@@ -1,0 +1,460 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/app-layout/app-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/bower_components/paper-button/paper-button.html">
+<link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/bower_components/iron-icon/iron-icon.html">
+<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="/bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="/bower_components/paper-item/paper-item.html">
+<link rel="import" href="/bower_components/neon-animation/web-animations.html">
+<link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/vaadin-grid/vaadin-grid.html">
+<!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
+<link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-column.html">
+
+<dom-module id="view-model">
+  <template>
+    <style>
+      html, body {
+          margin: 0;
+          font-family: 'Roboto', 'Noto', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          max-height: 368px;
+        }
+
+        app-toolbar {
+          background-color: #f2f1ed;
+          color: #706f6d;
+        }
+
+        paper-card{
+          color: black;
+          width: 50%;
+          word-wrap: break-word;
+          margin: 10px;
+        }
+
+        paper-toolbar {
+          background-color: #f2f1ed;
+        }
+
+
+        #search-bar {
+          display: flex;
+          flex-direction: column;
+          width: 50%;
+        }
+
+        #search-input {
+          width: 1000%;
+        }
+        #search-icon {
+          background-color: #377ff2;
+          color: #fff;
+        }
+
+        #heading {
+          margin-left: 20px;
+        }
+
+        #options {
+          display: inline-flex;
+        }
+
+        #category {
+          margin-right: 10px;
+        }
+
+        #version {
+          margin-left: 10px;
+        }
+
+        #results {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .table-responsive {
+          max-width: 500px;
+        }
+
+        .table {
+          display: block;
+        }
+
+    </style>
+
+    <h2>[[modelSelected.label]]</h2>
+    [[modelSelected.model]]
+    <br>
+    <paper-dropdown-menu id="category" label="Version">
+      <paper-listbox slot="dropdown-content" class="dropdown-content">
+        <paper-item>2.0</paper-item>
+        <paper-item>1.1</paper-item>
+        <paper-item>1.0</paper-item>
+      </paper-listbox>
+    </paper-dropdown-menu>
+    <div id="content"></div>
+
+<!--     <div class="container">
+      <div class="table-responsive"></div>
+    </div> -->
+  <div id="configuration">
+    <h3>Configurations</h3>
+    <vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">
+      <vaadin-grid-column flex-grow="0">
+        <template class="header">Inspect</template>  
+        <template><paper-button config$="[[item.model_config.value]]" on-click="openConfig">Open</paper-button></template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column resizable>
+        <template class="header">
+          Model Configuration
+        </template>
+        <template>[[item.model_config.value]]</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column resizable>
+        <template class="header">
+          Input Variables
+        </template>
+        <template>[[item.input_variables.value]]</template>
+      </vaadin-grid-column>
+
+      <vaadin-grid-column resizable>
+        <template class="header">
+          Output Variables
+        </template>
+        <template>[[item.output_variables.value]]</template>
+      </vaadin-grid-column>
+
+    </vaadin-grid>
+    </div>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class ViewModel extends Polymer.Element {
+      static get is() { return 'view-model'; }
+      static get properties() {
+        return {
+          modelSelected: {
+            model: String,
+            label: String
+          },
+          queryResults: {
+            type: Array,
+            value: []
+          },
+          configurationResults: Object
+        };
+      }
+
+      openConfig(e) {
+        var configuration = e.target.getAttribute("config");
+        var _parent = document.querySelector("mint-explorer-app");
+        // console.log(_parent);
+        // this.modelSelected = this.models[index].label.value;
+        console.log("Model");
+        console.log(configuration);
+        _parent.configSelected = {
+          model: _parent.modelSelected,
+          config: configuration
+        }
+        var _pages = Polymer.dom(_parent.root).querySelector("#pages");
+        console.log(_pages);
+        console.log(_pages.selected);
+        _pages.selected = "model-configuration";
+        console.log(_pages.selected);
+      }
+
+      processConfigurationResults(data) {
+        var obj = JSON.parse(JSON.stringify(data));
+        for(var i = 0; i < obj.results.bindings.length; ++i) {
+          for(var key in obj.results.bindings[i]) {
+            
+            if(obj.results.bindings[i][key].value.includes(",")) {
+              var strs = obj.results.bindings[i][key].value.split(",");
+              
+              var vars = [];
+              for(var j = 0; j<strs.length; ++j){
+                var parts = strs[j].split("#");
+                vars.push(parts[1]);
+              }
+              obj.results.bindings[i][key].value = vars;
+            }
+            else {
+              var str = obj.results.bindings[i][key].value;
+              var arr = str.split("#");
+              obj.results.bindings[i][key].value = arr[1];
+          }
+        }
+      }
+              console.log(obj);
+        this.configurationResults = obj;
+    }
+
+      fetchConfiguration() {
+        var _self = this;
+        var queries = [
+          {
+            description: "What are the model config, input variables, and output variables ?",
+            query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
+          }
+        ]
+        var endpoint = "http://ontosoft.isi.edu:3030/ds"
+        for(var i=0; i<queries.length; ++i) {
+          $.ajax({
+            url: endpoint + "/query?query=" + queries[i].query,
+            type: "GET",
+            cache: false,
+            timeout: 5000,
+            async: false,
+            complete: function() {
+                console.log("GET request sent");
+            },
+
+            success: function(data) {
+                console.log("GET success");
+                if(data.results.bindings.length === 0) {
+                  Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+                }   
+                else {
+                  _self.processConfigurationResults(data); 
+                }
+                // _self.configurationResults= JSON.parse(JSON.stringify(data));
+                // console.log(_self.configurationResults); 
+                // _self.populateConfigurations();          
+            },
+
+            error: function(jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connected.\n Verify Network.';
+                } 
+                else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } 
+                else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } 
+                else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } 
+                else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } 
+                else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } 
+                else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                console.log(msg);
+            }
+          });
+        }
+      }
+        
+      // }
+      fetchData() {
+        var _self = this;
+        var queries = [
+          {
+            description: "What are some of the things related to this model ?",
+            query: "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%24reln+%3Fprop%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+%3Freln+%3Fprop%0D%0A%7D"
+          }
+        ]
+        var endpoint = "http://ontosoft.isi.edu:3030/ds"
+        for(var i=0; i<queries.length; ++i) {
+          $.ajax({
+            url: endpoint + "/query?query=" + queries[i].query,
+            type: "GET",
+            cache: false,
+            timeout: 5000,
+            async: false,
+            complete: function() {
+                console.log("GET request sent");
+            },
+
+            success: function(data) {
+                console.log("GET success");    
+                var obj = JSON.parse(JSON.stringify(data));
+                _self.queryResults.push(obj);
+                console.log(_self.queryResults); 
+                _self.populateData();          
+            },
+
+            error: function(jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connected.\n Verify Network.';
+                } 
+                else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } 
+                else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } 
+                else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } 
+                else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } 
+                else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } 
+                else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                console.log(msg);
+            }
+          });
+        }
+        
+      }
+
+      populateData() {
+        var result = this.queryResults[0];
+        
+        var vars = result.head.vars;
+        for(var i=0; i<vars.length; ++i){
+          console.log(vars[i]);
+        }
+        var lines = []
+        for(var i=0; i<result.results.bindings.length; ++i) {
+          var string = " : ";
+          var obj = result.results.bindings[i];
+          console.log(obj);
+          for(var k=1; k<vars.length; ++k) {
+            var tuple = obj[vars[k]].value;
+            if(obj[vars[k]].type === "literal"){
+              string += tuple + " : ";
+            }
+            else if(obj[vars[k]].type === "uri"){
+              var arr = tuple.split("#");
+              string += arr[1] + " : ";
+            }
+          }
+          
+          lines.push(string); 
+        }
+        
+          var div="#content";
+          var elem = Polymer.dom(this.root).querySelector(div);
+          for(var j=0; j<lines.length; ++j) {
+          var paragraph = document.createElement("p");
+          paragraph.innerHTML = lines[j];
+          elem.appendChild(paragraph);
+
+      }
+    }
+
+    populateConfigurationResultss() {
+
+      var result = this.configurationResults;
+        var string = "<table class='table'><thead><tr>";
+        var vars = result.head.vars;
+        for(var i=0; i<vars.length; ++i){
+          string += "<th>" + vars[i] + "</th>";
+        }
+        string += "</tr></thead><tbody>";
+        for(var i=0; i<result.results.bindings.length; ++i) {
+          string += "<tr>";
+          var obj = result.results.bindings[i];
+          console.log(obj);
+          for(var k=0; k<vars.length; ++k) {
+            var tuple = obj[vars[k]].value;
+            if(obj[vars[k]].type === "literal"){
+              string += "<td>"+tuple + "</td>";
+            }
+            else if(obj[vars[k]].type === "uri"){
+              var arr = tuple.split("#");
+              string += "<td>"+arr[1] + "</td>";
+            }
+          }
+          string += "</tr>"
+        }
+        
+        var div=".table-responsive";
+        var elem = Polymer.dom(this.root).querySelector(div);
+        string = "<h3>Configurations</h3>" + string;
+        string += "</tbody></table>";
+        elem.innerHTML = string;
+    }
+
+    populateConfiguration() {
+
+      var result = this.configurationResults;
+        var string = "<table border='1'><tr>";
+        var vars = result.head.vars;
+        for(var i=0; i<vars.length; ++i){
+          string += "<th>" + vars[i] + "</th>";
+        }
+        string += "</tr>";
+        for(var i=0; i<result.results.bindings.length; ++i) {
+          string += "<tr>";
+          var obj = result.results.bindings[i];
+          console.log(obj);
+          for(var k=0; k<vars.length; ++k) {
+            var tuple = obj[vars[k]].value;
+            if(obj[vars[k]].type === "literal"){
+              string += "<td>"+tuple + "</td>";
+            }
+            else if(obj[vars[k]].type === "uri"){
+              var arr = tuple.split("#");
+              string += "<td>"+arr[1] + "</td>";
+            }
+          }
+          string += "</tr>"
+        }
+        
+        var div="#configuration";
+        var elem = Polymer.dom(this.root).querySelector(div);
+        string = "<h3>Configurations</h3>" + string;
+        string += "</table>";
+        elem.innerHTML = string;
+      }
+
+      ready() {
+        super.ready();
+        var _parent = document.querySelector("mint-explorer-app");
+        this.modelSelected = _parent.modelSelected;
+        console.log(this.modelSelected);
+        this.fetchData();
+        this.fetchConfiguration();
+      }
+    }
+
+    window.customElements.define(ViewModel.is, ViewModel);
+  </script>
+</dom-module>
+

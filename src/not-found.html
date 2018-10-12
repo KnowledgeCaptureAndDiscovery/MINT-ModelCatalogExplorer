@@ -1,0 +1,33 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+
+<dom-module id="not-found">
+  <template>
+    <style>
+      
+
+    </style>
+
+    <h1>[[message]]</h1>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class NotFound extends Polymer.Element {
+      static get is() { return 'not-found'; }
+      static get properties() {
+        return {
+          message: {
+            type: String,
+            value: "Error 404"
+        }
+      }
+    }
+  }
+    window.customElements.define(NotFound.is, NotFound);
+  </script>
+</dom-module>
