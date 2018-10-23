@@ -31,9 +31,17 @@ It will install all the dependencies in package.json.
 
 ## Viewing Your Application
 
-Run
+First, run the server from the server directory
 
 ```
+$ cd server
+$ node server.js
+```
+
+Then, run from the parent directory
+
+```
+$ cd ..
 $ polymer serve
 ```
 

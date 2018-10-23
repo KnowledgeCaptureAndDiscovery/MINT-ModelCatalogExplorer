@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-autocomplete/paper-autocomplete.html">
 
 <link rel="lazy-import" href="model-search.html">
 <link rel="lazy-import" href="view-model.html">
@@ -115,8 +116,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
 
-    
-
       <div id="content">
         <div id="title">
           <h2>Model Catalog Explorer</h2>
@@ -133,22 +132,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </div>
       <div id="search-bar">
-        <paper-input id="seachInput" value="{{searchParameter}}"></paper-input>
+        <paper-input id="searchInput" value="{{searchParameter}}"></paper-input>
+        <paper-autocomplete-suggestions for="searchInput" source="[[accounts]]"></paper-autocomplete-suggestions>
         <paper-icon-button id="searchIcon" icon="icons:search" title="Search" on-click="searchHandler"></paper-icon-button>
       </div>
 
-     
       <div id="results">
-        <dom-repeat items="{{results}}">
+        <dom-repeat items="{{searchResults}}">
         <template>
           <paper-card>
-           
             <div class="card-body">
-              
-             <div class="card-content" identity$="{{index}}">
-                    <h3>[[item.label.value]]</h3>
-                    <!-- [[item.model.value]] -->
-                    <paper-button label$="{{item.label.value}}" model$="{{item.model.value}}"" on-click="buttonPress">Go</paper-button>
+               <div class="card-content" identity$="{{index}}">
+                    <strong>[[item.label]]</strong>
+                    <a href="[[item.link]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
+                    
+                    <p>[[item.description]]</p>
+                    <paper-icon-button icon="icons:forward" label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel"></paper-icon-button>
                   </div>
               </div>
             </paper-card>
@@ -156,6 +155,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </dom-repeat>
       </div>
       
+      <!-- <paper-button on-click="buttonPress">Fire</paper-button> -->
+    <!-- </app-header-layout> -->
   </template>
 
   <script>
@@ -177,6 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           dummy: Array,
           queriedModels: Array,
           modelSelected: String,
+          searchResults: Array,
           results: Array
         };
       }
@@ -186,12 +188,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log(oldValue);
       }
 
-      buttonPress(e) {
+      goToModel(e) {
         // console.log(e.target);
         var _label = e.target.getAttribute("label");
         var _model = e.target.getAttribute("model");
         var _parent = document.querySelector("mint-explorer-app");
-        
+
         _parent.modelSelected = {
           model: _model,
           label: _label
@@ -204,32 +206,59 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }
 
+
+
       searchHandler() {
         var searchString = this.searchParameter;
         var filtered = [];
-        for(var i=0; i<this.models.length; ++i) {
-          if(this.models[i].label.value.includes(searchString) || this.models[i].model.value.includes(searchString)){
-            var obj = JSON.parse(JSON.stringify(this.models[i]));
+        for(var i=0; i<this.results.length; ++i) {
+          if(this.results[i].label.includes(searchString) || this.results[i].model.includes(searchString) || this.results[i].description.includes(searchString)){
+            var obj = JSON.parse(JSON.stringify(this.results[i]));
             filtered.push(obj);
-
           }
         }
-        this.results = filtered;
-        console.log(this.results);
+        this.searchResults = filtered;
+        console.log(this.searchResults);
       }
 
+      populateSearchResults() {
+        var results = [];
+        var _parent = document.querySelector("mint-explorer-app");
+        var modelDescriptions = _parent.modelDescriptions;
+        for(var i = 0; i < this.models.length; ++i) {
+          var result = {};
+          result.model = this.models[i].model.value;
+          result.label = this.models[i].label.value;
+          for(var j = 0; j < modelDescriptions.length; ++j) {
+            if(modelDescriptions[j].model == this.models[i].model.value) {
+              result.description = modelDescriptions[j].description;
+              if('link' in modelDescriptions[j]) {
+                result.link = modelDescriptions[j].link;
+              }
+            }
+          }
+          results.push(result);
+        }
+        this.results = results;
+        this.searchResults = results.slice(0, 2);
+      }
 
       ready() {
         super.ready();
         var _self = this;
-        var query = "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D&format=json";
-        var endpoint = "http://ontosoft.isi.edu:3030/ds"
+        var _parent = document.querySelector("mint-explorer-app");
+        console.log(_parent);
+        console.log(_parent.queries[0]);
+        var query = _parent.queries[0].query;
+        // var query = "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D&format=json";
+        var endpoint = _parent.endpoint;
+        // var endpoint = "http://ontosoft.isi.edu:3030/ds"
         $.ajax({
             url: endpoint + "/query?query=" + query,
             type: "GET",
             cache: false,
             timeout: 5000,
-            async: true,
+            async: false,
             complete: function() {
                 console.log("GET request sent");
             },
@@ -237,7 +266,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             success: function(data) {
                 console.log("GET success");    
                 _self.models = data.results.bindings;
-                _self.results = _self.models;
+                _self.populateSearchResults();
+                // _self.searchResults = _self.models;
                 console.log(_self.models);           
             },
 
@@ -268,9 +298,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         });
 
-      }
+        var states = [];
+        for(var i = 0; i < this.results.length; ++i) {
+          states.push({
+            "text": this.results[i].label+" "+this.results[i].description,
+            "value": this.results[i].label
+          })
+        }
+ 
+      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-suggestions');
+
+      autocompleteSuggestions.source = states;
+
+      autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
+        // var paperToast = document.querySelector('paper-toast');
+        // var selected = event.detail.text;
+        // paperToast.text = 'Selected: ' + selected;
+        // paperToast.show();
+
+        var input = Polymer.dom(_self.root).querySelector("#searchInput");
+        input.value = event.detail.value;
+
+      });
       
     }
+  }
 
     window.customElements.define(ModelSearch.is, ModelSearch);
   </script>

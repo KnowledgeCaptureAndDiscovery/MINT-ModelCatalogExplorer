@@ -11,10 +11,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
-
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
@@ -118,11 +114,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <paper-item>1.0</paper-item>
       </paper-listbox>
     </paper-dropdown-menu>
+
     <div id="content"></div>
 
-<!--     <div class="container">
-      <div class="table-responsive"></div>
-    </div> -->
+
   <div id="configuration">
     <h3>Configurations</h3>
     <vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">
@@ -157,6 +152,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   </template>
 
   <script>
+
+    
+    String.prototype.format = function () {
+      var i = 0, args = arguments;
+      return this.replace(/{}/g, function () {
+        return typeof args[i] != 'undefined' ? args[i++] : '';
+      });
+    };
+    
     /**
      * @customElement
      * @polymer
@@ -182,17 +186,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var _parent = document.querySelector("mint-explorer-app");
         // console.log(_parent);
         // this.modelSelected = this.models[index].label.value;
-        console.log("Model");
-        console.log(configuration);
+        // console.log("Model");
+        // console.log(configuration);
         _parent.configSelected = {
           model: _parent.modelSelected,
           config: configuration
         }
         var _pages = Polymer.dom(_parent.root).querySelector("#pages");
-        console.log(_pages);
-        console.log(_pages.selected);
+        // console.log(_pages);
+        // console.log(_pages.selected);
         _pages.selected = "model-configuration";
-        console.log(_pages.selected);
+        // console.log(_pages.selected);
       }
 
       processConfigurationResults(data) {
@@ -217,32 +221,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       }
-              console.log(obj);
+              // console.log(obj);
         this.configurationResults = obj;
     }
 
       fetchConfiguration() {
         var _self = this;
-        var queries = [
-          {
-            description: "What are the model config, input variables, and output variables ?",
-            query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
-          }
-        ]
-        var endpoint = "http://ontosoft.isi.edu:3030/ds"
-        for(var i=0; i<queries.length; ++i) {
-          $.ajax({
-            url: endpoint + "/query?query=" + queries[i].query,
+        var _parent = document.querySelector("mint-explorer-app");
+        var query = _parent.queries[2].query.format(encodeURI(_self.modelSelected.label));
+        // var queries = [
+        //   {
+        //     description: "What are the model config, input variables, and output variables ?",
+        //     query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
+        //   }
+        // ]
+        var endpoint = _parent.endpoint;
+        $.ajax({
+            url: endpoint + "/query?query=" + query,
             type: "GET",
             cache: false,
             timeout: 5000,
             async: false,
             complete: function() {
-                console.log("GET request sent");
+                // console.log("GET request sent");
             },
 
             success: function(data) {
-                console.log("GET success");
+                // console.log("GET success");
                 if(data.results.bindings.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
                 }   
@@ -277,35 +282,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 else {
                     msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
-                console.log(msg);
+                // console.log(msg);
             }
           });
-        }
       }
         
       // }
       fetchData() {
+
         var _self = this;
-        var queries = [
-          {
-            description: "What are some of the things related to this model ?",
-            query: "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%24reln+%3Fprop%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+%3Freln+%3Fprop%0D%0A%7D"
-          }
-        ]
-        var endpoint = "http://ontosoft.isi.edu:3030/ds"
-        for(var i=0; i<queries.length; ++i) {
+        var _parent = document.querySelector("mint-explorer-app");
+        var query = _parent.queries[1].query.format(encodeURI(_self.modelSelected.label));
+        // var queries = [
+        //   {
+        //     description: "What are some of the things related to this model ?",
+        //     query: "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%24reln+%3Fprop%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+%3Freln+%3Fprop%0D%0A%7D"
+        //   }
+        // ]
+        console.log(query);
+        var endpoint = _parent.endpoint;
+        
           $.ajax({
-            url: endpoint + "/query?query=" + queries[i].query,
+            url: endpoint + "/query?query=" + query,
             type: "GET",
             cache: false,
             timeout: 5000,
             async: false,
             complete: function() {
-                console.log("GET request sent");
+                // console.log("GET request sent");
             },
 
             success: function(data) {
-                console.log("GET success");    
+                // console.log("GET success");    
                 var obj = JSON.parse(JSON.stringify(data));
                 _self.queryResults.push(obj);
                 console.log(_self.queryResults); 
@@ -335,10 +343,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 else {
                     msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
-                console.log(msg);
+                // console.log(msg);
             }
           });
-        }
         
       }
 
@@ -347,13 +354,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         
         var vars = result.head.vars;
         for(var i=0; i<vars.length; ++i){
-          console.log(vars[i]);
+          // console.log(vars[i]);
         }
         var lines = []
         for(var i=0; i<result.results.bindings.length; ++i) {
           var string = " : ";
           var obj = result.results.bindings[i];
-          console.log(obj);
+          // console.log(obj);
           for(var k=1; k<vars.length; ++k) {
             var tuple = obj[vars[k]].value;
             if(obj[vars[k]].type === "literal"){
@@ -390,7 +397,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         for(var i=0; i<result.results.bindings.length; ++i) {
           string += "<tr>";
           var obj = result.results.bindings[i];
-          console.log(obj);
+          // console.log(obj);
           for(var k=0; k<vars.length; ++k) {
             var tuple = obj[vars[k]].value;
             if(obj[vars[k]].type === "literal"){
@@ -423,7 +430,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         for(var i=0; i<result.results.bindings.length; ++i) {
           string += "<tr>";
           var obj = result.results.bindings[i];
-          console.log(obj);
+          // console.log(obj);
           for(var k=0; k<vars.length; ++k) {
             var tuple = obj[vars[k]].value;
             if(obj[vars[k]].type === "literal"){
@@ -448,13 +455,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         var _parent = document.querySelector("mint-explorer-app");
         this.modelSelected = _parent.modelSelected;
-        console.log(this.modelSelected);
+        // console.log(this.modelSelected);
         this.fetchData();
         this.fetchConfiguration();
       }
     }
-
     window.customElements.define(ViewModel.is, ViewModel);
+    
   </script>
 </dom-module>
 

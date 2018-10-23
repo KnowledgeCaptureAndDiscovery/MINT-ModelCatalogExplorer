@@ -1,11 +1,7 @@
 <!--
-@license
-Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+The mint explorer app, which contains the pages for searching models,
+viewing models, viewing model configuration, and viewing input and 
+output presentations.s
 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
@@ -24,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="lazy-import" href="model-search.html">
 <link rel="lazy-import" href="view-model.html">
 <link rel="lazy-import" href="model-configuration.html">
+<link rel="lazy-import" href="variable-configuration.html">
 <link rel="lazy-import" href="not-found.html">
 
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
@@ -42,6 +39,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/neon-animation/web-animations.html">
 <link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
+<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/bower_components/iron-meta/iron-meta.html">
 <link rel="import" href="my-icons.html">
 
 <dom-module id="mint-explorer-app">
@@ -79,7 +78,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       tail="{{subroute}}">
     </app-route>
 
-    
     <app-header-layout>
       <app-header>
         <app-toolbar>
@@ -88,16 +86,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-toolbar>
       </app-header>
 
+      <!-- <dom-repeat items="{{modelDescriptions}}">
+      	<template>
+      		Query [[index]] - [[item.model]]
+      	</template>
+      </dom-repeat>  -->
+
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
         fallback-selection="not-found"
         role="main">
         <model-search id="modelSearch" name="model-search"></model-search>
-        <!-- modelSelected="{{modelSelected}}" queriedModels="{{models}}" -->
         <view-model id="viewModel" name="view-model"></view-model>
         <model-configuration id="modelConfiguration" name="model-configuration"></model-configuration>
-         <!-- modelSelected="{{modelSelected}}" -->
+        <variable-configuration id="variableConfiguration" name="variable-configuration"></variable-configuration>
         <not-found name="not-found"></not-found>
       </iron-pages>
 
@@ -129,6 +132,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           configSelected: {
             model: String,
             config: Object
+          },
+          queries: Array,
+          modelDescriptions: Array,
+          endpoint: {
+          	type: String,
+          	value: "http://ontosoft.isi.edu:3030/ds"
           }
         };
       }
@@ -160,6 +169,83 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.page = 'not-found';
       }
 
+      ready() {
+      	super.ready();
+      	var _self = this;
+      	// $.get("http://127.0.0.1:8080", {fileName: "queries.json"}, function(data){
+      	// 	_self.queries = data;
+       //  });
+        $.ajax({
+        	url: "http://127.0.0.1:8080",
+        	type: "GET",
+        	data: {fileName: "queries.json"},
+        	async: false,
+        	success: function(data) {
+        		_self.queries = data;
+        	}
+        })
+        // $.get("http://127.0.0.1:8080", {fileName: "model-descriptions.json"}, function(data){
+      		// _self.modelDescriptions = data;
+        // });
+        $.ajax({
+        	url: "http://127.0.0.1:8080",
+        	type: "GET",
+        	data: {fileName: "model-descriptions.json"},
+        	async: false,
+        	success: function(data) {
+        		_self.modelDescriptions = data;
+        	}
+        })
+      }
+
+      // ready() {
+      //   super.ready();
+      //   var _self = this;
+      //   $.ajax({
+      //       url: "http://ontosoft.isi.edu:3030/ds/query?query=" + "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D" +"&format=json",
+      //       type: "GET",
+      //       cache: false,
+      //       timeout: 5000,
+      //       async: true,
+      //       complete: function() {
+      //           console.log("GET request sent");
+      //       },
+
+      //       success: function(data) {
+      //           console.log("GET success");    
+      //           _self.models = data.results.bindings;
+      //           console.log("From inside success function");
+      //           console.log(_self.models);           
+      //       },
+
+      //       error: function(jqXHR, exception) {
+      //           var msg = '';
+      //           if (jqXHR.status === 0) {
+      //               msg = 'Not connected.\n Verify Network.';
+      //           } 
+      //           else if (jqXHR.status == 404) {
+      //               msg = 'Requested page not found. [404]';
+      //           } 
+      //           else if (jqXHR.status == 500) {
+      //               msg = 'Internal Server Error [500].';
+      //           } 
+      //           else if (exception === 'parsererror') {
+      //               msg = 'Requested JSON parse failed.';
+      //           } 
+      //           else if (exception === 'timeout') {
+      //               msg = 'Time out error.';
+      //           } 
+      //           else if (exception === 'abort') {
+      //               msg = 'Ajax request aborted.';
+      //           } 
+      //           else {
+      //               msg = 'Uncaught Error.\n' + jqXHR.responseText;
+      //           }
+      //           console.log(msg);
+      //       }
+      //   });
+
+      // }
 
     }
 
