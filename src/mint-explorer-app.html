@@ -108,6 +108,8 @@ output presentations.s
     </app-header-layout>
   </template>
 
+  <script type="text/javascript" src="queries.js"></script>
+  <script type="text/javascript" src="model-descriptions.js"></script>
   <script>
     // Gesture events like tap and track generated from touch will not be
     // preventable, allowing for better scrolling performance.
@@ -172,80 +174,10 @@ output presentations.s
       ready() {
       	super.ready();
       	var _self = this;
-      	// $.get("http://127.0.0.1:8080", {fileName: "queries.json"}, function(data){
-      	// 	_self.queries = data;
-       //  });
-        $.ajax({
-        	url: "http://127.0.0.1:8080",
-        	type: "GET",
-        	data: {fileName: "queries.json"},
-        	async: false,
-        	success: function(data) {
-        		_self.queries = data;
-        	}
-        })
-        // $.get("http://127.0.0.1:8080", {fileName: "model-descriptions.json"}, function(data){
-      		// _self.modelDescriptions = data;
-        // });
-        $.ajax({
-        	url: "http://127.0.0.1:8080",
-        	type: "GET",
-        	data: {fileName: "model-descriptions.json"},
-        	async: false,
-        	success: function(data) {
-        		_self.modelDescriptions = data;
-        	}
-        })
+      	_self.queries = queries;
+      	_self.modelDescriptions = modelDescriptions;
       }
 
-      // ready() {
-      //   super.ready();
-      //   var _self = this;
-      //   $.ajax({
-      //       url: "http://ontosoft.isi.edu:3030/ds/query?query=" + "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D" +"&format=json",
-      //       type: "GET",
-      //       cache: false,
-      //       timeout: 5000,
-      //       async: true,
-      //       complete: function() {
-      //           console.log("GET request sent");
-      //       },
-
-      //       success: function(data) {
-      //           console.log("GET success");    
-      //           _self.models = data.results.bindings;
-      //           console.log("From inside success function");
-      //           console.log(_self.models);           
-      //       },
-
-      //       error: function(jqXHR, exception) {
-      //           var msg = '';
-      //           if (jqXHR.status === 0) {
-      //               msg = 'Not connected.\n Verify Network.';
-      //           } 
-      //           else if (jqXHR.status == 404) {
-      //               msg = 'Requested page not found. [404]';
-      //           } 
-      //           else if (jqXHR.status == 500) {
-      //               msg = 'Internal Server Error [500].';
-      //           } 
-      //           else if (exception === 'parsererror') {
-      //               msg = 'Requested JSON parse failed.';
-      //           } 
-      //           else if (exception === 'timeout') {
-      //               msg = 'Time out error.';
-      //           } 
-      //           else if (exception === 'abort') {
-      //               msg = 'Ajax request aborted.';
-      //           } 
-      //           else {
-      //               msg = 'Uncaught Error.\n' + jqXHR.responseText;
-      //           }
-      //           console.log(msg);
-      //       }
-      //   });
-
-      // }
 
     }
 

@@ -1,4 +1,4 @@
-[
+var modelDescriptions = [
 	{
 		"model": "https://w3id.org/mint/instance#TOPOFLOW",
 		"link": "https://github.com/peckhams/topoflow>",
