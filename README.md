@@ -11,8 +11,6 @@ First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polyme
 
 ## Installing dependencies
 
-While building for the first time, there are two types of dependencies that need to be installed.
-
 Install the Polymer front-end related dependencies with
 
 ```
@@ -21,24 +19,9 @@ $ bower install
 It will install all the dependencies in bower.json.
 
 
-Next, install the Node.js back-end related dependencies with
-
-```
-$ npm install
-```
-
-It will install all the dependencies in package.json.
-
 ## Viewing Your Application
 
-First, run the server from the server directory
-
-```
-$ cd server
-$ node server.js
-```
-
-Then, run from the parent directory
+Run from the parent directory
 
 ```
 $ cd ..
