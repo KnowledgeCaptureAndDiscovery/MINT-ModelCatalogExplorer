@@ -31,6 +31,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid.html">
 <!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
 <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="my-icons.html">
+
 
 <dom-module id="view-model">
   <template>
@@ -102,8 +105,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: block;
         }
 
-    </style>
+        .danger{
+          color: #ffffff;
+          background-color: #e51c23;
+        }
 
+    </style>
+    <br>
+    <paper-button class="danger" on-click="goBack" raised>Back</paper-button >
     <h2>[[modelSelected.label]]</h2>
     [[modelSelected.model]]
     <br>
@@ -165,6 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @customElement
      * @polymer
      */
+
     class ViewModel extends Polymer.Element {
       static get is() { return 'view-model'; }
       static get properties() {
@@ -179,6 +189,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           configurationResults: Object
         };
+      }
+
+      goBack(){
+        var _parent = document.querySelector("mint-explorer-app");
+        var _pages = Polymer.dom(_parent.root).querySelector("#pages");
+        _pages.selected = "model-search";
       }
 
       openConfig(e) {
@@ -374,8 +390,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           
           lines.push(string); 
         }
-        
-          var div="#content";
+
+          var div = "#content";
           var elem = Polymer.dom(this.root).querySelector(div);
           for(var j=0; j<lines.length; ++j) {
           var paragraph = document.createElement("p");
@@ -385,7 +401,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
 
-    populateConfigurationResultss() {
+    populateConfigurationResults() {
 
       var result = this.configurationResults;
         var string = "<table class='table'><thead><tr>";
@@ -405,7 +421,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
             else if(obj[vars[k]].type === "uri"){
               var arr = tuple.split("#");
-              string += "<td>"+arr[1] + "</td>";
+              string += "<td>" + arr[1] + "</td>";
             }
           }
           string += "</tr>"
@@ -438,7 +454,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
             else if(obj[vars[k]].type === "uri"){
               var arr = tuple.split("#");
-              string += "<td>"+arr[1] + "</td>";
+              string += "<td>" + arr[1] + "</td>";
             }
           }
           string += "</tr>"

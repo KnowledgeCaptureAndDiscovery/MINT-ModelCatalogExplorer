@@ -126,6 +126,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #styled{
           width: 35%;
         }
+        .primary{
+          cursor: pointer;
+          border: 1px solid transparent;
+          font-size: 14px;
+          line-height: 1.846;
+          border-radius: 3px;
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+          color: #ffffff;
+          background-color: #2196f3;
+        }
 
     </style>
 
@@ -164,7 +177,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <a href="[[item.link]]" target="_blank"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
                     
                     <p>[[item.description]]</p>
-                    <paper-button label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel" raised>Go</paper-button >
+                    <paper-button class="primary" label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel" raised>Explore [[item.label]]</paper-button >
                   </div>
               </div>
             </paper-card>
@@ -223,8 +236,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log(_pages.selected);
 
       }
-
-
 
       searchHandler() {
         var searchString = this.searchParameter;

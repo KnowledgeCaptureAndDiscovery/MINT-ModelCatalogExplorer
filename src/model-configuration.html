@@ -8,16 +8,23 @@ Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
 
+<link rel="import" href="icons.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+
+
 
 <dom-module id="model-configuration">
   <template>
     <style include="shared-styles">
-      
+      .danger{
+        color: #ffffff;
+        background-color: #e51c23;
+      }
     </style>
-
-    <h2>Configuration</h2>
+    <br>
+    <paper-button class="danger" on-click="goBack" raised>Back</paper-button >
+    <h2>Configurations</h2>
     <h4>[[configSelected.model.label]]</h4>
     <h4>[[configSelected.model.model]]</h4>
     <h4>[[configSelected.config]]</h4>
@@ -35,6 +42,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         };
       }
+
+    goBack(){
+      var _parent = document.querySelector("mint-explorer-app");
+      var _pages = Polymer.dom(_parent.root).querySelector("#pages");
+      _pages.selected = "view-model";
+    }
 
     ready() {
         super.ready();
