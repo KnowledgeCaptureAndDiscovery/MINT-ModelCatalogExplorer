@@ -1,7 +1,7 @@
 var modelDescriptions = [
 	{
 		"model": "https://w3id.org/mint/instance#TOPOFLOW",
-		"link": "https://github.com/peckhams/topoflow>",
+		"link": "https://github.com/peckhams/topoflow",
 		"description": "TopoFlow is a powerful, spatially-distributed hydrologic model for various physical processes in a watershed with the goal of accurately predicting how various hydrologic variables will evolve in time in response to climatic forcings."
 	},
 	{

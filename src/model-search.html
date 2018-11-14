@@ -21,6 +21,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-autocomplete/paper-autocomplete.html">
+<!--<link rel="stylesheet" href="../src/css/components.css">-->
+
 
 <link rel="lazy-import" href="model-search.html">
 <link rel="lazy-import" href="view-model.html">
@@ -62,13 +64,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin: 10px;
         }
 
+        paper-input{
+          width: 25%;
+        }
+
+        paper-button{
+          background-color: #eee
+        }
+
         paper-toolbar {
           background-color: #f2f1ed;
           padding: 10px;
         }
 
         .card-body {
-          padding: 10px;
+          padding: 15px;
         }
 
         .card-actions {
@@ -89,8 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           width: 1000%;
         }
         #search-icon {
-          background-color: #377ff2;
-          color: #fff;
+          vertical-align: top
         }
 
         #heading {
@@ -114,8 +123,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           flex-direction: column;
         }
 
+        #styled{
+          width: 35%;
+        }
+
     </style>
 
+    <div class="container">
       <div id="content">
         <div id="title">
           <h2>Model Catalog Explorer</h2>
@@ -131,10 +145,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <paper-toggle-button id="version" checked>Retrieve latest version</paper-toggle-button>
         </div>
       </div>
+    </div>
+    <div class="container">
       <div id="search-bar">
-        <paper-input id="searchInput" value="{{searchParameter}}"></paper-input>
-        <paper-autocomplete-suggestions for="searchInput" source="[[accounts]]"></paper-autocomplete-suggestions>
-        <paper-icon-button id="searchIcon" icon="icons:search" title="Search" on-click="searchHandler"></paper-icon-button>
+        <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
+        <paper-autocomplete id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]" value="{{searchParameter}}" highlight-first>
+          <paper-icon-button id="searchIcon" icon="icons:search" title="Search" on-click="searchHandler" slot="suffix" prefix icon="search"></paper-icon-button>
+        </paper-autocomplete>
       </div>
 
       <div id="results">
@@ -144,10 +161,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div class="card-body">
                <div class="card-content" identity$="{{index}}">
                     <strong>[[item.label]]</strong>
-                    <a href="[[item.link]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
+                    <a href="[[item.link]]" target="_blank"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
                     
                     <p>[[item.description]]</p>
-                    <paper-icon-button icon="icons:forward" label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel"></paper-icon-button>
+                    <paper-button label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel" raised>Go</paper-button >
                   </div>
               </div>
             </paper-card>
@@ -158,6 +175,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- <paper-button on-click="buttonPress">Fire</paper-button> -->
     <!-- </app-header-layout> -->
   </template>
+
 
   <script>
     // Gesture events like tap and track generated from touch will not be
@@ -225,6 +243,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var results = [];
         var _parent = document.querySelector("mint-explorer-app");
         var modelDescriptions = _parent.modelDescriptions;
+        console.log("hfkjdf")
+        console.log(modelDescriptions)
+        console.log("ddkjfhsjk")
         for(var i = 0; i < this.models.length; ++i) {
           var result = {};
           result.model = this.models[i].model.value;
@@ -307,17 +328,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           })
         }
  
-      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-suggestions');
+      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete');
 
       autocompleteSuggestions.source = states;
 
       autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
-        // var paperToast = document.querySelector('paper-toast');
-        // var selected = event.detail.text;
-        // paperToast.text = 'Selected: ' + selected;
-        // paperToast.show();
+        //var paperToast = document.querySelector('paper-toast');
+        //var selected = event.detail.text;
+        //paperToast.text = 'Selected: ' + selected;
+        //paperToast.show();
 
         var input = Polymer.dom(_self.root).querySelector("#searchInput");
+        console.log(i)
         input.value = event.detail.value;
 
       });
