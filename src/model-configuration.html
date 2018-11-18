@@ -10,6 +10,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="icons.html">
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 <link rel="import" href="shared-styles.html">
 
 
@@ -23,7 +24,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
     <br>
-    <paper-button class="danger" on-click="goBack" raised>Back</paper-button >
+    <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
     <h2>Configurations</h2>
     <h4>[[configSelected.model.label]]</h4>
     <h4>[[configSelected.model.model]]</h4>

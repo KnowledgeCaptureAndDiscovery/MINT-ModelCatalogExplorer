@@ -33,6 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 
 
 <dom-module id="view-model">
@@ -112,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
     <br>
-    <paper-button class="danger" on-click="goBack" raised>Back</paper-button >
+    <a href="[[routePath]]model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
     <h2>[[modelSelected.label]]</h2>
     [[modelSelected.model]]
     <br>
@@ -132,7 +133,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">
       <vaadin-grid-column flex-grow="0">
         <template class="header">Inspect</template>  
-        <template><paper-button config$="[[item.model_config.value]]" on-click="openConfig">Open</paper-button></template>
+        <template><a href="[[routePath]]model-configuration"><paper-button config$="[[item.model_config.value]]" on-click="openConfig">Open</paper-button></a></template>
       </vaadin-grid-column>
 
       <vaadin-grid-column resizable>
@@ -391,7 +392,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           lines.push(string); 
         }
 
-          var div = "#content";
+          var div="#content";
           var elem = Polymer.dom(this.root).querySelector(div);
           for(var j=0; j<lines.length; ++j) {
           var paragraph = document.createElement("p");

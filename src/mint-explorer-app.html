@@ -60,7 +60,7 @@ output presentations.s
         }
 
         app-toolbar {
-          background-color: #f2f1ed;
+          background-color: #fff;
           color: #706f6d;
         }
 
@@ -97,10 +97,10 @@ output presentations.s
         attr-for-selected="name"
         fallback-selection="not-found"
         role="main">
-        <model-search id="modelSearch" name="model-search"></model-search>
-        <view-model id="viewModel" name="view-model"></view-model>
-        <model-configuration id="modelConfiguration" name="model-configuration"></model-configuration>
-        <variable-configuration id="variableConfiguration" name="variable-configuration"></variable-configuration>
+        <model-search id="modelSearch" name="model-search" route="{{subroute}}"></model-search>
+        <view-model id="viewModel" name="view-model" route="{{subroute}}"></view-model>
+        <model-configuration id="modelConfiguration" name="model-configuration" route="{{subroute}}"></model-configuration>
+        <variable-configuration id="variableConfiguration" name="variable-configuration" route="{{subroute}}"></variable-configuration>
         <not-found name="not-found"></not-found>
       </iron-pages>
 
@@ -169,6 +169,7 @@ output presentations.s
 
       _showPage404() {
         this.page = 'not-found';
+        this.set('route.path', '/404-not-found/')
       }
 
       ready() {

@@ -21,6 +21,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../bower_components/paper-autocomplete/paper-autocomplete.html">
+<link rel="import" href="../bower_components/paper-autocomplete-chips/paper-autocomplete-chips.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/vaadin-checkbox/vaadin-checkbox.html">
 <!--<link rel="stylesheet" href="../src/css/components.css">-->
 
 
@@ -46,13 +49,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="my-icons.html">
+<link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 
 <dom-module id="model-search">
   <template>
     <style>
       html, body {
           margin: 0;
-          font-family: 'Roboto', 'Noto', sans-serif;
+          font-family: 'Roboto', sans-serif;
           -webkit-font-smoothing: antialiased;
           max-height: 368px;
         }
@@ -90,37 +95,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         #search-bar {
-          display: flex;
-          flex-direction: column;
+          width: 50%;
+        }
+
+        #options {
           width: 50%;
         }
 
         #search-input {
           width: 1000%;
         }
-        #search-icon {
-          vertical-align: top
+        #searchIcon {
+          width: 50%;
+        }
+        #clearIcon {
+          margin-top: -40px;
+          margin-left: 51%;
+          width: 50%;
         }
 
         #heading {
           margin-left: 20px;
         }
 
-        #options {
-          display: inline-flex;
-        }
-
         #category {
           margin-right: 10px;
+          width: 100%
         }
 
         #version {
           margin-left: 10px;
-        }
-
-        #results {
-          display: flex;
-          flex-direction: column;
         }
 
         #styled{
@@ -140,50 +144,110 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           background-color: #2196f3;
         }
 
+        .dropdown-content{
+          width: 100%;
+        }
+        
+        .grid {
+          margin-left: 20px;
+          margin-right: 20px;
+          @apply --layout-horizontal;
+          @apply --layout-wrap;
+          @apply --layout-justified;
+          -webkit-flex-basis: 50%;
+          flex-basis: 50%;
+          max-width: 100%;
+        }
+        .box {
+          @apply --layout-vertical;
+
+          background-color: #FEFEFE;
+          border: 1px solid var(--app-accent-color);
+          border-radius: 4px;
+          background-size: 100% auto;
+          background-position: 0px 24px;
+
+          margin: 5px;
+          margin-left: 0px;
+          min-height: 190px;
+
+          display: block;
+          text-decoration: none;
+          text-align: center;
+          position: relative;
+          width: 47.5%;
+          padding: 15px;
+        }
+        .box .inner {
+          background: rgba(255,255,255,0.5);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .flex-center-justified {
+          @apply --layout-horizontal;
+          @apply --layout-center-justified;
+        }
+
+        .flex-end-justified {
+          margin-right: 40px;
+          @apply --layout-horizontal;
+          @apply --layout-end-justified;
+        }
+
+
     </style>
 
-    <div class="container">
-      <div id="content">
-        <div id="title">
-          <h2>Model Catalog Explorer</h2>
-        </div>
-        <div id="options">
-          <paper-dropdown-menu id="category" label="Select Category">
-            <paper-listbox slot="dropdown-content" class="dropdown-content">
-              <paper-item>Ecology</paper-item>
-              <paper-item>Hydrology</paper-item>
-              <paper-item>Economics</paper-item>
-            </paper-listbox>
-          </paper-dropdown-menu>
-          <paper-toggle-button id="version" checked>Retrieve latest version</paper-toggle-button>
+    <div class="container flex-center-justified">
+      <div><h1>Model Catalog Explorer</h1></div>
+    </div>
+    <div class="container flex-center-justified">
+      <div id="options">
+        <paper-dropdown-menu id="category" label="Select Category">
+          <paper-listbox slot="dropdown-content" class="dropdown-content">
+            <paper-item>Ecology</paper-item>
+            <paper-item>Hydrology</paper-item>
+            <paper-item>Economics</paper-item>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <vaadin-checkbox id="version" checked>Retrieve latest version</vaadin-checkbox>
+      </div>
+    </div>
+    <div class="container flex-center-justified">
+      <div id="search-bar">
+        <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
+        <paper-autocomplete-chips id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]">
+        </paper-autocomplete-chips>
+        <br>
+        <div class="grid">
+          <vaadin-button theme="contrast primary" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
+          </vaadin-button>
+          <vaadin-button theme="error primary" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+          </vaadin-button>
         </div>
       </div>
     </div>
-    <div class="container">
-      <div id="search-bar">
-        <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
-        <paper-autocomplete id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]" value="{{searchParameter}}" highlight-first>
-          <paper-icon-button id="searchIcon" icon="icons:search" title="Search" on-click="searchHandler" slot="suffix" prefix icon="search"></paper-icon-button>
-        </paper-autocomplete>
-      </div>
-
-      <div id="results">
-        <dom-repeat items="{{searchResults}}">
-        <template>
-          <paper-card>
-            <div class="card-body">
-               <div class="card-content" identity$="{{index}}">
-                    <strong>[[item.label]]</strong>
-                    <a href="[[item.link]]" target="_blank"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
-                    
-                    <p>[[item.description]]</p>
-                    <paper-button class="primary" label$="{{item.label}}" model$="{{item.model}}"" on-click="goToModel" raised>Explore [[item.label]]</paper-button >
-                  </div>
-              </div>
-            </paper-card>
-          </template>
-        </dom-repeat>
-      </div>
+    <br>
+    <div class="container flex-end-justified">
+      <div><b>Displaying [[numberofRes]]/[[totalRes]] results</b></div>
+    </div>
+    <br>
+    <div class="grid">
+      <dom-repeat items="{{tempResults}}">
+      <template>
+        <div class="box">
+         <div class="card-content" identity$="{{index}}">
+              <strong>[[item.label]]</strong>
+              <a href="[[item.link]]" target="_blank" hidden="[[item.avail]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
+              
+              <p>[[item.description]]</p>
+              <a href="[[routePath]]view-model"><vaadin-button theme="primary" label$="{{item.label}}" model$="{{item.model}}" on-click="goToModel" raised>Explore [[item.label]]</vaadin-button ></a>
+            </div>
+        </div>
+        </template>
+      </dom-repeat>
+    </div>
       
       <!-- <paper-button on-click="buttonPress">Fire</paper-button> -->
     <!-- </app-header-layout> -->
@@ -210,6 +274,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           queriedModels: Array,
           modelSelected: String,
           searchResults: Array,
+          tempResults: Array,
+          numberofRes: String,
+          totalRes: String,
           results: Array
         };
       }
@@ -233,12 +300,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log(_pages);
         console.log(_pages.selected);
         _pages.selected = "view-model";
+        //this.set('route.path', '/view-model');
         console.log(_pages.selected);
 
       }
 
       searchHandler() {
-        var searchString = this.searchParameter;
+        var searchString = Polymer.dom(this.root).querySelector("#searchInput").value;
+        console.log(searchString)
         var filtered = [];
         for(var i=0; i<this.results.length; ++i) {
           if(this.results[i].label.includes(searchString) || this.results[i].model.includes(searchString) || this.results[i].description.includes(searchString)){
@@ -246,8 +315,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             filtered.push(obj);
           }
         }
-        this.searchResults = filtered;
+        this.totalRes = this.results.length.toString();
+        this.tempResults = filtered;
+        this.numberofRes = this.tempResults.length.toString();
         console.log(this.searchResults);
+      }
+
+      clearHandler(){
+        location.reload();
       }
 
       populateSearchResults() {
@@ -261,18 +336,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var result = {};
           result.model = this.models[i].model.value;
           result.label = this.models[i].label.value;
+          result.avail = false;
           for(var j = 0; j < modelDescriptions.length; ++j) {
             if(modelDescriptions[j].model == this.models[i].model.value) {
               result.description = modelDescriptions[j].description;
               if('link' in modelDescriptions[j]) {
                 result.link = modelDescriptions[j].link;
               }
+              else{
+                result.avail = true;
+              }
             }
           }
           results.push(result);
         }
         this.results = results;
-        this.searchResults = results.slice(0, 2);
+        this.totalRes = results.length.toString();
+        this.searchResults = results;
+        var newArray = results.slice();
+        this.tempResults = newArray.splice(0, 10);
+        this.numberofRes = this.tempResults.length.toString();
       }
 
       ready() {
@@ -332,27 +415,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         var states = [];
+        var opts = [];
+        console.log("Hellop");
+        console.log(this.results);
         for(var i = 0; i < this.results.length; ++i) {
           states.push({
             "text": this.results[i].label+" "+this.results[i].description,
             "value": this.results[i].label
           })
+          opts.push(this.results[i].label)
         }
+        console.log(opts)
  
-      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete');
+      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
 
-      autocompleteSuggestions.source = states;
+      autocompleteSuggestions.source = opts;
 
       autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
         //var paperToast = document.querySelector('paper-toast');
         //var selected = event.detail.text;
         //paperToast.text = 'Selected: ' + selected;
         //paperToast.show();
-
         var input = Polymer.dom(_self.root).querySelector("#searchInput");
-        console.log(i)
         input.value = event.detail.value;
-
+        console.log(input.value)
       });
       
     }

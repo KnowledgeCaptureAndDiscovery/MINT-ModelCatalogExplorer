@@ -7,7 +7,7 @@
   "dependencies": {
     "app-layout": "PolymerElements/app-layout#^2.0.0",
     "app-route": "PolymerElements/app-route#^2.0.0",
-    "iron-flex-layout": "PolymerElements/iron-flex-layout#^2.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^3.0.1",
     "iron-iconset-svg": "PolymerElements/iron-iconset-svg#^2.0.0",
     "iron-media-query": "PolymerElements/iron-media-query#^2.0.0",
     "iron-pages": "PolymerElements/iron-pages#^2.0.0",
@@ -23,7 +23,11 @@
     "paper-item": "polymerelements/paper-item#^2.0.0",
     "paper-toggle-button": "polymerelements/paper-toggle-button#^2.0.0",
     "iron-icons": "PolymerElements/iron-icons#^2.1.1",
-    "paper-card": "PolymerElements/paper-card#^2.1.0"
+    "paper-card": "PolymerElements/paper-card#^2.1.0",
+    "vaadin-button": "vaadin/vaadin-button#^2.1.0",
+    "incubator-autocomplete": "vaadin/incubator-autocomplete#^1.1.0",
+    "paper-autocomplete-chips": "Neovici/paper-autocomplete-chips#^1.1.1",
+    "neon-animation": "^3.0.1"
   },
   "resolutions": {
     "polymer": "^2.0.0"
