@@ -26,7 +26,6 @@
     "paper-card": "PolymerElements/paper-card#^2.1.0",
     "vaadin-button": "vaadin/vaadin-button#^2.1.0",
     "incubator-autocomplete": "vaadin/incubator-autocomplete#^1.1.0",
-    "paper-autocomplete-chips": "Neovici/paper-autocomplete-chips#^1.1.1",
     "neon-animation": "^3.0.1"
   },
   "resolutions": {
