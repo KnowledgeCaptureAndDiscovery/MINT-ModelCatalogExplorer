@@ -147,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .dropdown-content{
           width: 100%;
         }
-        
+
         .grid {
           margin-left: 20px;
           margin-right: 20px;
@@ -233,14 +233,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div><b>Displaying [[numberofRes]]/[[totalRes]] results</b></div>
     </div>
     <br>
-    <div class="grid">
+    <div class="grid flex-center-justified">
       <dom-repeat items="{{tempResults}}">
       <template>
-        <div class="box">
-         <div class="card-content" identity$="{{index}}">
+        <div class="box" >
+         <div class="card-content " identity$="{{index}}" >
               <strong>[[item.label]]</strong>
               <a href="[[item.link]]" target="_blank" hidden="[[item.avail]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
-              
+
               <p>[[item.description]]</p>
               <a href="[[routePath]]view-model"><vaadin-button theme="primary" label$="{{item.label}}" model$="{{item.model}}" on-click="goToModel" raised>Explore [[item.label]]</vaadin-button ></a>
             </div>
@@ -248,7 +248,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
       </dom-repeat>
     </div>
-      
+
       <!-- <paper-button on-click="buttonPress">Fire</paper-button> -->
     <!-- </app-header-layout> -->
   </template>
@@ -380,33 +380,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             success: function(data) {
-                console.log("GET success");    
+                console.log("GET success");
                 _self.models = data.results.bindings;
                 _self.populateSearchResults();
                 // _self.searchResults = _self.models;
-                console.log(_self.models);           
+                console.log(_self.models);
             },
 
             error: function(jqXHR, exception) {
                 var msg = '';
                 if (jqXHR.status === 0) {
                     msg = 'Not connected.\n Verify Network.';
-                } 
+                }
                 else if (jqXHR.status == 404) {
                     msg = 'Requested page not found. [404]';
-                } 
+                }
                 else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
-                } 
+                }
                 else if (exception === 'parsererror') {
                     msg = 'Requested JSON parse failed.';
-                } 
+                }
                 else if (exception === 'timeout') {
                     msg = 'Time out error.';
-                } 
+                }
                 else if (exception === 'abort') {
                     msg = 'Ajax request aborted.';
-                } 
+                }
                 else {
                     msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
@@ -426,7 +426,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           opts.push(this.results[i].label)
         }
         console.log(opts)
- 
+
       var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
 
       autocompleteSuggestions.source = opts;
@@ -440,7 +440,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         input.value = event.detail.value;
         console.log(input.value)
       });
-      
+
     }
   }
 
