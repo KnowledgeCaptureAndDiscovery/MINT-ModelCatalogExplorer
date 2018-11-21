@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="/bower_components/paper-card/paper-card.html">
 
 
 
@@ -22,15 +23,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #ffffff;
         background-color: #e51c23;
       }
+
     </style>
     <br>
+    <div>
     <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
-    <h2>Configurations</h2>
-    <h4>[[configSelected.model.label]]</h4>
-    <h4>[[configSelected.model.model]]</h4>
-    <h4>[[configSelected.config]]</h4>
+    </div>
+    <!--<h2>Configurations</h2>-->
+    <!--<h4>[[configSelected.model.label]]</h4>-->
+    <!--<h4>[[configSelected.model.model]]</h4>-->
+    <!--<h4>[[configSelected.config]]</h4>-->
+    <br>
 
+    <h2>[[configSelected.model.label]] Configurations</h2>
+    <paper-card >
+      <div class = "card">
+        <div class = "">
+          <h4>Label:[[configSelected.model.label]]</h4>
+          <h4>Link: [[configSelected.model.model]]</h4>
+          <h4>Configuration: [[configSelected.config]]</h4>
+        </div>
+      </div>
+    </paper-card>
   </template>
+
 
   <script>
     class ModelConfiguration extends Polymer.Element {
