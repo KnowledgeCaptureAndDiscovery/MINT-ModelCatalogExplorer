@@ -36,6 +36,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 
 
+
 <dom-module id="view-model">
   <template>
     <style>
@@ -114,7 +115,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <br>
     <a href="[[routePath]]model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
-    <h2>[[modelSelected.label]]</h2>
+    <h2>Model:[[modelSelected.label]]</h2>
     [[modelSelected.model]]
     <br>
     <paper-dropdown-menu id="category" label="Version">
@@ -127,13 +128,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <div id="content"></div>
 
-
   <div id="configuration">
     <h3>Configurations</h3>
     <vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">
       <vaadin-grid-column flex-grow="0">
-        <template class="header">Inspect</template>  
-        <template><a href="[[routePath]]model-configuration"><paper-button config$="[[item.model_config.value]]" on-click="openConfig">Open</paper-button></a></template>
+        <template class="header">Inspect</template>
+        <template><a href="[[routePath]]model-configuration"><vaadin-button config$="{{item.model_config.value}}}" on-click="openConfig" raised><iron-icon icon="icons:open-in-new"></iron-icon></vaadin-button></a></template>
       </vaadin-grid-column>
 
       <vaadin-grid-column resizable>
@@ -163,14 +163,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-    
+
     String.prototype.format = function () {
       var i = 0, args = arguments;
       return this.replace(/{}/g, function () {
         return typeof args[i] != 'undefined' ? args[i++] : '';
       });
     };
-    
+
     /**
      * @customElement
      * @polymer
@@ -220,10 +220,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var obj = JSON.parse(JSON.stringify(data));
         for(var i = 0; i < obj.results.bindings.length; ++i) {
           for(var key in obj.results.bindings[i]) {
-            
+
             if(obj.results.bindings[i][key].value.includes(",")) {
               var strs = obj.results.bindings[i][key].value.split(",");
-              
+
               var vars = [];
               for(var j = 0; j<strs.length; ++j){
                 var parts = strs[j].split("#");
@@ -267,35 +267,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 // console.log("GET success");
                 if(data.results.bindings.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
-                }   
+                }
                 else {
-                  _self.processConfigurationResults(data); 
+                  _self.processConfigurationResults(data);
                 }
                 // _self.configurationResults= JSON.parse(JSON.stringify(data));
-                // console.log(_self.configurationResults); 
-                // _self.populateConfigurations();          
+                // console.log(_self.configurationResults);
+                // _self.populateConfigurations();
             },
 
             error: function(jqXHR, exception) {
                 var msg = '';
                 if (jqXHR.status === 0) {
                     msg = 'Not connected.\n Verify Network.';
-                } 
+                }
                 else if (jqXHR.status == 404) {
                     msg = 'Requested page not found. [404]';
-                } 
+                }
                 else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
-                } 
+                }
                 else if (exception === 'parsererror') {
                     msg = 'Requested JSON parse failed.';
-                } 
+                }
                 else if (exception === 'timeout') {
                     msg = 'Time out error.';
-                } 
+                }
                 else if (exception === 'abort') {
                     msg = 'Ajax request aborted.';
-                } 
+                }
                 else {
                     msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
@@ -303,7 +303,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           });
       }
-        
+
       // }
       fetchData() {
 
@@ -318,7 +318,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // ]
         console.log(query);
         var endpoint = _parent.endpoint;
-        
+
           $.ajax({
             url: endpoint + "/query?query=" + query,
             type: "GET",
@@ -330,143 +330,143 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             success: function(data) {
-                // console.log("GET success");    
+                // console.log("GET success");
                 var obj = JSON.parse(JSON.stringify(data));
                 _self.queryResults.push(obj);
-                console.log(_self.queryResults); 
-                _self.populateData();          
+                console.log(_self.queryResults);
+               // _self.populateData();
             },
 
             error: function(jqXHR, exception) {
                 var msg = '';
                 if (jqXHR.status === 0) {
                     msg = 'Not connected.\n Verify Network.';
-                } 
+                }
                 else if (jqXHR.status == 404) {
                     msg = 'Requested page not found. [404]';
-                } 
+                }
                 else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
-                } 
+                }
                 else if (exception === 'parsererror') {
                     msg = 'Requested JSON parse failed.';
-                } 
+                }
                 else if (exception === 'timeout') {
                     msg = 'Time out error.';
-                } 
+                }
                 else if (exception === 'abort') {
                     msg = 'Ajax request aborted.';
-                } 
+                }
                 else {
                     msg = 'Uncaught Error.\n' + jqXHR.responseText;
                 }
                 // console.log(msg);
             }
           });
-        
-      }
-
-      populateData() {
-        var result = this.queryResults[0];
-        
-        var vars = result.head.vars;
-        for(var i=0; i<vars.length; ++i){
-          // console.log(vars[i]);
-        }
-        var lines = []
-        for(var i=0; i<result.results.bindings.length; ++i) {
-          var string = " : ";
-          var obj = result.results.bindings[i];
-          // console.log(obj);
-          for(var k=1; k<vars.length; ++k) {
-            var tuple = obj[vars[k]].value;
-            if(obj[vars[k]].type === "literal"){
-              string += tuple + " : ";
-            }
-            else if(obj[vars[k]].type === "uri"){
-              var arr = tuple.split("#");
-              string += arr[1] + " : ";
-            }
-          }
-          
-          lines.push(string); 
-        }
-
-          var div="#content";
-          var elem = Polymer.dom(this.root).querySelector(div);
-          for(var j=0; j<lines.length; ++j) {
-          var paragraph = document.createElement("p");
-          paragraph.innerHTML = lines[j];
-          elem.appendChild(paragraph);
 
       }
-    }
 
-    populateConfigurationResults() {
+    //   populateData() {
+    //     var result = this.queryResults[0];
+    //
+    //     var vars = result.head.vars;
+    //     for(var i=0; i<vars.length; ++i){
+    //       // console.log(vars[i]);
+    //     }
+    //     var lines = []
+    //     for(var i=0; i<result.results.bindings.length; ++i) {
+    //       var string = " : ";
+    //       var obj = result.results.bindings[i];
+    //       // console.log(obj);
+    //       for(var k=1; k<vars.length; ++k) {
+    //         var tuple = obj[vars[k]].value;
+    //         if(obj[vars[k]].type === "literal"){
+    //           string += tuple + " : ";
+    //         }
+    //         else if(obj[vars[k]].type === "uri"){
+    //           var arr = tuple.split("#");
+    //           string += arr[1] + " : ";
+    //         }
+    //       }
+    //
+    //       lines.push(string);
+    //     }
+    //
+    //       var div="#content";
+    //       var elem = Polymer.dom(this.root).querySelector(div);
+    //       for(var j=0; j<lines.length; ++j) {
+    //       var paragraph = document.createElement("p");
+    //       paragraph.innerHTML = lines[j];
+    //       elem.appendChild(paragraph);
+    //
+    //   }
+    // }
 
-      var result = this.configurationResults;
-        var string = "<table class='table'><thead><tr>";
-        var vars = result.head.vars;
-        for(var i=0; i<vars.length; ++i){
-          string += "<th>" + vars[i] + "</th>";
-        }
-        string += "</tr></thead><tbody>";
-        for(var i=0; i<result.results.bindings.length; ++i) {
-          string += "<tr>";
-          var obj = result.results.bindings[i];
-          // console.log(obj);
-          for(var k=0; k<vars.length; ++k) {
-            var tuple = obj[vars[k]].value;
-            if(obj[vars[k]].type === "literal"){
-              string += "<td>"+tuple + "</td>";
-            }
-            else if(obj[vars[k]].type === "uri"){
-              var arr = tuple.split("#");
-              string += "<td>" + arr[1] + "</td>";
-            }
-          }
-          string += "</tr>"
-        }
-        
-        var div=".table-responsive";
-        var elem = Polymer.dom(this.root).querySelector(div);
-        string = "<h3>Configurations</h3>" + string;
-        string += "</tbody></table>";
-        elem.innerHTML = string;
-    }
-
-    populateConfiguration() {
-
-      var result = this.configurationResults;
-        var string = "<table border='1'><tr>";
-        var vars = result.head.vars;
-        for(var i=0; i<vars.length; ++i){
-          string += "<th>" + vars[i] + "</th>";
-        }
-        string += "</tr>";
-        for(var i=0; i<result.results.bindings.length; ++i) {
-          string += "<tr>";
-          var obj = result.results.bindings[i];
-          // console.log(obj);
-          for(var k=0; k<vars.length; ++k) {
-            var tuple = obj[vars[k]].value;
-            if(obj[vars[k]].type === "literal"){
-              string += "<td>"+tuple + "</td>";
-            }
-            else if(obj[vars[k]].type === "uri"){
-              var arr = tuple.split("#");
-              string += "<td>" + arr[1] + "</td>";
-            }
-          }
-          string += "</tr>"
-        }
-        
-        var div="#configuration";
-        var elem = Polymer.dom(this.root).querySelector(div);
-        string = "<h3>Configurations</h3>" + string;
-        string += "</table>";
-        elem.innerHTML = string;
-      }
+    // populateConfigurationResults() {
+    //
+    //   var result = this.configurationResults;
+    //     var string = "<table class='table'><thead><tr>";
+    //     var vars = result.head.vars;
+    //     for(var i=0; i<vars.length; ++i){
+    //       string += "<th>" + vars[i] + "</th>";
+    //     }
+    //     string += "</tr></thead><tbody>";
+    //     for(var i=0; i<result.results.bindings.length; ++i) {
+    //       string += "<tr>";
+    //       var obj = result.results.bindings[i];
+    //       // console.log(obj);
+    //       for(var k=0; k<vars.length; ++k) {
+    //         var tuple = obj[vars[k]].value;
+    //         if(obj[vars[k]].type === "literal"){
+    //           string += "<td>"+tuple + "</td>";
+    //         }
+    //         else if(obj[vars[k]].type === "uri"){
+    //           var arr = tuple.split("#");
+    //           string += "<td>" + arr[1] + "</td>";
+    //         }
+    //       }
+    //       string += "</tr>"
+    //     }
+    //
+    //     var div=".table-responsive";
+    //     var elem = Polymer.dom(this.root).querySelector(div);
+    //     string = "<h3>Configurations</h3>" + string;
+    //     string += "</tbody></table>";
+    //     elem.innerHTML = string;
+    // }
+    //
+    // populateConfiguration() {
+    //
+    //   var result = this.configurationResults;
+    //     var string = "<table border='1'><tr>";
+    //     var vars = result.head.vars;
+    //     for(var i=0; i<vars.length; ++i){
+    //       string += "<th>" + vars[i] + "</th>";
+    //     }
+    //     string += "</tr>";
+    //     for(var i=0; i<result.results.bindings.length; ++i) {
+    //       string += "<tr>";
+    //       var obj = result.results.bindings[i];
+    //       // console.log(obj);
+    //       for(var k=0; k<vars.length; ++k) {
+    //         var tuple = obj[vars[k]].value;
+    //         if(obj[vars[k]].type === "literal"){
+    //           string += "<td>"+tuple + "</td>";
+    //         }
+    //         else if(obj[vars[k]].type === "uri"){
+    //           var arr = tuple.split("#");
+    //           string += "<td>" + arr[1] + "</td>";
+    //         }
+    //       }
+    //       string += "</tr>"
+    //     }
+    //
+    //     var div="#configuration";
+    //     var elem = Polymer.dom(this.root).querySelector(div);
+    //     string = "<h3>Configurations</h3>" + string;
+    //     string += "</table>";
+    //     elem.innerHTML = string;
+    //   }
 
       ready() {
         super.ready();
@@ -478,7 +478,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     }
     window.customElements.define(ViewModel.is, ViewModel);
-    
+
   </script>
 </dom-module>
 
