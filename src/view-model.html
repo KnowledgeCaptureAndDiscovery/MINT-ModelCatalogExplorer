@@ -310,6 +310,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var _self = this;
         var _parent = document.querySelector("mint-explorer-app");
         var query = _parent.queries[1].query.format(encodeURI(_self.modelSelected.label));
+        console.log("Ok", _self.modelSelected.label);
         // var queries = [
         //   {
         //     description: "What are some of the things related to this model ?",
@@ -472,6 +473,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         var _parent = document.querySelector("mint-explorer-app");
         this.modelSelected = _parent.modelSelected;
+        console.log(_parent.modelSelected);
         // console.log(this.modelSelected);
         this.fetchData();
         this.fetchConfiguration();

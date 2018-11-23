@@ -206,9 +206,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div id="options">
         <paper-dropdown-menu id="category" label="Select Category">
           <paper-listbox slot="dropdown-content" class="dropdown-content">
-            <paper-item>Ecology</paper-item>
-            <paper-item>Hydrology</paper-item>
-            <paper-item>Economics</paper-item>
+          <dom-repeat items="{{cts}}">
+            <template>
+              <paper-item>[[item.name]]</paper-item>
+            </template>
+          </dom-repeat>
           </paper-listbox>
         </paper-dropdown-menu>
         <vaadin-checkbox id="version" checked>Retrieve latest version</vaadin-checkbox>
@@ -236,10 +238,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="grid flex-center-justified">
       <dom-repeat items="{{tempResults}}">
       <template>
-        <div class="box" >
-         <div class="card-content " identity$="{{index}}" >
+        <div class="box">
+         <div class="card-content" identity$="{{index}}" >
               <strong>[[item.label]]</strong>
-              <a href="[[item.link]]" target="_blank" hidden="[[item.avail]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
+              <a href="[[item.model]]" target="_blank" hidden="[[item.avail]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
 
               <p>[[item.description]]</p>
               <a href="[[routePath]]view-model"><vaadin-button theme="primary" label$="{{item.label}}" model$="{{item.model}}" on-click="goToModel" raised>Explore [[item.label]]</vaadin-button ></a>
@@ -277,7 +279,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           tempResults: Array,
           numberofRes: String,
           totalRes: String,
-          results: Array
+          results: Array,
+          cts: Array,
+          finResults: Array
         };
       }
 
@@ -287,8 +291,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       goToModel(e) {
-        // console.log(e.target);
+        console.log(e.target);
         var _label = e.target.getAttribute("label");
+        console.log("From", _label);
         var _model = e.target.getAttribute("model");
         var _parent = document.querySelector("mint-explorer-app");
 
@@ -296,6 +301,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           model: _model,
           label: _label
         }
+        console.log("Here", _parent.modelSelected);
         var _pages = Polymer.dom(_parent.root).querySelector("#pages");
         console.log(_pages);
         console.log(_pages.selected);
@@ -307,10 +313,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       searchHandler() {
         var searchString = Polymer.dom(this.root).querySelector("#searchInput").value;
-        console.log(searchString)
+        console.log("Done", searchString)
         var filtered = [];
+        console.log(this.results)
         for(var i=0; i<this.results.length; ++i) {
-          if(this.results[i].label.includes(searchString) || this.results[i].model.includes(searchString) || this.results[i].description.includes(searchString)){
+          if(this.results[i].label === searchString){
             var obj = JSON.parse(JSON.stringify(this.results[i]));
             filtered.push(obj);
           }
@@ -321,18 +328,106 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log(this.searchResults);
       }
 
+      displayLabel(tp){
+        if(tp.length != 0){
+          var temp = []
+          for(var i=0; i < this.finResults.length; i++){
+            for(var j=0; j < tp.length; j++){
+              if(tp[j] === this.finResults[i].model){
+                temp.push(this.finResults[i])
+                break
+              }
+            }
+          }
+          console.log("From Disp", this.finResults)
+          this.results = temp;
+          this.totalRes = temp.length.toString();
+          this.searchResults = temp;
+          var newArray = temp.slice();
+          this.tempResults = newArray.splice(0, 10);
+          this.numberofRes = this.tempResults.length.toString();
+        }
+      }
+
       clearHandler(){
         location.reload();
       }
 
+      getVersion(versions){
+          // Get All the related Versions for the model
+      }
+
       populateSearchResults() {
         var results = [];
+        var cats = [];
+        var versions = [];
+        var _self = this
+        var categories = new Set();
         var _parent = document.querySelector("mint-explorer-app");
-        var modelDescriptions = _parent.modelDescriptions;
+        var query = _parent.queries[3].query
         console.log("hfkjdf")
-        console.log(modelDescriptions)
-        console.log("ddkjfhsjk")
-        for(var i = 0; i < this.models.length; ++i) {
+        console.log(query)
+        $.ajax({
+          url: query,
+          type: "GET",
+          cache: false,
+          timeout: 5000,
+          async: false,
+          complete: function() {
+              console.log("GET request sent");
+          },
+
+          success: function(data) {
+              var x = data.results.bindings
+              for(var i = 0;i < x.length; i++){
+                var result = {}
+                versions = [];
+                result.model = x[i].model.value
+                result.label = x[i].label.value
+                result.description = x[i].desc.value
+                result.category = x[i].categories.value
+                categories.add(x[i].categories.value)
+                result.version = x[i].versions.value
+                if(x[i].versions.value.includes(",")){
+                  versions = x[i].versions.value.split(",")
+                }
+                else{
+                  versions.push(x[i].versions.value)
+                }
+                _self.getVersion(versions)
+                results.push(result)
+              }
+              cats = Array.from(categories);
+          },
+
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+              console.log(msg);
+            }
+        });
+        
+        /*for(var i = 0; i < this.models.length; ++i) {
           var result = {};
           result.model = this.models[i].model.value;
           result.label = this.models[i].label.value;
@@ -349,21 +444,82 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           }
           results.push(result);
+        }*/
+        var cts = []
+        console.log(cats)
+        for(var i = 0; i < cats.length; i++){
+          cts.push({
+            "name": cats[i]
+          })
         }
+        this.cts = cts
         this.results = results;
         this.totalRes = results.length.toString();
         this.searchResults = results;
         var newArray = results.slice();
         this.tempResults = newArray.splice(0, 10);
         this.numberofRes = this.tempResults.length.toString();
+        console.log("Got", this.results)
+        console.log("Complete", this.numberofRes)
+      }
+
+      getModelsByCategory(category){
+        var _parent = document.querySelector("mint-explorer-app");
+        var qt = _parent.queries[4].query;
+        var query = qt + "&cat=" + category
+        var catsByModel = []
+        console.log(query)
+        $.ajax({
+          url: query,
+          type: "GET",
+          cache: false,
+          timeout: 5000,
+          async: false,
+          complete: function() {
+              console.log("GET request sent");
+          },
+
+          success: function(data) {
+            var x = []
+            x = data.results.bindings
+            for(var i=0; i< x.length; i++){
+              catsByModel.push(x[i].model.value)
+            }
+          },
+
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+              console.log(msg);
+          }
+        });
+        return catsByModel;
       }
 
       ready() {
         super.ready();
         var _self = this;
         var _parent = document.querySelector("mint-explorer-app");
-        console.log(_parent);
-        console.log(_parent.queries[0]);
         var query = _parent.queries[0].query;
         // var query = "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D&format=json";
         var endpoint = _parent.endpoint;
@@ -380,7 +536,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
 
             success: function(data) {
-                console.log("GET success");
+                console.log("GET successssssssssss");
                 _self.models = data.results.bindings;
                 _self.populateSearchResults();
                 // _self.searchResults = _self.models;
@@ -414,10 +570,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         });
 
+        this.finResults = this.results
         var states = [];
         var opts = [];
         console.log("Hellop");
         console.log(this.results);
+        console.log(this.cts)
         for(var i = 0; i < this.results.length; ++i) {
           states.push({
             "text": this.results[i].label+" "+this.results[i].description,
@@ -427,22 +585,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         console.log(opts)
 
-      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
 
-      autocompleteSuggestions.source = opts;
+        var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
+        var dropdownContent = Polymer.dom(this.root).querySelector('paper-dropdown-menu');
 
-      autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
-        //var paperToast = document.querySelector('paper-toast');
-        //var selected = event.detail.text;
-        //paperToast.text = 'Selected: ' + selected;
-        //paperToast.show();
-        var input = Polymer.dom(_self.root).querySelector("#searchInput");
-        input.value = event.detail.value;
-        console.log(input.value)
-      });
+        dropdownContent.addEventListener('selected-item-changed', function(event){
+          // Write function to implement Search for specific element
+          var inp = Polymer.dom(_self.root).querySelector('#category')
+          var category = inp.value
+          var tp = [];
+          if(category != ''){
+            tp = _self.getModelsByCategory(category);
+            _self.displayLabel(tp);
+          }
 
+        })
+        autocompleteSuggestions.source = opts;
+
+        autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
+          //var paperToast = document.querySelector('paper-toast');
+          //var selected = event.detail.text;
+          //paperToast.text = 'Selected: ' + selected;
+          //paperToast.show();
+          var input = Polymer.dom(_self.root).querySelector("#searchInput");
+          input.value = event.detail.value;
+          console.log(input.value)
+        });
+      }
     }
-  }
 
     window.customElements.define(ModelSearch.is, ModelSearch);
   </script>
