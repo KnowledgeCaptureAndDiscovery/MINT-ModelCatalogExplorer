@@ -140,7 +140,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template class="header">
           Model Configuration
         </template>
-        <template>[[item.model_config.value]]</template>
+        <template>[[item.config.value]]</template>
       </vaadin-grid-column>
 
       <vaadin-grid-column resizable>
@@ -209,6 +209,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           model: _parent.modelSelected,
           config: configuration
         }
+        console.log(_parent.configSelected);
         var _pages = Polymer.dom(_parent.root).querySelector("#pages");
         // console.log(_pages);
         // console.log(_pages.selected);
@@ -238,14 +239,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       }
-              // console.log(obj);
+              console.log(obj);
         this.configurationResults = obj;
     }
 
       fetchConfiguration() {
         var _self = this;
         var _parent = document.querySelector("mint-explorer-app");
-        var query = _parent.queries[2].query.format(encodeURI(_self.modelSelected.label));
+        var query = _parent.queries[5].query;
         // var queries = [
         //   {
         //     description: "What are the model config, input variables, and output variables ?",
@@ -254,8 +255,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // ]
         var endpoint = _parent.endpoint;
         $.ajax({
-            url: endpoint + "/query?query=" + query,
+            url: query,
             type: "GET",
+            data:{
+                model:_self.modelSelected.model
+            },
             cache: false,
             timeout: 5000,
             async: false,
@@ -335,6 +339,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 var obj = JSON.parse(JSON.stringify(data));
                 _self.queryResults.push(obj);
                 console.log(_self.queryResults);
+
                // _self.populateData();
             },
 
