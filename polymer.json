@@ -1,11 +1,16 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/mint-explorer-app.html",
   "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/model-configuration.html",
+    "src/model-descriptions.js",
+    "src/model-search.html",
+    "src/my-icons.html",
+    "src/not-found.html",
+    "src/queries.js",
+    "src/shared-styles.html",
+    "src/variable-configuration.html",
+    "src/view-model.html"
   ],
   "sources": [
     "images/**/*",
