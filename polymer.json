@@ -1,12 +1,5 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
-  "fragments": [
-    "src/my-view1.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
-  ],
   "sources": [
     "images/**/*",
     "src/**/*"
@@ -19,15 +12,13 @@
   "lint": {
     "rules": ["polymer-2"]
   },
-  "builds": [
-    {
-      "preset": "es5-bundled"
-    },
-    {
-      "preset": "es6-bundled"
-    },
-    {
-      "preset": "es6-unbundled"
-    }
-  ]
+  "builds": [{
+    "name": "modelCatalogTest",
+	"bundle": true,
+    "addServiceWorker": true,
+    "swPrecacheConfig": "sw-precache-config.js",
+    "css": { "minify": true },
+    "js": { "minify": true },
+    "html": { "minify": true }
+  }]
 }
