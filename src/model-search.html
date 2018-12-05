@@ -331,8 +331,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             filtered.push(obj);
           }
         }
-        this.totalRes = this.results.length.toString();
         this.tempResults = filtered;
+        this.totalRes = this.tempResults.length.toString();
         this.numberofRes = this.tempResults.length.toString();
         console.log(this.searchResults);
       }
