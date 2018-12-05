@@ -37,6 +37,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/bower_components/paper-chip/paper-chip.html">
 <link rel="import" href="/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/bower_components/paper-button/paper-button.html">
 <link rel="import" href="/bower_components/paper-icon-button/paper-icon-button.html">
@@ -196,6 +197,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           @apply --layout-end-justified;
         }
 
+        paper-chip.custom-background {
+          --paper-chip-background-color: #eee;
+        }
+        paper-chip{
+          font-weight: bold;
+        }
+        
+
 
     </style>
 
@@ -240,10 +249,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template>
         <div class="box">
          <div class="card-content" identity$="{{index}}" >
-              <strong>[[item.label]]</strong>
-              <a href="[[item.model]]" target="_blank" hidden="[[item.avail]]"><paper-icon-button icon="icons:open-in-new"></paper-icon-button></a>
-
+              <h2><strong>[[item.label]] &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover></paper-chip></strong></h2>
               <p>[[item.description]]</p>
+              <p><a href="[[item.link]]" target="_blank" hidden="[[item.avail]]"><vaadin-button theme="secondary" raised>View Documentation</vaadin-button ></a></p>
               <a href="[[routePath]]view-model"><vaadin-button theme="primary" label$="{{item.label}}" model$="{{item.model}}" on-click="goToModel" raised>Explore [[item.label]]</vaadin-button ></a>
             </div>
         </div>
@@ -281,7 +289,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           totalRes: String,
           results: Array,
           cts: Array,
-          finResults: Array
+          finResults: Array,
         };
       }
 
@@ -306,12 +314,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log(_pages);
         console.log(_pages.selected);
         _pages.selected = "view-model";
+        window.dispatchEvent(new CustomEvent('location-changed'));
         //this.set('route.path', '/view-model');
         console.log(_pages.selected);
 
       }
 
-      searchHandler() {
+      searchHandler(){
         var searchString = Polymer.dom(this.root).querySelector("#searchInput").value;
         console.log("Done", searchString)
         var filtered = [];
@@ -355,6 +364,61 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       getVersion(versions){
           // Get All the related Versions for the model
+          console.log("Temp", versions)
+          var _self = this;
+          var _parent = document.querySelector("mint-explorer-app");
+          // Get Versions
+          var qs = _parent.queries[6].query
+          var r = []
+          var finVersions = []
+          for(var i = 0; i < versions.length; i++){
+            $.ajax({
+              url: qs,
+              type: "GET",
+              data:{
+                  mv: versions[i]
+              },
+              cache: false,
+              timeout: 5000,
+              async: false,
+              success: function(data) {
+                r = data.results.bindings
+                var temp = []
+                for(var i = 0; i < r.length; i++){
+                  temp = r[i].prop.value.split("#")
+                  if(temp[1] === "hasVersionId"){
+                    finVersions.push(r[i].value.value)
+                  }
+                }
+              },
+              error: function(jqXHR, exception) {
+                  var msg = '';
+                  if (jqXHR.status === 0) {
+                      msg = 'Not connected.\n Verify Network.';
+                  }
+                  else if (jqXHR.status == 404) {
+                      msg = 'Requested page not found. [404]';
+                  }
+                  else if (jqXHR.status == 500) {
+                      msg = 'Internal Server Error [500].';
+                  }
+                  else if (exception === 'parsererror') {
+                      msg = 'Requested JSON parse failed.';
+                  }
+                  else if (exception === 'timeout') {
+                      msg = 'Time out error.';
+                  }
+                  else if (exception === 'abort') {
+                      msg = 'Ajax request aborted.';
+                  }
+                  else {
+                      msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                  }
+              }
+            });
+          }
+          console.log("Final Versions", finVersions)
+          return finVersions
       }
 
       populateSearchResults() {
@@ -379,6 +443,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           success: function(data) {
               var x = data.results.bindings
+              var res = []
               for(var i = 0;i < x.length; i++){
                 var result = {}
                 versions = [];
@@ -386,17 +451,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 result.label = x[i].label.value
                 result.description = x[i].desc.value
                 result.category = x[i].categories.value
-                categories.add(x[i].categories.value)
-                result.version = x[i].versions.value
-                if(x[i].versions.value.includes(",")){
-                  versions = x[i].versions.value.split(",")
+                if('doc' in x[i]){
+                  result.link = x[i].doc.value
+                  result.avail = false
                 }
                 else{
-                  versions.push(x[i].versions.value)
+                  result.avail = true
                 }
-                _self.getVersion(versions)
+                categories.add(x[i].categories.value)
+                if(x[i].versions.value.includes(",")){
+                  versions = x[i].versions.value.split(", ")
+                }
+                else{
+                  versions.push(x[i].versions.value.trim())
+                }
+                res = _self.getVersion(versions)
+                var h = {
+                  data: res,
+                  len: res.length
+                }
+                result.version = h
                 results.push(result)
               }
+              console.log(results)
               cats = Array.from(categories);
           },
 
@@ -519,56 +596,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready();
         var _self = this;
-        var _parent = document.querySelector("mint-explorer-app");
-        var query = _parent.queries[0].query;
-        // var query = "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D&format=json";
-        var endpoint = _parent.endpoint;
-        console.log("Hello", query)
-        // var endpoint = "http://ontosoft.isi.edu:3030/ds"
-        $.ajax({
-            url: endpoint + "/query?query=" + query,
-            type: "GET",
-            cache: false,
-            timeout: 5000,
-            async: false,
-            complete: function() {
-                console.log("GET request sent");
-            },
-
-            success: function(data) {
-                console.log("GET successssssssssss");
-                _self.models = data.results.bindings;
-                _self.populateSearchResults();
-                // _self.searchResults = _self.models;
-                console.log(_self.models);
-            },
-
-            error: function(jqXHR, exception) {
-                var msg = '';
-                if (jqXHR.status === 0) {
-                    msg = 'Not connected.\n Verify Network.';
-                }
-                else if (jqXHR.status == 404) {
-                    msg = 'Requested page not found. [404]';
-                }
-                else if (jqXHR.status == 500) {
-                    msg = 'Internal Server Error [500].';
-                }
-                else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
-                }
-                else if (exception === 'timeout') {
-                    msg = 'Time out error.';
-                }
-                else if (exception === 'abort') {
-                    msg = 'Ajax request aborted.';
-                }
-                else {
-                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                }
-                console.log(msg);
-            }
-        });
+        _self.populateSearchResults();
 
         this.finResults = this.results
         var states = [];
@@ -610,6 +638,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var input = Polymer.dom(_self.root).querySelector("#searchInput");
           input.value = event.detail.value;
           console.log(input.value)
+          _self.searchHandler()
         });
       }
     }

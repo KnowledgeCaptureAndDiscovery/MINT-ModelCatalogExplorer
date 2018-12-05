@@ -113,15 +113,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     </style>
     <br>
-    <a href="[[routePath]]model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
+    <a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
     <h2>Model:[[modelSelected.label]]</h2>
     [[modelSelected.model]]
     <br>
-    <paper-dropdown-menu id="category" label="Version">
+    <paper-dropdown-menu id="version" label="Version">
       <paper-listbox slot="dropdown-content" class="dropdown-content">
-        <paper-item>2.0</paper-item>
-        <paper-item>1.1</paper-item>
-        <paper-item>1.0</paper-item>
+        <dom-repeat items="{{finVersions}}">
+          <template>
+            <paper-item>[[item]]</paper-item>
+          </template>
+        </dom-repeat>
       </paper-listbox>
     </paper-dropdown-menu>
 
@@ -162,7 +164,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
-
+    console.log("Hello")
     String.prototype.format = function () {
       var i = 0, args = arguments;
       return this.replace(/{}/g, function () {
@@ -181,8 +183,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return {
           modelSelected: {
             model: String,
-            label: String
+            label: String,
+            observer: '_activeChanged'
           },
+          data : {
+            model: String,
+            label: String,
+            observer: '_modelChanged'
+          },
+          finVersions: Array,
           queryResults: {
             type: Array,
             value: []
@@ -191,10 +200,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
+      _activeChanged(modelSelected){
+
+      }
+
+      _modelChanged(data){
+        this.finVersions = []
+        var _parent = document.querySelector("mint-explorer-app");
+        this.modelSelected = data
+        console.log("Ojj", data)
+        this.fetchConfiguration(data);
+      }
+
       goBack(){
         var _parent = document.querySelector("mint-explorer-app");
         var _pages = Polymer.dom(_parent.root).querySelector("#pages");
         _pages.selected = "model-search";
+        this.finVersions = []
       }
 
       openConfig(e) {
@@ -238,74 +260,185 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
         }
       }
-              console.log(obj);
+        console.log(obj);
         this.configurationResults = obj;
     }
 
-      fetchConfiguration() {
-        var _self = this;
-        var _parent = document.querySelector("mint-explorer-app");
-        var query = _parent.queries[5].query;
-        // var queries = [
-        //   {
-        //     description: "What are the model config, input variables, and output variables ?",
-        //     query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
-        //   }
-        // ]
-        var endpoint = _parent.endpoint;
+    getVersion(versions){
+      var _self = this;
+      var _parent = document.querySelector("mint-explorer-app");
+      // Get Versions
+      var qs = _parent.queries[6].query
+      var r = []
+      var finVersions = []
+      for(var i = 0; i < versions.length; i++){
         $.ajax({
-            url: query,
-            type: "GET",
-            data:{
-                model:_self.modelSelected.model
-            },
-            cache: false,
-            timeout: 5000,
-            async: false,
-            complete: function() {
-                // console.log("GET request sent");
-            },
-
-            success: function(data) {
-                // console.log("GET success");
-                if(data.results.bindings.length === 0) {
-                  Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
-                }
-                else {
-                  _self.processConfigurationResults(data);
-                }
-                // _self.configurationResults= JSON.parse(JSON.stringify(data));
-                // console.log(_self.configurationResults);
-                // _self.populateConfigurations();
-            },
-
-            error: function(jqXHR, exception) {
-                var msg = '';
-                if (jqXHR.status === 0) {
-                    msg = 'Not connected.\n Verify Network.';
-                }
-                else if (jqXHR.status == 404) {
-                    msg = 'Requested page not found. [404]';
-                }
-                else if (jqXHR.status == 500) {
-                    msg = 'Internal Server Error [500].';
-                }
-                else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
-                }
-                else if (exception === 'timeout') {
-                    msg = 'Time out error.';
-                }
-                else if (exception === 'abort') {
-                    msg = 'Ajax request aborted.';
-                }
-                else {
-                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                }
-                // console.log(msg);
+          url: qs,
+          type: "GET",
+          data:{
+              mv: versions[i]
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          success: function(data) {
+            r = data.results.bindings
+            var temp = []
+            for(var i = 0; i < r.length; i++){
+              temp = r[i].prop.value.split("#")
+              if(temp[1] === "hasVersionId"){
+                finVersions.push(r[i].value.value)
+              }
             }
-          });
+          },
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+          }
+        });
       }
+      console.log("Final Versions", finVersions)
+      this.finVersions = finVersions
+    }
+
+    fetchConfiguration(parentConfig) {
+      var _self = this;
+      var _parent = document.querySelector("mint-explorer-app");
+      // Get Versions
+      var qs = _parent.queries[6].query
+      var versions = []
+      var r = []
+      $.ajax({
+          url: qs,
+          type: "GET",
+          data:{
+              mv: parentConfig.model
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          success: function(data) {
+              console.log("Versions", data)
+              r = data.results.bindings
+              var temp = []
+              for(var i = 0; i < r.length; i++){
+                temp = r[i].prop.value.split("#")
+                if(temp[1] === "hasSoftwareVersion"){
+                  versions.push(r[i].value.value)
+                }
+              }
+              _self.getVersion(versions)
+          },
+
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+              // console.log(msg);
+          }
+        });
+
+      var query = _parent.queries[5].query;
+      // var queries = [
+      //   {
+      //     description: "What are the model config, input variables, and output variables ?",
+      //     query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
+      //   }
+      // ]
+      var endpoint = _parent.endpoint;
+      $.ajax({
+          url: query,
+          type: "GET",
+          data:{
+              model: parentConfig.model
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          complete: function() {
+              // console.log("GET request sent");
+          },
+
+          success: function(data) {
+              // console.log("GET success");
+              if(data.results.bindings.length === 0) {
+                Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+              }
+              else {
+                console.log(data)
+                _self.processConfigurationResults(data);
+              }
+              // _self.configurationResults= JSON.parse(JSON.stringify(data));
+              // console.log(_self.configurationResults);
+              // _self.populateConfigurations();
+          },
+
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+              // console.log(msg);
+          }
+        });
+    }
 
       // }
       fetchData() {
@@ -475,12 +608,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       ready() {
         super.ready();
+        this.finVersions = []
         var _parent = document.querySelector("mint-explorer-app");
+        console.log("Loaded")
         this.modelSelected = _parent.modelSelected;
         console.log(_parent.modelSelected);
+        console.log("Data Finished")
         // console.log(this.modelSelected);
-        this.fetchData();
-        this.fetchConfiguration();
+        //this.fetchData();
+        this.fetchConfiguration(_parent.modelSelected);
+      }
+
+      attributeChangedCallback(){
+        super.attributeChangedCallback();
+        console.log("attached");
       }
     }
     window.customElements.define(ViewModel.is, ViewModel);
