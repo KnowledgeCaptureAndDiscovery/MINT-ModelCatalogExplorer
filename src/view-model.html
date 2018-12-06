@@ -7,7 +7,7 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 
@@ -33,12 +33,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
+<link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
 
 
 
 <dom-module id="view-model">
   <template>
-    <style>
+    <style include="shared-styles">
       html, body {
           margin: 0;
           font-family: 'Roboto', 'Noto', sans-serif;
@@ -55,12 +56,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           color: black;
           width: 50%;
           word-wrap: break-word;
-          margin: 10px;
+          margin: 20px;
         }
 
         paper-toolbar {
           background-color: #f2f1ed;
         }
+
+      .flex-center-justified {
+        @apply --layout-horizontal;
+
+      }
 
 
         #search-bar {
@@ -111,12 +117,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           background-color: #e51c23;
         }
 
+      .title{
+        display: inline-block;
+      }
+
     </style>
     <br>
+
     <a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
     <h2>Model:[[modelSelected.label]]</h2>
     [[modelSelected.model]]
     <br>
+
     <paper-dropdown-menu id="version" label="Version">
       <paper-listbox slot="dropdown-content" class="dropdown-content">
         <dom-repeat items="{{finVersions}}">
@@ -128,38 +140,75 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </paper-dropdown-menu>
 
     <div id="content"></div>
-
-  <div id="configuration">
-    <h3>Configurations</h3>
-    <vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">
-      <vaadin-grid-column flex-grow="0">
-        <template class="header">Inspect</template>
-        <template><a href="[[routePath]]model-configuration"><vaadin-button config$="{{item.model_config.value}}}" on-click="openConfig" raised><iron-icon icon="icons:open-in-new"></iron-icon></vaadin-button></a></template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column resizable>
-        <template class="header">
-          Model Configuration
+    <div class="grid flex-center-justified">
+   <div id="configuration">
+  <template is="dom-repeat" items={{configurationResults.results.bindings}}>
+    <div class="card">
+      <div class="title">
+        <h4>Model Configuration:</h4>
+        <template is="dom-repeat" items={{item.config.value}} as="stuff">
+        <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
         </template>
-        <template>[[item.config.value]]</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column resizable>
-        <template class="header">
-          Input Variables
-        </template>
-        <template>[[item.input_variables.value]]</template>
-      </vaadin-grid-column>
-
-      <vaadin-grid-column resizable>
-        <template class="header">
-          Output Variables
-        </template>
-        <template>[[item.output_variables.value]]</template>
-      </vaadin-grid-column>
-
-    </vaadin-grid>
+      </div>
+    <div class="card">
+      <div>
+      <h4>Input Variables:</h4>
+      <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
+        <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+      </template>
     </div>
+
+      <div>
+        <h4>Output Variables:</h4>
+        <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
+          <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+        </template>
+      </div>
+    </div>
+    </div>
+    </template>
+    </div>
+    <!--<div id="configuration">-->
+    <!--<h3>Configurations</h3>-->
+    <!--<vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">-->
+      <!--<vaadin-grid-column flex-grow="0">-->
+        <!--<template class="header">Inspect</template>-->
+        <!--<template><a href="[[routePath]]model-configuration"><vaadin-button config$="{{item.model_config.value}}" on-click="openConfig" raised><iron-icon icon="icons:open-in-new"></iron-icon></vaadin-button></a></template>-->
+      <!--</vaadin-grid-column>-->
+
+      <!--<vaadin-grid-column resizable>-->
+        <!--<template class="header">-->
+          <!--Model Configuration-->
+        <!--</template>-->
+        <!--<template>[[item.config.value]]</template>-->
+      <!--</vaadin-grid-column>-->
+
+      <!--<vaadin-grid-column resizable>-->
+        <!--<template class="header">-->
+          <!--Input Variables-->
+        <!--</template>-->
+          <!--<template>-->
+            <!--<a href="[[routePath]]variable-configuration"><vaadin-button variable$="[[item.input_variable.value]]" on-click="openConfigForUri" raised>[[item.input_variables.value]]</vaadin-button></a>-->
+
+          <!--</template>-->
+
+      <!--</vaadin-grid-column>-->
+
+      <!--<vaadin-grid-column resizable>-->
+        <!--<template class="header">-->
+          <!--Output Variables-->
+        <!--</template>-->
+        <!--<template>-->
+        <!--<a href="[[routePath]]variable-configuration">-->
+          <!--<span>[[item.output_variables.value]]</span>-->
+        <!--</a>-->
+        <!--</template>-->
+      <!--</vaadin-grid-column>-->
+
+    <!--</vaadin-grid>-->
+    </div>
+
+
   </template>
 
   <script>
@@ -196,7 +245,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Array,
             value: []
           },
-          configurationResults: Object
+          configurationResults: Object,
+            unModifiedConfigurationResults:Object
         };
       }
 
@@ -207,8 +257,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _modelChanged(data){
         this.finVersions = []
         var _parent = document.querySelector("mint-explorer-app");
-        this.modelSelected = data
-        console.log("Ojj", data)
+        this.modelSelected = data;
+        console.log("Ojj", data);
         this.fetchConfiguration(data);
       }
 
@@ -221,6 +271,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       openConfig(e) {
         var configuration = e.target.getAttribute("config");
+
         var _parent = document.querySelector("mint-explorer-app");
         // console.log(_parent);
         // this.modelSelected = this.models[index].label.value;
@@ -238,15 +289,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // console.log(_pages.selected);
       }
 
+      openConfigForUri(e) {
+          var configuration = e.target.getAttribute("variable");
+          if(configuration.constructor===Array){
+              console.log("hyttr");
+              configuration=configuration[0];
+              configuration=configuration.trim();
+          }
+          console.log("ygayfdadaad");
+          console.log(configuration);
+          console.log(this.unModifiedConfigurationResults);
+          var _parent = document.querySelector("mint-explorer-app");
+
+              for (var i = 0; i < this.unModifiedConfigurationResults.results.bindings.length; ++i) {
+                  for (var key in this.unModifiedConfigurationResults.results.bindings[i]) {
+                      if(this.unModifiedConfigurationResults.results.bindings[i][key].value.includes(",")) {
+                          var strs = this.unModifiedConfigurationResults.results.bindings[i][key].value.split(",");
+                          for(var j = 0; j<strs.length; ++j){
+                              var vars = [];
+                              var parts = strs[j].split("#");
+                             if(parts[1]===configuration){
+                                 _parent.variableSelected=strs[j];
+                                 console.log("hello" + _parent.variableSelected);
+                                 break;
+                             }
+                          }
+                      }else{
+                          var str = this.unModifiedConfigurationResults.results.bindings[i][key].value;
+                          var arr = str.split("#");
+                          if(arr[1]===configuration){
+                              _parent.variableSelected=str;
+                              break;
+                          }
+                      }
+                  }
+              }
+            console.log("jhfgdf"+_parent.variableSelected);
+      }
+
       processConfigurationResults(data) {
         var obj = JSON.parse(JSON.stringify(data));
-        for(var i = 0; i < obj.results.bindings.length; ++i) {
+          this.unModifiedConfigurationResults=JSON.parse(JSON.stringify(data));
+          for(var i = 0; i < obj.results.bindings.length; ++i) {
           for(var key in obj.results.bindings[i]) {
 
             if(obj.results.bindings[i][key].value.includes(",")) {
               var strs = obj.results.bindings[i][key].value.split(",");
 
               var vars = [];
+
               for(var j = 0; j<strs.length; ++j){
                 var parts = strs[j].split("#");
                 vars.push(parts[1]);
@@ -256,10 +347,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             else {
               var str = obj.results.bindings[i][key].value;
               var arr = str.split("#");
-              obj.results.bindings[i][key].value = arr[1];
+                var vars = [];
+                vars.push(arr[1]);
+              obj.results.bindings[i][key].value = vars;
           }
-        }
+          }
       }
+      console.log("this is config");
         console.log(obj);
         this.configurationResults = obj;
     }
@@ -404,8 +498,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }
               else {
-                console.log(data)
-                _self.processConfigurationResults(data);
+                  _self.processConfigurationResults(data);
+
+               // console.log(this.unModifiedConfigurationResult);
               }
               // _self.configurationResults= JSON.parse(JSON.stringify(data));
               // console.log(_self.configurationResults);

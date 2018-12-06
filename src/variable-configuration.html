@@ -10,18 +10,42 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
+<!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
 
 <dom-module id="variable-configuration">
   <template>
     <style include="shared-styles">
-
+      .flex-center-justified {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
     </style>
+    <br>
+    <div>
+      <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
+    </div>
+<div class="flex-center-justified">
+  <h4>Variable:[[varSelected]]</h4>
+</div>
+    <div id="configuration">
+    <h3>Configurations</h3>
+    <vaadin-grid heightByRows="true" items="[[variableAndUnits.results.bindings]]">
+    <vaadin-grid-column resizable>
+    <template class="header">Variable Presentation</template>
+      <template>[[item.vp.value]]</template>
+    </vaadin-grid-column>
 
-    <h2>Configuration</h2>
-    <h4>[[configSelected.model.label]]</h4>
-    <h4>[[configSelected.model.model]]</h4>
-    <h4>[[configSelected.config]]</h4>
-
+    <vaadin-grid-column resizable>
+    <template class="header">
+    Unit
+    </template>
+    <template>[[item.unit.value]]</template>
+    </vaadin-grid-column>
+    </vaadin-grid>
+    </div>
   </template>
 
   <script>
@@ -32,7 +56,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           configSelected: {
             model: String,
             config: String
-          }
+          },
+            varSelected:String,
+            variableAndUnits:Object
+
         };
       }
 
@@ -40,7 +67,73 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         var _parent = document.querySelector("mint-explorer-app");
         this.configSelected = _parent.configSelected;
+        this.varSelected=_parent.variableSelected.trim();
+        this.fetchConfiguration(this.varSelected);
+
     }
+
+    process(data){
+        var obj = JSON.parse(JSON.stringify(data));
+        this.variableAndUnits=obj;
+    }
+
+    fetchConfiguration(e){
+        var _self = this;
+        var _parent = document.querySelector("mint-explorer-app");
+        var query = _parent.queries[7].query;
+        var endpoint = _parent.endpoint;
+        $.ajax({
+            url: query,
+            type: "GET",
+            data:{
+                io: e
+            },
+            cache: false,
+            timeout: 5000,
+            async: false,
+            complete: function() {
+                // console.log("GET request sent");
+            },
+
+            success: function(data) {
+                 console.log("GET success");
+                if(data.results.length === 0) {
+                    Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+                }
+                else {
+                    console.log(data);
+                   _self.process(data);
+                }
+            },
+
+            error: function(jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connected.\n Verify Network.';
+                }
+                else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                }
+                else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                }
+                else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                }
+                else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                }
+                else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                }
+                else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                // console.log(msg);
+            }
+        });
+    }
+
   }
 
     window.customElements.define(VariableConfiguration.is, VariableConfiguration);

@@ -26,6 +26,12 @@ var queries = [
   {
     "description": "Fetch version of a model",
     "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-  }
+  },{
+      "decription":"Fetch variable configuration",
+        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+    },{
+      "description":"Fetch model-configuration data",
+        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+    }
 
 ]

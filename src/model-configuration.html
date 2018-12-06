@@ -36,15 +36,35 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <br>
 
     <h2>[[configSelected.model.label]] Configurations</h2>
-    <paper-card >
-      <div class = "card">
-        <div class = "">
-          <h4>Label:[[configSelected.model.label]]</h4>
-          <h4>Link: [[configSelected.model.model]]</h4>
-          <h4>Configuration: [[configSelected.config]]</h4>
+
+    <div id="configuration">
+      <h3>Configurations</h3>
+      <template is="dom-repeat" items=[[configurationResults.results.bindings]]>
+        <div class="card">
+
+          <div>
+            <b>cag</b> : [[item.cag.value]]
+          </div>
+
+          <div>
+            <b>Description</b> : [[item.desc.value]]
+          </div>
+
+
+          <div>
+            <b>input_variables </b>: [[item.input_variables.value]]
+          </div>
+
+
+          <div>
+            <b>output_variables</b> : [[item.output_variables.value]]
+          </div>
+
         </div>
-      </div>
-    </paper-card>
+      </template>
+    </div>
+
+
   </template>
 
 
@@ -56,7 +76,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           configSelected: {
             model: String,
             config: String
-          }
+          },
+            varSelected:String,
+            configurationResults:Object
         };
       }
 
@@ -66,11 +88,105 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _pages.selected = "view-model";
     }
 
+    processConfigurationResults(data) {
+            var obj = JSON.parse(JSON.stringify(data));
+            //this.unModifiedConfigurationResults=JSON.parse(JSON.stringify(data));
+            for(var i = 0; i < obj.results.bindings.length; ++i) {
+                for(var key in obj.results.bindings[i]) {
+
+                    if(obj.results.bindings[i][key].value.includes(",")) {
+                        var strs = obj.results.bindings[i][key].value.split(",");
+
+                        var vars = [];
+
+                        for(var j = 0; j<strs.length; ++j){
+                            var parts = strs[j].split("#");
+                            vars.push(parts[1]);
+                        }
+                        obj.results.bindings[i][key].value = vars;
+                    }
+                    else {
+                        var str = obj.results.bindings[i][key].value;
+                        var arr = str.split("#");
+                        var vars = [];
+                        vars.push(arr[1]);
+                        if(str.includes("#"))
+                        obj.results.bindings[i][key].value = vars;
+                        else
+                            obj.results.bindings[i][key].value = str;
+                    }
+                }
+            }
+            console.log("this is config");
+            console.log(obj);
+            this.configurationResults = obj;
+        }
+
     ready() {
         super.ready();
         var _parent = document.querySelector("mint-explorer-app");
         this.configSelected = _parent.configSelected;
+        this.varSelected=_parent.variableSelected.trim();
+        this.fetchConfiguration(this.varSelected);
     }
+
+        fetchConfiguration(e){
+            var _self = this;
+            var _parent = document.querySelector("mint-explorer-app");
+            var query = _parent.queries[8].query;
+            var endpoint = _parent.endpoint;
+            $.ajax({
+                url: query,
+                type: "GET",
+                data:{
+                    modelConfig: e
+                },
+                cache: false,
+                timeout: 5000,
+                async: false,
+                complete: function() {
+                    // console.log("GET request sent");
+                },
+
+                success: function(data) {
+                    console.log("GET success");
+                    if(data.results.length === 0) {
+                        Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+                    }
+                    else {
+                        console.log("sjgf");
+                        console.log(data);
+                        _self.processConfigurationResults(data);
+                    }
+                },
+
+                error: function(jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connected.\n Verify Network.';
+                    }
+                    else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    }
+                    else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    }
+                    else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    }
+                    else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    }
+                    else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    }
+                    else {
+                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                    }
+                    // console.log(msg);
+                }
+            });
+        }
   }
 
     window.customElements.define(ModelConfiguration.is, ModelConfiguration);
