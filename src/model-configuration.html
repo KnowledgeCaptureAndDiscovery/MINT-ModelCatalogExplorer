@@ -12,8 +12,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 <link rel="import" href="shared-styles.html">
-<link rel="import" href="/bower_components/paper-card/paper-card.html">
-
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 
 <dom-module id="model-configuration">
@@ -23,48 +23,98 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #ffffff;
         background-color: #e51c23;
       }
+      .box {
+          @apply --layout-vertical;
 
+          background-color: #FEFEFE;
+          border: 1px solid var(--app-accent-color);
+          border-radius: 4px;
+          background-size: 100% auto;
+          background-position: 0px 24px;
+
+          margin: 5px;
+          margin-left: 0px;
+          min-height: 100px;
+
+          display: block;
+          text-decoration: none;
+          text-align: center;
+          position: relative;
+          width: 47.5%;
+          padding: 15px;
+        }
+        .box .inner {
+          background: rgba(255,255,255,0.5);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+      .flex-center-justified {
+          @apply --layout-horizontal;
+          @apply --layout-center-justified;
+        }
+
+        .flex-end-justified {
+          margin-right: 40px;
+          @apply --layout-horizontal;
+          @apply --layout-end-justified;
+        }
+        paper-chip.custom-background {
+            --paper-chip-background-color: #007bff;
+            --paper-chip-label-color: #fff;
+        }
+        paper-chip.custom-background-l {
+            --paper-chip-background-color: #ffc107;
+            --paper-chip-label-color: #fff;
+        }
     </style>
     <br>
     <div>
-    <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
+    <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
     </div>
     <!--<h2>Configurations</h2>-->
     <!--<h4>[[configSelected.model.label]]</h4>-->
     <!--<h4>[[configSelected.model.model]]</h4>-->
     <!--<h4>[[configSelected.config]]</h4>-->
     <br>
-
-    <h2>[[configSelected.model.label]] Configurations</h2>
-
-    <div id="configuration">
-      <h3>Configurations</h3>
+    <div class="flex-center-justified">
+      <h1>[[tempVar]]</h1>
+    </div>
+    <div class="flex-center-justified">
+      <paper-chip label="Model: [[modelName]]" class="custom-background" no-hover></paper-chip>
+    </div>
+    <div class="flex-center-justified">
+      <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
+    </div>
+    <br>
+    <div class="container flex-center-justified">
       <template is="dom-repeat" items=[[configurationResults.results.bindings]]>
-        <div class="card">
+        <div class="box">
+            <div class="card-content">
+              <div>
+                <b>CAG</b> : [[item.cag.value]]
+              </div>
 
-          <div>
-            <b>cag</b> : [[item.cag.value]]
-          </div>
-
-          <div>
-            <b>Description</b> : [[item.desc.value]]
-          </div>
-
-
-          <div>
-            <b>input_variables </b>: [[item.input_variables.value]]
-          </div>
+              <div>
+                <b>Description</b> : [[item.desc.value]]
+              </div>
 
 
-          <div>
-            <b>output_variables</b> : [[item.output_variables.value]]
-          </div>
+              <div>
+                <b>Input Variables </b>: [[item.input_variables.value]]
+              </div>
 
+
+              <div>
+                <b>Output Variables</b> : [[item.output_variables.value]]
+              </div>
+
+            </div>
         </div>
       </template>
     </div>
-
-
   </template>
 
 
@@ -75,10 +125,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return {
           configSelected: {
             model: String,
-            config: String
+            config: String,
           },
-            varSelected:String,
-            configurationResults:Object
+          data: {
+            variable:String,
+            observer: '_varChanged'
+          },
+          modelName: String,
+          varSelected:String,
+          tempVar: String,
+          configurationResults:Object
         };
       }
 
@@ -86,6 +142,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       var _parent = document.querySelector("mint-explorer-app");
       var _pages = Polymer.dom(_parent.root).querySelector("#pages");
       _pages.selected = "view-model";
+    }
+
+    _varChanged(data){
+        var _parent = document.querySelector("mint-explorer-app");
+        this.configSelected = _parent.configSelected;
+        this.modelName = _parent.modelSelected.label;
+        this.varSelected =_parent.variableSelected.trim();
+        var x = [];
+        x = this.varSelected.split("#");
+        this.tempVar = x[1];
+        this.fetchConfiguration(this.varSelected);
     }
 
     processConfigurationResults(data) {
@@ -126,67 +193,70 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         super.ready();
         var _parent = document.querySelector("mint-explorer-app");
         this.configSelected = _parent.configSelected;
+        this.modelName = _parent.modelSelected.label;
         this.varSelected=_parent.variableSelected.trim();
+        x = this.varSelected.split("#");
+        this.tempVar = x[1];
         this.fetchConfiguration(this.varSelected);
     }
 
-        fetchConfiguration(e){
-            var _self = this;
-            var _parent = document.querySelector("mint-explorer-app");
-            var query = _parent.queries[8].query;
-            var endpoint = _parent.endpoint;
-            $.ajax({
-                url: query,
-                type: "GET",
-                data:{
-                    modelConfig: e
-                },
-                cache: false,
-                timeout: 5000,
-                async: false,
-                complete: function() {
-                    // console.log("GET request sent");
-                },
+    fetchConfiguration(e){
+        var _self = this;
+        var _parent = document.querySelector("mint-explorer-app");
+        var query = _parent.queries[8].query;
+        var endpoint = _parent.endpoint;
+        $.ajax({
+            url: query,
+            type: "GET",
+            data:{
+                modelConfig: e
+            },
+            cache: false,
+            timeout: 5000,
+            async: false,
+            complete: function() {
+                // console.log("GET request sent");
+            },
 
-                success: function(data) {
-                    console.log("GET success");
-                    if(data.results.length === 0) {
-                        Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
-                    }
-                    else {
-                        console.log("sjgf");
-                        console.log(data);
-                        _self.processConfigurationResults(data);
-                    }
-                },
+            success: function(data) {
+                console.log("GET success");
+                /*if(data.results.length === 0) {
+                    Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+                }*/
+                //else {
+                    console.log("sjgf");
+                    console.log(data);
+                    _self.processConfigurationResults(data);
+                //}
+            },
 
-                error: function(jqXHR, exception) {
-                    var msg = '';
-                    if (jqXHR.status === 0) {
-                        msg = 'Not connected.\n Verify Network.';
-                    }
-                    else if (jqXHR.status == 404) {
-                        msg = 'Requested page not found. [404]';
-                    }
-                    else if (jqXHR.status == 500) {
-                        msg = 'Internal Server Error [500].';
-                    }
-                    else if (exception === 'parsererror') {
-                        msg = 'Requested JSON parse failed.';
-                    }
-                    else if (exception === 'timeout') {
-                        msg = 'Time out error.';
-                    }
-                    else if (exception === 'abort') {
-                        msg = 'Ajax request aborted.';
-                    }
-                    else {
-                        msg = 'Uncaught Error.\n' + jqXHR.responseText;
-                    }
-                    // console.log(msg);
+            error: function(jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connected.\n Verify Network.';
                 }
-            });
-        }
+                else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                }
+                else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                }
+                else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                }
+                else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                }
+                else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                }
+                else {
+                    msg = 'Uncaught Error.\n' + jqXHR.responseText;
+                }
+                // console.log(msg);
+            }
+        });
+    }
   }
 
     window.customElements.define(ModelConfiguration.is, ModelConfiguration);
