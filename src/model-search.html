@@ -249,9 +249,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template>
         <div class="box">
          <div class="card-content" identity$="{{index}}" >
-              <h2><strong>[[item.label]] &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover></paper-chip></strong></h2>
+              <h2><strong>[[item.label]] 
+                &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
+                &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover></paper-chip></strong></h2>
               <p>[[item.description]]</p>
-              <p><a href="[[item.link]]" target="_blank" hidden="[[item.avail]]"><vaadin-button theme="secondary" raised>View Documentation</vaadin-button ></a></p>
               <a href="[[routePath]]view-model"><vaadin-button theme="primary" label$="{{item.label}}" model$="{{item.model}}" on-click="goToModel" raised>Explore [[item.label]]</vaadin-button ></a>
             </div>
         </div>

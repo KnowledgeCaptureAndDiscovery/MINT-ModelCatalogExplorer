@@ -28,13 +28,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-toggle-button/paper-toggle-button.html">
 <link rel="import" href="/bower_components/paper-card/paper-card.html">
 <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid.html">
+<link rel="import" href="/bower_components/paper-chip/paper-chip.html">
 <!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
 <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="my-icons.html">
 <link rel="import" href="../bower_components/vaadin-button/vaadin-button.html">
 <link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
-
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
 
 
 <dom-module id="view-model">
@@ -120,53 +121,102 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .title{
         display: inline-block;
       }
+      .box {
+          @apply --layout-vertical;
+
+          background-color: #FEFEFE;
+          border: 1px solid var(--app-accent-color);
+          border-radius: 4px;
+          background-size: 100% auto;
+          background-position: 0px 24px;
+
+          margin: 5px;
+          margin-left: 0px;
+          min-height: 190px;
+
+          display: block;
+          text-decoration: none;
+          text-align: center;
+          position: relative;
+          width: 47.5%;
+          padding: 15px;
+        }
+        .box .inner {
+          background: rgba(255,255,255,0.5);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+        .flex-center-justified {
+          @apply --layout-horizontal;
+          @apply --layout-center-justified;
+        }
+
+        .flex-end-justified {
+          margin-right: 40px;
+          @apply --layout-horizontal;
+          @apply --layout-end-justified;
+        }
+        #options{
+          width: 50%;
+        }
+        #version {
+          margin-right: 10px;
+          width: 50%
+        }
 
     </style>
     <br>
 
-    <a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
-    <h2>Model:[[modelSelected.label]]</h2>
-    [[modelSelected.model]]
-    <br>
-
-    <paper-dropdown-menu id="version" label="Version">
-      <paper-listbox slot="dropdown-content" class="dropdown-content">
-        <dom-repeat items="{{finVersions}}">
-          <template>
-            <paper-item>[[item]]</paper-item>
-          </template>
-        </dom-repeat>
-      </paper-listbox>
-    </paper-dropdown-menu>
-
+    <a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
+    <div class="flex-center-justified">
+      <h1>[[modelSelected.label]]</h1>
+    </div>
+    <div class="flex-center-justified">
+      <paper-chip label="Label: [[modelSelected.model]]" class="custom-background" no-hover></paper-chip>
+    </div>
+    <div class="container flex-center-justified">
+      <paper-dropdown-menu id="version" label="Select Version">
+        <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <dom-repeat items="{{finVersions}}">
+            <template>
+              <paper-item>[[item]]</paper-item>
+            </template>
+          </dom-repeat>
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </div>
+    <br><br>
     <div id="content"></div>
     <div class="grid flex-center-justified">
-   <div id="configuration">
-  <template is="dom-repeat" items={{configurationResults.results.bindings}}>
-    <div class="card">
-      <div class="title">
-        <h4>Model Configuration:</h4>
-        <template is="dom-repeat" items={{item.config.value}} as="stuff">
-        <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+     <!--<div id="configuration">-->
+      <template is="dom-repeat" items={{configurationResults.results.bindings}}>
+        <div class="box">
+          <div class="card-content">
+            <div class="title">
+              <h4>Model Configuration:</h4>
+              <template is="dom-repeat" items={{item.config.value}} as="stuff">
+              <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+              </template>
+            </div>
+            <div class="body">
+              <div>
+                <h4>Input Variables:</h4>
+                <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
+                  <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                </template>
+              </div>
+              <div>
+                <h4>Output Variables:</h4>
+                <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
+                  <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                </template>
+              </div>
+            </div>
+          </div>
+        </div>
         </template>
-      </div>
-    <div class="card">
-      <div>
-      <h4>Input Variables:</h4>
-      <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
-        <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
-      </template>
-    </div>
-
-      <div>
-        <h4>Output Variables:</h4>
-        <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
-          <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
-        </template>
-      </div>
-    </div>
-    </div>
-    </template>
     </div>
     <!--<div id="configuration">-->
     <!--<h3>Configurations</h3>-->
@@ -206,7 +256,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!--</vaadin-grid-column>-->
 
     <!--</vaadin-grid>-->
-    </div>
+    <!--</div>-->
 
 
   </template>
@@ -494,14 +544,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           success: function(data) {
               // console.log("GET success");
-              if(data.results.bindings.length === 0) {
+              /*if(data.results.bindings.length === 0) {
                 Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
-              }
-              else {
+              }*/
+              //else {
                   _self.processConfigurationResults(data);
 
                // console.log(this.unModifiedConfigurationResult);
-              }
+              //}
               // _self.configurationResults= JSON.parse(JSON.stringify(data));
               // console.log(_self.configurationResults);
               // _self.populateConfigurations();

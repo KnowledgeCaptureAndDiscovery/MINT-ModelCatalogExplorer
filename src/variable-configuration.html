@@ -14,41 +14,85 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
+<link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="variable-configuration">
   <template>
     <style include="shared-styles">
+      .box {
+          @apply --layout-vertical;
+
+          background-color: #FEFEFE;
+          border: 1px solid var(--app-accent-color);
+          border-radius: 4px;
+          background-size: 100% auto;
+          background-position: 0px 24px;
+
+          margin: 5px;
+          margin-left: 0px;
+          min-height: 100px;
+
+          display: block;
+          text-decoration: none;
+          text-align: center;
+          position: relative;
+          width: 47.5%;
+          padding: 15px;
+        }
+        .box .inner {
+          background: rgba(255,255,255,0.5);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+
       .flex-center-justified {
-        @apply --layout-horizontal;
-        @apply --layout-center-justified;
-      }
+          @apply --layout-horizontal;
+          @apply --layout-center-justified;
+        }
+
+        .flex-end-justified {
+          margin-right: 40px;
+          @apply --layout-horizontal;
+          @apply --layout-end-justified;
+        }
+        paper-chip.custom-background-l {
+            --paper-chip-background-color: #ffc107;
+            --paper-chip-label-color: #fff;
+        }
     </style>
     <br>
     <div>
-      <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised>Back</vaadin-button></a>
+      <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
     </div>
-<div class="flex-center-justified">
-  <h4>Variable:[[varSelected]]</h4>
-</div>
-    <div id="configuration">
-    <h3>Configurations</h3>
-    <vaadin-grid heightByRows="true" items="[[variableAndUnits.results.bindings]]">
-    <vaadin-grid-column resizable>
-    <template class="header">Variable Presentation</template>
-      <template>[[item.vp.value]]</template>
-    </vaadin-grid-column>
+    <div class="flex-center-justified">
+      <h1>[[tempVar]]</h1>
+    </div>
+    <div class="flex-center-justified">
+      <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
+    </div>
+    <br>
+    <div class="container flex-center-justified">
 
-    <vaadin-grid-column resizable>
-    <template class="header">
-    Unit
-    </template>
-    <template>[[item.unit.value]]</template>
-    </vaadin-grid-column>
-    </vaadin-grid>
+        <vaadin-grid theme="row-dividers" column-reordering-allowed multi-sort items="[[variableAndUnits.results.bindings]]">
+        <vaadin-grid-column flex-grow="2" text-align="center">
+        <template class="header"><strong>Variable Presentation</strong></template>
+          <template>[[item.vp.value]]</template>
+        </vaadin-grid-column>
+
+        <vaadin-grid-column width="9em" flex-grow="2" text-align="center">
+        <template class="header">
+            <strong>Unit</strong>
+        </template>
+        <template>[[item.unit.value]]</template>
+        </vaadin-grid-column>
+        </vaadin-grid>
     </div>
   </template>
 
   <script>
+
     class VariableConfiguration extends Polymer.Element {
       static get is() { return 'variable-configuration'; }
       static get properties() {
@@ -57,10 +101,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             model: String,
             config: String
           },
-            varSelected:String,
-            variableAndUnits:Object
-
+          data: {
+            variable:String,
+            observer: '_variableChanged'
+          },
+          tempVar: String,
+          varSelected:String,
+          variableAndUnits:Object
         };
+      }
+
+    _variableChanged(data){
+        var _parent = document.querySelector("mint-explorer-app");
+        this.configSelected = _parent.configSelected;
+        this.varSelected = _parent.variableSelected.trim();
+        var x = []
+        x = this.varSelected.split("#")
+        this.tempVar = x[1]
+        this.fetchConfiguration(this.varSelected);
+    }
+
+    goBack(){
+        var _parent = document.querySelector("mint-explorer-app");
+        var _pages = Polymer.dom(_parent.root).querySelector("#pages");
+        _pages.selected = "view-model";
       }
 
     ready() {
@@ -68,8 +132,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var _parent = document.querySelector("mint-explorer-app");
         this.configSelected = _parent.configSelected;
         this.varSelected=_parent.variableSelected.trim();
+        var x = []
+        x = this.varSelected.split("#")
+        this.tempVar = x[1]
         this.fetchConfiguration(this.varSelected);
-
     }
 
     process(data){
@@ -97,13 +163,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             success: function(data) {
                  console.log("GET success");
-                if(data.results.length === 0) {
+                 console.log(data)
+                /*if(data.results.bindings.length === 0) {
                     Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
-                }
-                else {
+                }*/
+                //else {
                     console.log(data);
                    _self.process(data);
-                }
+                //}
             },
 
             error: function(jqXHR, exception) {

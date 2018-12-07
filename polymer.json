@@ -10,7 +10,8 @@
     "src/queries.js",
     "src/shared-styles.html",
     "src/variable-configuration.html",
-    "src/view-model.html"
+    "src/view-model.html",
+    "src/my-about.html"
   ],
   "sources": [
     "images/**/*",

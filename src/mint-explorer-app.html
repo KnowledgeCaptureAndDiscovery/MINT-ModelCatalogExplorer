@@ -22,6 +22,7 @@ output presentations.s
 <link rel="lazy-import" href="model-configuration.html">
 <link rel="lazy-import" href="variable-configuration.html">
 <link rel="lazy-import" href="not-found.html">
+<link rel="lazy-import" href="my-about.html">
 
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
 <link rel="import" href="/bower_components/app-layout/app-header/app-header.html">
@@ -63,6 +64,10 @@ output presentations.s
           background-color: #fff;
           color: #706f6d;
         }
+        #links{
+          position: absolute;
+          right: 5%;
+        }
 
     </style>
 
@@ -72,9 +77,9 @@ output presentations.s
 
     <app-route
       route="{{route}}"
-      pattern="/:page"
+      pattern="[[routePath]]/:page"
       data="{{routeData}}"
-      tail="{{routeTail}}">
+      tail="{{subroute}}">
     </app-route>
 
     <app-header-layout>
@@ -82,6 +87,10 @@ output presentations.s
         <app-toolbar>
           <img height="40" src="images/logo.png">
           <div id="heading">MINT</div>
+          <div id="links">
+            <a href="[[routePath]]/" style="text-decoration: none; color: #000;">Home</a>&nbsp;&nbsp;&nbsp;
+            <a href="[[routePath]]my-about" style="text-decoration: none; color: #000;">About</a>
+          </div>
         </app-toolbar>
       </app-header>
 
@@ -104,9 +113,10 @@ output presentations.s
         role="main">
         <model-search id="modelSearch" name="model-search" route="{{subroute}}"></model-search>
         <view-model id="viewModel" data="{{modelSelected}}" name="view-model" route="{{subroute}}"></view-model>
-        <model-configuration id="modelConfiguration" name="model-configuration" route="{{subroute}}"></model-configuration>
-        <variable-configuration id="variableConfiguration" name="variable-configuration" route="{{subroute}}"></variable-configuration>
+        <model-configuration id="modelConfiguration" data="{{variableSelected}}" tempmodel="{{configSelected}}" name="model-configuration" route="{{subroute}}"></model-configuration>
+        <variable-configuration id="variableConfiguration" data="{{variableSelected}}" name="variable-configuration" route="{{subroute}}"></variable-configuration>
         <not-found name="not-found"></not-found>
+        <my-about name="my-about" route="{{subroute}}"></my-about>
       </iron-pages>
 
 
@@ -140,9 +150,9 @@ output presentations.s
             model: String,
             config: Object
           },
-            variableSelected:{
-              variable:String,
-            },
+          variableSelected:{
+            variable:String,
+          },
           queries: Array,
           modelDescriptions: Array,
           endpoint: {
