@@ -7,7 +7,6 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
@@ -57,6 +56,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           @apply --layout-horizontal;
           @apply --layout-end-justified;
         }
+        paper-chip.custom-background {
+          --paper-chip-background-color: #dc3545;
+          --paper-chip-label-color: #fff;
+        }
         paper-chip.custom-background-l {
             --paper-chip-background-color: #ffc107;
             --paper-chip-label-color: #fff;
@@ -74,20 +77,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     <br>
     <div class="container flex-center-justified">
-
-        <vaadin-grid theme="row-dividers" column-reordering-allowed multi-sort items="[[variableAndUnits.results.bindings]]">
-        <vaadin-grid-column flex-grow="2" text-align="center">
-        <template class="header"><strong>Variable Presentation</strong></template>
-          <template>[[item.vp.value]]</template>
-        </vaadin-grid-column>
-
-        <vaadin-grid-column width="9em" flex-grow="2" text-align="center">
-        <template class="header">
-            <strong>Unit</strong>
-        </template>
-        <template>[[item.unit.value]]</template>
-        </vaadin-grid-column>
+      <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
+        <vaadin-grid items="[[variableAndUnits.results.bindings]]">
+          <vaadin-grid-column width="50px" flex-grow="0">
+            <template class="header">#</template>
+            <template>[[index]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column flex-grow="2" text-align="center">
+            <template class="header"><strong>Variable Presentation</strong></template>
+            <template>[[item.vp.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="9em" flex-grow="2" text-align="center">
+            <template class="header"><strong>Unit</strong></template>
+            <template>[[item.unit.value]]</template>
+          </vaadin-grid-column>
         </vaadin-grid>
+      </template>
+      <template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">
+        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>
+      </template> 
     </div>
   </template>
 
@@ -119,6 +127,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         x = this.varSelected.split("#")
         this.tempVar = x[1]
         this.fetchConfiguration(this.varSelected);
+    }
+
+    _checkBVal(stuff){
+      console.log("Found", stuff)
+      if(stuff.length === 0){
+        return true
+      }
+      return false
+    }
+
+    _checkBNegVal(stuff){
+      console.log("Found", stuff)
+      if(stuff.length === 0){
+        return false
+      }
+      return true
     }
 
     goBack(){

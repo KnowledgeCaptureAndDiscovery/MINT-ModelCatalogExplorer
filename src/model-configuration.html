@@ -69,6 +69,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             --paper-chip-background-color: #ffc107;
             --paper-chip-label-color: #fff;
         }
+        paper-chip.custom-background-b {
+          --paper-chip-background-color: #dc3545;
+          --paper-chip-label-color: #fff;
+        }
+        paper-chip.custom-background-m {
+          --paper-chip-background-color: #28a745;
+          --paper-chip-label-color: #fff;
+        }
     </style>
     <br>
     <div>
@@ -84,35 +92,55 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     <div class="flex-center-justified">
       <paper-chip label="Model: [[modelName]]" class="custom-background" no-hover></paper-chip>
+      <paper-chip label="Version: [[verSelected]]" class="custom-background-m" no-hover></paper-chip>
     </div>
     <div class="flex-center-justified">
       <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
     </div>
     <br>
     <div class="container flex-center-justified">
-      <template is="dom-repeat" items=[[configurationResults.results.bindings]]>
-        <div class="box">
-            <div class="card-content">
-              <div>
-                <b>CAG</b> : [[item.cag.value]]
+      <template is="dom-if" if="[[configurationResults.results.bindings]]">
+        <template is="dom-repeat" items=[[configurationResults.results.bindings]]>
+          <div class="box">
+              <div class="card-content">
+                <div>
+                  <template is="dom-if" if="[[_checkInpValue(item.cag.value)]]">
+                    <b>CAG </b>: [[item.cag.value]]
+                  </template>
+                  <template is="dom-if" if="[[_checkNegInpValue(item.cag.value)]]">
+                    <b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
+                  </template>
+                </div>
+                <div>
+                  <template is="dom-if" if="[[_checkInpValue(item.desc.value)]]">
+                    <b>Description </b>: [[item.desc.value]]
+                  </template>
+                  <template is="dom-if" if="[[_checkNegInpValue(item.desc.value)]]">
+                    <b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
+                  </template>
+                </div>
+                <div>
+                  <template is="dom-if" if="[[_checkInpValue(item.input_variables.value)]]">
+                    <b>Input Variables </b>: [[item.input_variables.value]]
+                  </template>
+                  <template is="dom-if" if="[[_checkNegInpValue(item.input_variables.value)]]">
+                    <b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
+                  </template>
+                </div>
+                <div>
+                  <template is="dom-if" if="[[_checkInpValue(item.output_variables.value)]]">
+                    <b>Output Variables </b>: [[item.output_variables.value]]
+                  </template>
+                  <template is="dom-if" if="[[_checkNegInpValue(item.output_variables.value)]]">
+                    <b>Output Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
+                  </template>
+                </div>
               </div>
-
-              <div>
-                <b>Description</b> : [[item.desc.value]]
-              </div>
-
-
-              <div>
-                <b>Input Variables </b>: [[item.input_variables.value]]
-              </div>
-
-
-              <div>
-                <b>Output Variables</b> : [[item.output_variables.value]]
-              </div>
-
-            </div>
-        </div>
+          </div>
+        </template>
+      </template>
+      <template is="dom-if" if="[[_checkConf(configurationResults.results.bindings)]]">
+        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background-b" no-hover></paper-chip>
       </template>
     </div>
   </template>
@@ -133,6 +161,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           modelName: String,
           varSelected:String,
+          verSelected: String,
           tempVar: String,
           configurationResults:Object
         };
@@ -149,10 +178,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.configSelected = _parent.configSelected;
         this.modelName = _parent.modelSelected.label;
         this.varSelected =_parent.variableSelected.trim();
+        this.verSelected = _parent.versionSelected;
         var x = [];
         x = this.varSelected.split("#");
         this.tempVar = x[1];
         this.fetchConfiguration(this.varSelected);
+    }
+
+    _checkInpValue(stuff){
+        console.log("Detected", stuff)
+        return typeof stuff !== 'undefined';
+      }
+
+    _checkNegInpValue(stuff){
+      console.log("Detected", stuff)
+      return typeof stuff === 'undefined';
+    }
+
+    _checkConf(stuff){
+      console.log("This", stuff)
+      if(stuff.length === 0){
+        return true
+      }
+      return false
     }
 
     processConfigurationResults(data) {
@@ -195,6 +243,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.configSelected = _parent.configSelected;
         this.modelName = _parent.modelSelected.label;
         this.varSelected=_parent.variableSelected.trim();
+        this.verSelected = _parent.versionSelected;
+        var x = [];
         x = this.varSelected.split("#");
         this.tempVar = x[1];
         this.fetchConfiguration(this.varSelected);

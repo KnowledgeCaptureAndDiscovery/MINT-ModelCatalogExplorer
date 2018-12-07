@@ -165,7 +165,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin-right: 10px;
           width: 50%
         }
-
+        paper-chip.custom-background {
+          --paper-chip-background-color: #dc3545;
+          --paper-chip-label-color: #fff;
+        }
+        paper-chip.custom-background-m {
+          --paper-chip-background-color: #28a745;
+          --paper-chip-label-color: #fff;
+        }
     </style>
     <br>
 
@@ -174,7 +181,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>[[modelSelected.label]]</h1>
     </div>
     <div class="flex-center-justified">
-      <paper-chip label="Label: [[modelSelected.model]]" class="custom-background" no-hover></paper-chip>
+      <paper-chip label="Label: [[modelSelected.model]]" no-hover></paper-chip>
     </div>
     <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version">
@@ -195,22 +202,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="box">
           <div class="card-content">
             <div class="title">
-              <h4>Model Configuration:</h4>
+              <h4>Model Configuration: </h4>
               <template is="dom-repeat" items={{item.config.value}} as="stuff">
-              <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
               </template>
             </div>
             <div class="body">
               <div>
-                <h4>Input Variables:</h4>
-                <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
-                  <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                <h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>
+              </div>
+              <div>
+                <template is="dom-if" if="[[_checkValue(item.input_variables.value)]]">
+                  <h4>Input Variables:</h4>
+                  <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
+                    <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                  </template>
+                </template>
+                <template is="dom-if" if="[[_checkNegValue(item.input_variables.value)]]">
+                  <h4>Input Variables:</h4>
+                  <paper-chip label="Not Found" class="custom-background" no-hover></paper-chip>
                 </template>
               </div>
               <div>
-                <h4>Output Variables:</h4>
-                <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
-                  <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                <template is="dom-if" if="[[_checkValue(item.output_variables.value)]]">
+                  <h4>Output Variables:</h4>
+                  <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
+                    <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                  </template>
+                </template>
+                <template is="dom-if" if="[[_checkNegValue(item.output_variables.value)]]">
+                  <h4>Output Variables:</h4>
+                  <paper-chip label="Not Found" class="custom-background" no-hover></paper-chip>
                 </template>
               </div>
             </div>
@@ -296,12 +318,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: []
           },
           configurationResults: Object,
-            unModifiedConfigurationResults:Object
+          unModifiedConfigurationResults:Object
         };
       }
 
       _activeChanged(modelSelected){
 
+      }
+
+      _checkValue(stuff){
+        console.log("Detected", stuff)
+        return typeof stuff !== 'undefined';
+      }
+
+      _checkNegValue(stuff){
+        console.log("Detected", stuff)
+        return typeof stuff === 'undefined';
       }
 
       _modelChanged(data){
@@ -368,7 +400,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                           var str = this.unModifiedConfigurationResults.results.bindings[i][key].value;
                           var arr = str.split("#");
                           if(arr[1]===configuration){
-                              _parent.variableSelected=str;
+                              _parent.variableSelected = str;
+                              _parent.versionSelected = this.unModifiedConfigurationResults.results.bindings[i]["version"].value
                               break;
                           }
                       }
@@ -379,34 +412,70 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       processConfigurationResults(data) {
         var obj = JSON.parse(JSON.stringify(data));
-          this.unModifiedConfigurationResults=JSON.parse(JSON.stringify(data));
+          this.unModifiedConfigurationResults = JSON.parse(JSON.stringify(data));
+          console.log("Ok Done", this.unModifiedConfigurationResults)
           for(var i = 0; i < obj.results.bindings.length; ++i) {
-          for(var key in obj.results.bindings[i]) {
-
-            if(obj.results.bindings[i][key].value.includes(",")) {
-              var strs = obj.results.bindings[i][key].value.split(",");
-
-              var vars = [];
-
-              for(var j = 0; j<strs.length; ++j){
-                var parts = strs[j].split("#");
-                vars.push(parts[1]);
+            for(var key in obj.results.bindings[i]) {
+              var temp = []
+              if(key === "version"){
+                var _self = this;
+                var _parent = document.querySelector("mint-explorer-app");
+                // Get Versions
+                var qs = _parent.queries[6].query
+                var r = []
+                var cs;
+                $.ajax({
+                  url: qs,
+                  type: "GET",
+                  data:{
+                      mv: obj.results.bindings[i][key].value
+                  },
+                  cache: false,
+                  timeout: 5000,
+                  async: false,
+                  success: function(data) {
+                    r = data.results.bindings
+                    for(var i = 0; i < r.length; i++){
+                      temp = r[i].prop.value.split("#")
+                      if(temp[1] === "hasVersionId"){
+                        cs = r[i].value.value;
+                        break;
+                      }
+                    }
+                  },
+                  error: function(jqXHR, exception) {
+                  }
+                });
+                obj.results.bindings[i][key].value = cs
+                this.unModifiedConfigurationResults.results.bindings[i][key].value = cs
               }
-              obj.results.bindings[i][key].value = vars;
+              else{
+                if(obj.results.bindings[i][key].value.includes(",")) {
+                  var strs = obj.results.bindings[i][key].value.split(",");
+
+                  var vars = [];
+
+                  for(var j = 0; j<strs.length; ++j){
+                    var parts = strs[j].split("#");
+                    vars.push(parts[1]);
+                  }
+                  obj.results.bindings[i][key].value = vars;
+                }
+                else {
+                  var str = obj.results.bindings[i][key].value;
+                  var arr = str.split("#");
+                    var vars = [];
+                    vars.push(arr[1]);
+                  obj.results.bindings[i][key].value = vars;
+                }
+              }
             }
-            else {
-              var str = obj.results.bindings[i][key].value;
-              var arr = str.split("#");
-                var vars = [];
-                vars.push(arr[1]);
-              obj.results.bindings[i][key].value = vars;
           }
-          }
-      }
-      console.log("this is config");
+        console.log("this is config");
         console.log(obj);
         this.configurationResults = obj;
-    }
+      }
+
 
     getVersion(versions){
       var _self = this;
@@ -522,12 +591,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
       var query = _parent.queries[5].query;
-      // var queries = [
-      //   {
-      //     description: "What are the model config, input variables, and output variables ?",
-      //     query: "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
-      //   }
-      // ]
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
@@ -586,7 +649,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
       // }
-      fetchData() {
+      /*fetchData() {
 
         var _self = this;
         var _parent = document.querySelector("mint-explorer-app");
@@ -647,7 +710,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
           });
 
-      }
+      }*/
 
     //   populateData() {
     //     var result = this.queryResults[0];
@@ -762,6 +825,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // console.log(this.modelSelected);
         //this.fetchData();
         this.fetchConfiguration(_parent.modelSelected);
+        console.log("Product", this.configurationResults)
       }
 
       attributeChangedCallback(){
