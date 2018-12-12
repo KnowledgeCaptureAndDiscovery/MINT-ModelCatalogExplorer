@@ -11,7 +11,8 @@
     "src/shared-styles.html",
     "src/variable-configuration.html",
     "src/view-model.html",
-    "src/my-about.html"
+    "src/my-about.html",
+    "src/loading-screen.html"
   ],
   "sources": [
     "images/**/*",

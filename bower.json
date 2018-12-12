@@ -34,7 +34,9 @@
     "neon-animation": "^3.0.1",
     "web-animations-js": "^2.3.1",
     "paper-chip": "ThomasCybulski/paper-chip#^2.0.21",
-    "vaadin-ordered-layout": "vaadin/vaadin-ordered-layout#^1.1.0"
+    "vaadin-ordered-layout": "vaadin/vaadin-ordered-layout#^1.1.0",
+    "paper-spinner": "PolymerElements/paper-spinner#2.0.0",
+    "vaadin-progress-bar": "vaadin/vaadin-progress-bar#^1.1.0"
   },
   "resolutions": {
     "polymer": "^2.0.0"

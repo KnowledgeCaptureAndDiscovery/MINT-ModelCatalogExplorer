@@ -17,6 +17,7 @@ output presentations.s
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
+<link rel="import" href="loading-screen.html">
 <link rel="lazy-import" href="model-search.html">
 <link rel="lazy-import" href="view-model.html">
 <link rel="lazy-import" href="model-configuration.html">
@@ -106,6 +107,9 @@ output presentations.s
       	</template>
       </dom-repeat>  -->
 
+      <!-- Loading screen -->
+      <loading-screen loading="true" id="pageLoading"></loading-screen>
+
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
@@ -150,6 +154,10 @@ output presentations.s
             model: String,
             config: Object
           },
+          loadedPages: {
+            type: Object,
+            value: {}
+          },
           variableSelected:{
             variable:String,
           },
@@ -176,14 +184,22 @@ output presentations.s
 
       }
 
-      _pageChanged(page) {
+      _pageChanged(page, oldPage) {
         // Load page import on demand. Show 404 page if fails
-        const resolvedPageUrl = this.resolveUrl(page + '.html');
-        Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+         if (page != null) {
+          if(!this.loadedPages[page]) {
+          this.$.pageLoading.loading = true;
+          this.loadedPages[page] = true;
+          let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+          Polymer.importHref(
+            this.resolveUrl(page + '.html'),
+            cb, cb, true);
+          }
+        }
+      }
+      _pageLoaded(page) {
+        this.$.pageLoading.loading = false;
+        console.log("LOADED", this.$.pageLoading.loading)
       }
 
       _showPage404() {
