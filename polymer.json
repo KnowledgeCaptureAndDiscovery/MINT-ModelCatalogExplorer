@@ -28,7 +28,8 @@
   },
   "builds": [{
     "name": "modelCatalogTest",
-	"bundle": true,
+    "basePath":"modelExplorer",
+	  "bundle": true,
     "addServiceWorker": true,
     "swPrecacheConfig": "sw-precache-config.js",
     "css": { "minify": true },
