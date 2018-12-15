@@ -27,5 +27,5 @@ module.exports = {
     },
   ],
   navigateFallback: "/modelExplorer/index.html",
-  replacePrefix: "/modelExplorer/"
+  replacePrefix: "/"
 };
