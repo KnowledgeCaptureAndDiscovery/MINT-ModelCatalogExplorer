@@ -204,6 +204,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           font-weight: bold;
         }
 
+        .search-icon{
+          cursor: pointer;
+        }
+
+        .clear-icon{
+          cursor: pointer;
+        }
+
 
 
     </style>
@@ -232,9 +240,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-autocomplete-chips>
         <br>
         <div class="grid">
-          <vaadin-button theme="contrast primary" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
+          <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
           </vaadin-button>
-          <vaadin-button theme="error primary" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
           </vaadin-button>
         </div>
       </div>
@@ -474,7 +482,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 result.version = h
                 results.push(result)
               }
-              console.log(results)
+              console.log("This", results)
               cats = Array.from(categories);
           },
 
@@ -523,7 +531,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           results.push(result);
         }*/
-        var cts = []
+        var cts = [{'name': ''}]
         console.log(cats)
         for(var i = 0; i < cats.length; i++){
           cts.push({
@@ -546,7 +554,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var qt = _parent.queries[4].query;
         var query = qt + "&cat=" + category
         var catsByModel = []
-        console.log(query)
+        console.log("Done", query)
         $.ajax({
           url: query,
           type: "GET",
@@ -591,6 +599,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               console.log(msg);
           }
         });
+        console.log("BOB" + catsByModel)
         return catsByModel;
       }
 
@@ -626,6 +635,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if(category != ''){
             tp = _self.getModelsByCategory(category);
             _self.displayLabel(tp);
+          }
+          else{
+            console.log("Empty String")
+            _self.populateSearchResults();
+            this.finResults = this.results
           }
 
         })
