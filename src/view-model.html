@@ -181,7 +181,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>[[modelSelected.label]]</h1>
     </div>
     <div class="flex-center-justified">
-      <paper-chip label="Label: [[modelSelected.model]]" no-hover></paper-chip>
+      <paper-chip label="URI: [[modelSelected.model]]" no-hover></paper-chip>
     </div>
     <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version">
@@ -208,30 +208,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </template>
             </div>
             <div class="body">
+              <!--<div>-->
+                <!--<h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>-->
+              <!--</div>-->
               <div>
-                <h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>
+                <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
+                <h4>Description:</h4>
+                {{item.configDesc.value}}
+                </template>
+                <template is="dom-if" if="[[_checkNegValue(item.configDesc.value)]]">
+                  <h4>Description:</h4>
+                  <paper-chip label="Not Found" class="custom-background" no-hover></paper-chip>
+                </template>
               </div>
+
               <div>
-                <template is="dom-if" if="[[_checkValue(item.input_variables.value)]]">
-                  <h4>Input Variables:</h4>
-                  <template is="dom-repeat" items={{item.input_variables.value}} as="stuff">
+                <template is="dom-if" if="[[_checkValue(item.input_files.value)]]">
+                  <h4>Input Files:</h4>
+                  <template is="dom-repeat" items={{item.input_files.value}} as="stuff">
                     <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
                   </template>
                 </template>
-                <template is="dom-if" if="[[_checkNegValue(item.input_variables.value)]]">
-                  <h4>Input Variables:</h4>
+                <template is="dom-if" if="[[_checkNegValue(item.input_files.value)]]">
+                  <h4>Input Files:</h4>
                   <paper-chip label="Not Found" class="custom-background" no-hover></paper-chip>
                 </template>
               </div>
               <div>
-                <template is="dom-if" if="[[_checkValue(item.output_variables.value)]]">
-                  <h4>Output Variables:</h4>
-                  <template is="dom-repeat" items={{item.output_variables.value}} as="stuff">
+                <template is="dom-if" if="[[_checkValue(item.output_files.value)]]">
+                  <h4>Output Files:</h4>
+                  <template is="dom-repeat" items={{item.output_files.value}} as="stuff">
                     <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
                   </template>
                 </template>
-                <template is="dom-if" if="[[_checkNegValue(item.output_variables.value)]]">
-                  <h4>Output Variables:</h4>
+                <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
+                  <h4>Output Files:</h4>
                   <paper-chip label="Not Found" class="custom-background" no-hover></paper-chip>
                 </template>
               </div>
@@ -446,8 +457,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   error: function(jqXHR, exception) {
                   }
                 });
-                obj.results.bindings[i][key].value = cs
-                this.unModifiedConfigurationResults.results.bindings[i][key].value = cs
+                obj.results.bindings[i][key].value = cs;
+                this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
               }
               else{
                 if(obj.results.bindings[i][key].value.includes(",")) {
@@ -466,7 +477,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   var arr = str.split("#");
                     var vars = [];
                     vars.push(arr[1]);
-                  obj.results.bindings[i][key].value = vars;
+                    if(str.includes("#"))
+                        obj.results.bindings[i][key].value = vars;
+                    else
+                        obj.results.bindings[i][key].value = str;
                 }
               }
             }
