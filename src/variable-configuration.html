@@ -161,6 +161,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
     <div class="grid">
+        <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
         <template is="dom-repeat" items={{variableAndUnits.results.bindings}}>
           <div class="box">
             <div class="card-content">
@@ -190,7 +191,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </div>
           </div>
         </template>
+        </template>
+        <template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">
+        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>
+        </template>
     </div>
+
   </template>
 
   <script>
