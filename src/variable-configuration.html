@@ -18,84 +18,178 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="variable-configuration">
   <template>
     <style include="shared-styles">
-      .box {
-          @apply --layout-vertical;
+      html, body {
+        margin: 0;
+        font-family: 'Roboto', 'Noto', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        max-height: 368px;
+      }
 
-          background-color: #FEFEFE;
-          border: 1px solid var(--app-accent-color);
-          border-radius: 4px;
-          background-size: 100% auto;
-          background-position: 0px 24px;
+      app-toolbar {
+        background-color: #f2f1ed;
+        color: #706f6d;
+      }
 
-          margin: 5px;
-          margin-left: 0px;
-          min-height: 100px;
+      paper-card{
+        color: black;
+        width: 50%;
+        word-wrap: break-word;
+        margin: 20px;
+      }
 
-          display: block;
-          text-decoration: none;
-          text-align: center;
-          position: relative;
-          width: 47.5%;
-          padding: 15px;
-        }
-        .box .inner {
-          background: rgba(255,255,255,0.5);
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
+      paper-toolbar {
+        background-color: #f2f1ed;
+      }
 
       .flex-center-justified {
-          @apply --layout-horizontal;
-          @apply --layout-center-justified;
-        }
+        @apply --layout-horizontal;
 
-        .flex-end-justified {
-          margin-right: 40px;
-          @apply --layout-horizontal;
-          @apply --layout-end-justified;
-        }
-        paper-chip.custom-background {
-          --paper-chip-background-color: #dc3545;
-          --paper-chip-label-color: #fff;
-        }
-        paper-chip.custom-background-l {
-            --paper-chip-background-color: #ffc107;
-            --paper-chip-label-color: #fff;
-        }
+      }
+
+      .title{
+        display: inline-block;
+      }
+      .box {
+        @apply --layout-vertical;
+
+        background-color: #FEFEFE;
+        border: 1px solid var(--app-accent-color);
+        border-radius: 4px;
+        background-size: 100% auto;
+        background-position: 0px 24px;
+
+        margin: 5px;
+        margin-left: 0px;
+        min-height: 190px;
+
+        display: block;
+        text-decoration: none;
+        text-align: center;
+        position: relative;
+        width: 47.5%;
+        padding: 15px;
+      }
+      .box .inner {
+        background: rgba(255,255,255,0.5);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .flex-center-justified {
+        @apply --layout-horizontal;
+        @apply --layout-center-justified;
+      }
+
+
+      paper-chip.custom-background {
+        --paper-chip-background-color: #dc3545;
+        --paper-chip-label-color: #fff;
+      }
+      paper-chip.custom-background-m {
+        --paper-chip-background-color: #28a745;
+        --paper-chip-label-color: #fff;
+      }
+
+      .grid {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 20px;
+        margin-right: 20px;
+        @apply --layout-vertical;
+        @apply --layout-center-justified;
+        -webkit-flex-basis: 50%;
+        flex-basis: 50%;
+        max-width: 100%;
+      }
     </style>
     <br>
     <div>
       <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
     </div>
-    <div class="flex-center-justified">
+    <div class="container flex-center-justified">
       <h1>[[tempVar]]</h1>
     </div>
-    <div class="flex-center-justified">
+    <div class="container flex-center-justified">
       <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
     </div>
     <br>
-    <div class="container flex-center-justified">
-      <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
-        <vaadin-grid items="[[variableAndUnits.results.bindings]]">
-          <vaadin-grid-column width="50px" flex-grow="0">
-            <template class="header">#</template>
-            <template>[[index]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column flex-grow="2" text-align="center">
-            <template class="header"><strong>Variable Presentation</strong></template>
-            <template>[[item.vp.value]]</template>
-          </vaadin-grid-column>
-          <vaadin-grid-column width="9em" flex-grow="2" text-align="center">
-            <template class="header"><strong>Unit</strong></template>
-            <template>[[item.unit.value]]</template>
-          </vaadin-grid-column>
-        </vaadin-grid>
-      </template>
-      <template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">
-        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>
-      </template> 
+    <!--<div class="container flex-center-justified">-->
+      <!--<template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">-->
+        <!--<vaadin-grid items="[[variableAndUnits.results.bindings]]">-->
+          <!--&lt;!&ndash;<vaadin-grid-column width="50px" flex-grow="0">&ndash;&gt;-->
+            <!--&lt;!&ndash;<template class="header">#</template>&ndash;&gt;-->
+            <!--&lt;!&ndash;<template>[[index]]</template>&ndash;&gt;-->
+          <!--&lt;!&ndash;</vaadin-grid-column>&ndash;&gt;-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Label</strong></template>-->
+            <!--<template>[[item.label.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Short Name</strong></template>-->
+            <!--<template>[[item.shortName.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Long Name</strong></template>-->
+            <!--<template>[[item.longName.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Description</strong></template>-->
+            <!--<template>[[item.description.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Standard Name</strong></template>-->
+            <!--<template>[[item.sn.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column  text-align="center">-->
+            <!--<template class="header"><strong>Variable Presentation</strong></template>-->
+            <!--<template>[[item.vp.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+          <!--<vaadin-grid-column width="9em" flex-grow="2" text-align="center">-->
+            <!--<template class="header"><strong>Unit</strong></template>-->
+            <!--<template>[[item.unit.value]]</template>-->
+          <!--</vaadin-grid-column>-->
+        <!--</vaadin-grid>-->
+      <!--</template>-->
+
+      <!--<template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">-->
+        <!--<paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>-->
+      <!--</template>-->
+    <!--</div>-->
+
+
+
+    <div class="grid">
+        <template is="dom-repeat" items={{variableAndUnits.results.bindings}}>
+          <div class="box">
+            <div class="card-content">
+              <div class="title">
+                <h4>Label:&nbsp;{{item.label.value}}</h4>
+              </div>
+              <div class="body">
+              <div>
+                <h4>Short Name:{{item.shortName.value}}</h4>
+              </div>
+              <div>
+                <h4>Long Name:</h4> {{item.longName.value}}
+              </div>
+              <div>
+                <h4>Description:</h4>{{item.description.value}}
+              </div>
+              <div>
+                <h4>Standard Name:</h4>{{item.sn.value}}
+              </div>
+              <div>
+                <h4>Variable Presentation:</h4>{{item.vp.value}}
+              </div>
+              <div>
+                <h4>Unit:</h4>{{item.unit.value}}
+              </div>
+            </div>
+            </div>
+          </div>
+        </template>
     </div>
   </template>
 
