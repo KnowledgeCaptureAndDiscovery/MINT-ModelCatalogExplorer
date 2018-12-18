@@ -23,6 +23,7 @@ output presentations.s
 <link rel="lazy-import" href="model-configuration.html">
 <link rel="lazy-import" href="variable-configuration.html">
 <link rel="lazy-import" href="not-found.html">
+<link rel="lazy-import" href="variable-search.html">
 <link rel="lazy-import" href="my-about.html">
 
 <link rel="import" href="/bower_components/app-layout/app-layout.html">
@@ -89,7 +90,8 @@ output presentations.s
           <img height="40" src="images/logo.png">
           <div id="heading">MINT</div>
           <div id="links">
-            <a href="[[routePath]]model-search" style="text-decoration: none; color: #000;">Home</a>&nbsp;&nbsp;&nbsp;
+            <a href="[[routePath]]model-search" style="text-decoration: none; color: #000;">Models</a>&nbsp;&nbsp;&nbsp;
+            <a href="[[routePath]]variable-search" style="text-decoration: none; color: #000;">Variables</a>&nbsp;&nbsp;&nbsp;
             <a href="[[routePath]]my-about" style="text-decoration: none; color: #000;">About</a>
           </div>
         </app-toolbar>
@@ -119,6 +121,7 @@ output presentations.s
         <view-model id="viewModel" data="{{modelSelected}}" name="view-model" route="{{subroute}}"></view-model>
         <model-configuration id="modelConfiguration" data="{{variableSelected}}" tempmodel="{{configSelected}}" name="model-configuration" route="{{subroute}}"></model-configuration>
         <variable-configuration id="variableConfiguration" data="{{variableSelected}}" name="variable-configuration" route="{{subroute}}"></variable-configuration>
+        <variable-search id="variableSearch" name="variable-search" route="{{subroute}}"></variable-search>
         <not-found name="not-found"></not-found>
         <my-about name="my-about" route="{{subroute}}"></my-about>
       </iron-pages>

@@ -12,6 +12,7 @@
     "src/variable-configuration.html",
     "src/view-model.html",
     "src/my-about.html",
+    "src/variable-search.html",
     "src/loading-screen.html"
   ],
   "sources": [

@@ -531,7 +531,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           results.push(result);
         }*/
-        var cts = [{'name': ''}]
+        var cts = [{'name': 'All'}]
         console.log(cats)
         for(var i = 0; i < cats.length; i++){
           cts.push({
@@ -632,7 +632,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var inp = Polymer.dom(_self.root).querySelector('#category')
           var category = inp.value
           var tp = [];
-          if(category != ''){
+          if(category != 'All'){
             tp = _self.getModelsByCategory(category);
             _self.displayLabel(tp);
           }
