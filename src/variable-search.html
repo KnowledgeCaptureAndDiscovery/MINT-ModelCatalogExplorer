@@ -202,9 +202,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           --paper-chip-background-color: #28a745;
           --paper-chip-label-color: #fff;
         }
+        paper-chip.custom-background-j {
+          --paper-chip-background-color: purple;
+          --paper-chip-label-color: #fff;
+        }
     </style>
    <div class="container flex-center-justified">
       <div><h1>Variable Search</h1></div>
+    </div>
+    <div class="container flex-center-justified">
+      <center><p style="width: 50%; color: #dc3545">This interface provides a way to search variable presentation and standard names from all the models. Try it out by specifying a variable presentation or standard name in the search bar. For example: Type <b>SRAD</b> in search bar to obtain it's metadata. </p></center>
     </div>
     <div class="container flex-center-justified">
       <div id="search-bar">
@@ -223,12 +230,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <br><br>
     <div id="displayRes" style="display: none;">
       <div class="container flex-center-justified">
-        <div><h2>{{variableAndUnits.label}}</h2></div>
+        <div><h2>{{variableAndUnits.label}} &nbsp;&nbsp;&nbsp;<paper-chip label="Variable Presentation" class="custom-background-m" no-hover></paper-chip></h2></div>
       </div>
       <div class="container flex-center-justified">
         <div><paper-chip label="URI: [[variableAndUnits.uri]]" no-hover></paper-chip></div>
       </div>
-      <br><br>
+      <br>
       <div class="container flex-center-justified">
         <div class="grid">
           <template is="dom-if" if="[[_checkValue(variableAndUnits)]]">
@@ -295,6 +302,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </template>
       </div>
     </div>
+    </div>
+    <div id="dispSN" style="display: none;">
+      <div class="container flex-center-justified">
+        <div><h2>{{inpVal}} &nbsp;&nbsp;&nbsp;<paper-chip label="Standard Name" class="custom-background-j" no-hover></paper-chip></h2></div>
+      </div>
+      <div class="container flex-center-justified">
+        <div class="grid">
+          <div class="box">
+            <div class="card-content">
+              <div class="body">
+                <div>
+                  <h4>Variable Presentation:</h4>{{sntoLabel}}
+                </div>
+                <div>
+                  <h4>Variable Presentation URI :</h4> {{sntoURI}}
+                </div>
+                <div>
+                  <h4>Metadata :</h4> <paper-chip label="Currently Not Available" class="custom-background" no-hover></paper-chip>
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
   </template>
 
 
@@ -306,7 +337,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          variables: Array,
          dictMap: Object,
          variableAndUnits: Object,
-         tempVar: String,
+         varSN: Object,
+         sntoURI: String,
+         sntoLabel: String,
+         inpVal: String,
          URI: String
         };
       }
@@ -342,9 +376,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             if('sn' in res[i]){
               searchRes.push(res[i].sn.value)
             }
+            else{
+            }
             searchRes.push(res[i].label.value)
             test[res[i].label.value] = res[i].v.value
           }
+
         },
 
         error: function(jqXHR, exception) {
@@ -458,32 +495,113 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         });
     }
+
+    checkSN(vsn){
+      console.log("Hello")
+      var _parent = document.querySelector("mint-explorer-app");
+      var qt = _parent.queries[9].query;
+      var flag = false
+      var sntoLabel = ''
+      var sntoURI = ''
+      $.ajax({
+        url: qt,
+        type: "GET",
+        cache: false,
+        timeout: 5000,
+        async: false,
+        complete: function() {
+            console.log("GET request sent");
+        },
+
+        success: function(data) {
+          console.log(data)
+          var res = data.results.bindings
+          for(var i=0; i<res.length; i++){
+            if('sn' in res[i]){
+              if(res[i].sn.value === vsn){
+                  flag = true
+                  sntoLabel = res[i].label.value
+                  sntoURI = res[i].v.value
+                  break
+              }
+            }
+          }
+        },
+
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            console.log(msg);
+        }
+      });
+      this.sntoLabel = sntoLabel
+      this.sntoURI = sntoURI
+      this.inpVal = vsn
+      console.log(sntoLabel, sntoURI)
+      return flag
+    }
+
+    getVarSN(svn){
+
+    }
       
 
-      ready() {
-        super.ready();
-        var _self = this;
-        _self.getAllVariables()
+    ready() {
+      super.ready();
+      var _self = this;
+      _self.getAllVariables()
 
-        var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
-        autocompleteSuggestions.source = this.variables;
+      var autocompleteSuggestions = Polymer.dom(this.root).querySelector('paper-autocomplete-chips');
+      autocompleteSuggestions.source = this.variables;
 
-        var temp = this.dictMap
+      var temp = this.dictMap
+      var ks = this.variables
 
-        autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
-          var input = Polymer.dom(_self.root).querySelector("#searchVariable");
-          input.value = event.detail.value;
-          this.tempVar = input.value
-          this.URI = temp[input.value]
+      autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
+        var input = Polymer.dom(_self.root).querySelector("#searchVariable");
+        input.value = event.detail.value;
+        this.URI = temp[input.value]
+        var flag = _self.checkSN(input.value)
+        if(flag === false){
           _self.fetchConfiguration(temp[input.value])
           var data = Polymer.dom(_self.root).querySelector("#displayRes");
           data.style.display = "block"
           console.log(this.variableAndUnits)
-        });
-
-        
-      }
+          var kisp = Polymer.dom(_self.root).querySelector("#dispSN");
+          kisp.style.display = "none"
+        }
+        else{
+          console.log("Standard Variable Found")
+          var ksp = Polymer.dom(_self.root).querySelector("#displayRes");
+          ksp.style.display = "none"
+          var tr = Polymer.dom(_self.root).querySelector("#dispSN");
+          tr.style.display = "block"
+          //var kisp = Polymer.dom(_self.root).querySelector("#displayRes");
+          //kisp.style.display = "none"
+        }
+      });
     }
+  }
 
     window.customElements.define(VariableSearch.is, VariableSearch);
   </script>
