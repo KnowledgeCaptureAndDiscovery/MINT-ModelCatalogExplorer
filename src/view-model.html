@@ -208,9 +208,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </template>
             </div>
             <div class="body">
-              <!--<div>-->
-                <!--<h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>-->
-              <!--</div>-->
+              <div>
+                <h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>
+              </div>
               <div>
                 <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
                 <h4>Description:</h4>
@@ -226,7 +226,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <template is="dom-if" if="[[_checkValue(item.input_files.value)]]">
                   <h4>Input Files:</h4>
                   <template is="dom-repeat" items={{item.input_files.value}} as="stuff">
-                    <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                    <a href="[[routePath]]variable-presentation"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
                   </template>
                 </template>
                 <template is="dom-if" if="[[_checkNegValue(item.input_files.value)]]">
@@ -238,7 +238,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <template is="dom-if" if="[[_checkValue(item.output_files.value)]]">
                   <h4>Output Files:</h4>
                   <template is="dom-repeat" items={{item.output_files.value}} as="stuff">
-                    <a href="[[routePath]]variable-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
+                    <a href="[[routePath]]variable-presentation"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
                   </template>
                 </template>
                 <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
