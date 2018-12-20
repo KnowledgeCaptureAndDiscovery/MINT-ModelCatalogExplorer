@@ -1,4 +1,4 @@
-<!--
+
 @license
 Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -6,11 +6,11 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
+
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
-<!-- <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> -->
+ <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-column.html">
 <link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
@@ -115,52 +115,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
     </div>
     <br>
-    <!--<div class="container flex-center-justified">-->
-      <!--<template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">-->
-        <!--<vaadin-grid items="[[variableAndUnits.results.bindings]]">-->
-          <!--&lt;!&ndash;<vaadin-grid-column width="50px" flex-grow="0">&ndash;&gt;-->
-            <!--&lt;!&ndash;<template class="header">#</template>&ndash;&gt;-->
-            <!--&lt;!&ndash;<template>[[index]]</template>&ndash;&gt;-->
-          <!--&lt;!&ndash;</vaadin-grid-column>&ndash;&gt;-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Label</strong></template>-->
-            <!--<template>[[item.label.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Short Name</strong></template>-->
-            <!--<template>[[item.shortName.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Long Name</strong></template>-->
-            <!--<template>[[item.longName.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Description</strong></template>-->
-            <!--<template>[[item.description.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Standard Name</strong></template>-->
-            <!--<template>[[item.sn.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column  text-align="center">-->
-            <!--<template class="header"><strong>Variable Presentation</strong></template>-->
-            <!--<template>[[item.vp.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-          <!--<vaadin-grid-column width="9em" flex-grow="2" text-align="center">-->
-            <!--<template class="header"><strong>Unit</strong></template>-->
-            <!--<template>[[item.unit.value]]</template>-->
-          <!--</vaadin-grid-column>-->
-        <!--</vaadin-grid>-->
-      <!--</template>-->
+    <div class="container flex-center-justified">
+      <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
+        <vaadin-grid heightByRows="true" items="[[variableAndUnits.results.bindings]]">
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Label</strong></template>
+            <template>[[item.label.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Short Name</strong></template>
+            <template>[[item.shortName.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Long Name</strong></template>
+            <template>[[item.longName.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Description</strong></template>
+            <template>[[item.description.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Standard Name</strong></template>
+            <template>[[item.sn.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column  text-align="center" resizable>
+            <template class="header"><strong>Variable Presentation</strong></template>
+            <template>[[item.vp.value]]</template>
+          </vaadin-grid-column>
+          <vaadin-grid-column width="9em" flex-grow="2" text-align="center" resizable>
+            <template class="header"><strong>Unit</strong></template>
+            <template>[[item.unit.value]]</template>
+          </vaadin-grid-column>
+        </vaadin-grid>
+      </template>
 
-      <!--<template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">-->
-        <!--<paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>-->
-      <!--</template>-->
-    <!--</div>-->
+      <template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">
+        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>
+      </template>
+    </div>
 
 
 
-    <div class="grid">
+    <!--<div class="grid">
         <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
         <template is="dom-repeat" items={{variableAndUnits.results.bindings}}>
           <div class="box">
@@ -195,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <template is="dom-if" if="[[_checkBVal(variableAndUnits.results.bindings)]]">
         <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background" no-hover></paper-chip>
         </template>
-    </div>
+    </div>-->
 
   </template>
 
