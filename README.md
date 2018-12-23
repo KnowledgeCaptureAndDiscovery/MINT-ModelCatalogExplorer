@@ -1,6 +1,10 @@
 # MINT-ModelCatalogExplorer
 A repository to show and explore models included in the MINT Model Catalog
 
+A demo of this application may be found at http://ontosoft.isi.edu:8081/
+
+At the moment, **we only support Google Chrome browser**.
+
 ## Install Node.js and npm
 
 If you don't have Node.js or npm installed, follow the instructions [here](https://www.npmjs.com/get-npm). 
