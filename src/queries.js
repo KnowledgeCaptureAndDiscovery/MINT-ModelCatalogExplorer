@@ -38,5 +38,9 @@ var queries = [
   {
     "description": "Fetch all the variables",
     "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+  },
+  {
+    "description": "Fetch model and configs from variable presentation",
+    "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
   }
 ]

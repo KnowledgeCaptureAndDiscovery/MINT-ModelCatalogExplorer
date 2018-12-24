@@ -206,6 +206,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           --paper-chip-background-color: purple;
           --paper-chip-label-color: #fff;
         }
+        paper-chip.custom-background-l {
+            --paper-chip-background-color: #ffc107;
+            --paper-chip-label-color: #fff;
+        }
+        paper-chip.custom-background-k {
+          --paper-chip-background-color: #007bff;
+          --paper-chip-label-color: #fff;
+        }
     </style>
    <div class="container flex-center-justified">
       <div><h1>Variable Search</h1></div>
@@ -234,6 +242,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <div class="container flex-center-justified">
         <div><paper-chip label="URI: [[variableAndUnits.uri]]" no-hover></paper-chip></div>
+      </div>
+      <br>
+      <div class="container flex-center-justified">
+        <div><paper-chip label="Model: [[variableAndUnits.model]]" class="custom-background-k" no-hover></paper-chip></div>
+        <div><paper-chip label="Version: [[variableAndUnits.version]]" class="custom-background-k" no-hover></paper-chip></div>
+        <div><paper-chip label="Configuration: [[variableAndUnits.config]]" class="custom-background-k" no-hover></paper-chip></div>
       </div>
       <br>
       <div class="container flex-center-justified">
@@ -416,8 +430,136 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       console.log(this.dictMap)
     }
 
+    getMetadata(uri){
+      var _parent = document.querySelector("mint-explorer-app");
+      var qt = _parent.queries[6].query;
+      var ts = {}
+      $.ajax({
+        url: qt,
+        type: "GET",
+        data: {
+          mv: uri
+        },
+        cache: false,
+        timeout: 5000,
+        async: false,
+        success: function(data) {
+          ts = data
+        },
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            console.log(msg);
+        }
+      });
+      return ts
+    }
+
+    processMetadata(kmp){
+      var jump = []
+      var _self = this
+      for(var i=0; i<kmp.length; i++){
+        var u = {}
+        if(i === 0){
+          u = _self.getMetadata(kmp[i].val)
+          for(var j=0; j<u.results.bindings.length; j++){
+            var ty = u.results.bindings[j].prop.value.split("#")
+            if(ty[1] === "label"){
+              jump.push(u.results.bindings[j].value.value)
+              break
+            }
+          }
+        }
+        else if(i === 1){
+          var kj = kmp[i].val.split("#")
+          jump.push(kj[1])
+        }
+        else if(i === 2){
+          u = _self.getMetadata(kmp[i].val)
+          for(var k=0; k<u.results.bindings.length; k++){
+            var ty = u.results.bindings[k].prop.value.split("#")
+            if(ty[1] === "hasVersionId"){
+              jump.push(u.results.bindings[k].value.value)
+              break
+            }
+          }
+        }
+      }
+      return jump
+    }
+
     process(data, uri){
-      var obj = {"uri": uri}
+      var _self = this
+      var _parent = document.querySelector("mint-explorer-app");
+      var qt = _parent.queries[10].query;
+      var kmp = [] 
+      $.ajax({
+        url: qt,
+        type: "GET",
+        data: {
+          var: uri
+        },
+        cache: false,
+        timeout: 5000,
+        async: false,
+        success: function(data) {
+          kmp.push({'val': data.results.bindings[0].model.value})
+          kmp.push({'val': data.results.bindings[0].configuration.value})
+          kmp.push({'val': data.results.bindings[0].version.value})
+        },
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            console.log(msg);
+        }
+      });
+      console.log("KMP", kmp)
+
+      var yes = {}
+      yes = _self.processMetadata(kmp)
+      console.log("Acheived", yes)
+
+      var obj = {"uri": uri, "model": yes[0], "config": yes[1], "version": yes[2]}
       for(var i=0; i<data.length; i++){
         var x = data[i].prop.value.split("#")
         if(data[i].prop.value.includes("description")){
@@ -459,9 +601,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             cache: false,
             timeout: 5000,
             async: false,
-            complete: function() {
-                // console.log("GET request sent");
-            },
 
             success: function(data) {
               console.log(data);
@@ -561,9 +700,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return flag
     }
 
-    getVarSN(svn){
-
-    }
       
 
     ready() {
