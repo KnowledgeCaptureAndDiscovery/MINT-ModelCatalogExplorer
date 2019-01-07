@@ -13,7 +13,8 @@
     "src/view-model.html",
     "src/my-about.html",
     "src/variable-search.html",
-    "src/loading-screen.html"
+    "src/loading-screen.html",
+    "src/font-awesome.html"
   ],
   "sources": [
     "images/**/*",

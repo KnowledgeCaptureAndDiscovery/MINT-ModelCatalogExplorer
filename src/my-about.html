@@ -99,7 +99,10 @@
         </div>
       </div>
     </div>
-    <h2></h2>
+    <footer>
+      <hr>
+      <center><p>Copyright &copy; {{year}} Model Catalog Explorer <a href="https://github.com/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogExplorer/" target="_blank" title="View on GitHub" style="position: relative; top: 10px;"><img src= "./images/github.png" width="40"></a></p></center>
+    </footer>
   </template>
 
 
@@ -108,13 +111,15 @@
       static get is() { return 'my-about'; }
       static get properties() {
         return {
-         
+         year: String
         };
       }
 
     ready() {
         super.ready();
-        console.log("Hello")
+        var currentTime = new Date()
+        var year = currentTime.getFullYear()
+        this.year = year
     }
   }
 
