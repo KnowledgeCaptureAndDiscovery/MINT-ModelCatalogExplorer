@@ -1,0 +1,37 @@
+{
+	"name": "cosmoz-i18next",
+	"version": "1.0.0",
+	"description": "[![Build Status](https://travis-ci.org/Neovici/cosmoz-i18next.svg?branch=master)](https://travis-ci.org/Neovici/cosmoz-i18next)",
+	"main": "cosmoz-i18next.html",
+	"directories": {
+		"test": "test"
+	},
+	"devDependencies": {
+		"eslint": "^4.10.0",
+		"eslint-plugin-html": "^3.2.1",
+		"eslint-plugin-mocha": "^4.11.0",
+		"polymer-cli": "^1.6.0",
+		"web-component-tester-istanbul": "Neovici/web-component-tester-istanbul"
+	},
+	"scripts": {
+		"start": "polymer serve -o",
+		"postinstall": "polymer install --variants",
+		"lint": "eslint --cache --ext .js,.html . && polymer lint cosmoz-*.html",
+		"test": "polymer test",
+		"analyze": "polymer analyze --input cosmoz-*.html  > analysis.json"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/neovici/cosmoz-i18next.git"
+	},
+	"keywords": [
+		"polymer",
+		"web-components"
+	],
+	"author": "",
+	"license": "Apache-2.0",
+	"bugs": {
+		"url": "https://github.com/neovici/cosmoz-i18next/issues"
+	},
+	"homepage": "https://github.com/neovici/cosmoz-i18next#readme"
+}

@@ -1,0 +1,20 @@
+<link rel="import" href="cosmoz-i18next.html"/>
+
+<dom-module id="cosmoz-t">
+	<template>[[ _(input, t) ]]</template>
+	<script>
+		(function () {
+			Polymer({
+				is: 'cosmoz-t',
+				properties: {
+					input: {
+						type: String
+					}
+				},
+				behaviors: [
+					Cosmoz.TranslatableBehavior
+				]
+			});
+		}());
+	</script>
+</dom-module>
