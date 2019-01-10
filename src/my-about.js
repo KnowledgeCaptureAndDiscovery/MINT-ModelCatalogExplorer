@@ -1,14 +1,14 @@
-import './my-icons.js';
-import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-import 'vaadin-button/vaadin-button.js';
-import './shared-styles.js';
-import '/node_modules/@polymer/paper-card/paper-card.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import { PolymerElement, html } from '@polymer/polymer/polymer-element.js';
+import '@polymer/paper-card/paper-card.js'
+import '@polymer/iron-flex-layout/iron-flex-layout.js'
+import './my-icons.js'
+import './shared-styles.js'
+
+
 class MyAbout extends PolymerElement {
   static get template() {
     return html`
-    <style include="shared-styles">
+      <style include="shared-styles">
         .box {
           @apply --layout-vertical;
 
@@ -52,10 +52,7 @@ class MyAbout extends PolymerElement {
           height:auto
         }
     </style>
-    <!--<h2>Configurations</h2>-->
-    <!--<h4>[[configSelected.model.label]]</h4>-->
-    <!--<h4>[[configSelected.model.model]]</h4>-->
-    <!--<h4>[[configSelected.config]]</h4>-->
+
     <center><h1>What is MINT?</h1></center>
     <center>
       Major societal and environmental challenges require forecasting how natural processes and human activities affect one another. There are many areas of the globe where climate affects water resources and therefore food availability, with major economic and social implications. Today, such analyses require significant effort to integrate highly heterogeneous models from separate disciplines, including geosciences, agriculture, economics, and social sciences. Model integration requires resolving semantic, spatio-temporal, and execution mismatches, which are largely done by hand today and may take more than two years. The Model INTegration (MINT) project will develop a modeling environment which will significantly reduce the time needed to develop new integrated models, while ensuring their utility and accuracy.
@@ -99,21 +96,22 @@ class MyAbout extends PolymerElement {
         </div>
       </div>
     </div>
-    <h2></h2>
-`;
+    <footer>
+      <hr>
+      <center><p>Copyright &copy; {{year}} Model Catalog Explorer <a href="https://github.com/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogExplorer/" target="_blank" title="View on GitHub" style="position: relative; top: 10px;"><img src= "./images/github.png" width="40"></a></p></center>
+    </footer>
+    `;
   }
-
-  static get is() { return 'my-about'; }
   static get properties() {
     return {
-     
+     year: String
     };
   }
-
   ready() {
-      super.ready();
-      console.log("Hello")
+    super.ready();
+    var currentTime = new Date()
+    var year = currentTime.getFullYear()
+    this.year = year
   }
 }
-
-window.customElements.define(MyAbout.is, MyAbout);
+window.customElements.define('my-about', MyAbout);

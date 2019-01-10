@@ -1,39 +1,74 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/mint-explorer-app.html",
-  "fragments": [
-    "src/model-configuration.html",
-    "src/model-descriptions.js",
-    "src/model-search.html",
-    "src/my-icons.html",
-    "src/not-found.html",
-    "src/queries.js",
-    "src/shared-styles.html",
-    "src/variable-configuration.html",
-    "src/view-model.html",
-    "src/my-about.html",
-    "src/loading-screen.html"
-  ],
+  "shell": "src/mint-explorer-app.js",
   "sources": [
-    "images/**/*",
-    "src/**/*"
+    "images/**/*"
   ],
   "extraDependencies": [
-    "bower_components/webcomponentsjs/*.js",
-    "!bower_components/webcomponentsjs/gulpfile.js",
     "manifest.json",
-    ".htaccess"
+    "node_modules/@webcomponents/webcomponentsjs/*.js",
+    "!node_modules/@webcomponents/webcomponentsjs/gulpfile.js",
+    "node_modules/@webcomponents/webcomponentsjs/bundles/*.js"
   ],
+  "builds": [
+    {
+      "name": "esm-bundled",
+      "browserCapabilities": [
+        "es2015",
+        "modules"
+      ],
+      "js": {
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    },
+    {
+      "name": "es6-bundled",
+      "browserCapabilities": [
+        "es2015"
+      ],
+      "js": {
+        "minify": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    },
+    {
+      "name": "es5-bundled",
+      "js": {
+        "minify": true,
+        "compile": true,
+        "transformModulesToAmd": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      },
+      "bundle": true,
+      "addServiceWorker": true
+    }
+  ],
+  "moduleResolution": "node",
+  "npm": true,
   "lint": {
-    "rules": ["polymer-2"]
-  },
-  "builds": [{
-    "name": "modelCatalogTest",
-	  "bundle": true,
-    "addServiceWorker": true,
-    "swPrecacheConfig": "sw-precache-config.js",
-    "css": { "minify": true },
-    "js": { "minify": true },
-    "html": { "minify": true }
-  }]
+    "rules": [
+      "polymer-3"
+    ]
+  }
 }

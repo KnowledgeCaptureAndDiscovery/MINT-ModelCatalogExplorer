@@ -1,7 +1,7 @@
 {
-  "name": "MINT Model Catalog Explorer",
-  "short_name": "CatalogExplorer",
-  "description": "An application for browsing existing numerial models",
+  "name": "My App",
+  "short_name": "My App",
+  "description": "My App description",
   "icons": [
     {
       "src": "images/manifest/icon-192x192.png",
