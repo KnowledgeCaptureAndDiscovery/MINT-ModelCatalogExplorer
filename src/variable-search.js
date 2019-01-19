@@ -13,7 +13,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import '@polymer/neon-animation/web-animations.js';
 
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import '@polymer/app-layout/app-drawer/app-drawer.js';
@@ -26,38 +25,37 @@ import '@polymer/app-route/app-location.js';
 import '@polymer/app-route/app-route.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/iron-selector/iron-selector.js';
+import './paper-chip.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
-import 'paper-autocomplete/paper-autocomplete.js';
-import 'paper-autocomplete-chips/paper-autocomplete-chips.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import 'vaadin-checkbox/vaadin-checkbox.js';
-import '/node_modules/paper-chip/paper-chip.js';
-import 'vaadin-combo-box/vaadin-combo-box.js';
+import '@vaadin/vaadin-combo-box/vaadin-combo-box.js';
+
 import './model-search.js';
 import './view-model.js';
 import './model-configuration.js';
 import './not-found.js';
-import '/node_modules/@polymer/app-layout/app-layout.js';
-import '/node_modules/@polymer/app-layout/app-header/app-header.js';
-import '/node_modules/@polymer/app-layout/app-header-layout/app-header-layout.js';
-import '/node_modules/@polymer/app-layout/app-toolbar/app-toolbar.js';
-import '/node_modules/@polymer/iron-flex-layout/iron-flex-layout.js';
-import '/node_modules/paper-chip/paper-chip.js';
-import '/node_modules/@polymer/paper-input/paper-input.js';
-import '/node_modules/@polymer/paper-button/paper-button.js';
-import '/node_modules/@polymer/paper-icon-button/paper-icon-button.js';
-import '/node_modules/@polymer/iron-icons/iron-icons.js';
-import '/node_modules/@polymer/iron-icon/iron-icon.js';
-import '/node_modules/@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
-import '/node_modules/@polymer/paper-listbox/paper-listbox.js';
-import '/node_modules/@polymer/paper-item/paper-item.js';
-import '/node_modules/@polymer/neon-animation/web-animations.js';
-import '/node_modules/@polymer/paper-toggle-button/paper-toggle-button.js';
-import '/node_modules/@polymer/paper-card/paper-card.js';
+import './regex-highlighter.js';
+
+import '@polymer/app-layout/app-layout.js';
+import '@polymer/app-layout/app-header/app-header.js';
+import '@polymer/app-layout/app-header-layout/app-header-layout.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-icons/iron-icons.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@polymer/paper-card/paper-card.js';
 import './my-icons.js';
-import 'vaadin-button/vaadin-button.js';
+import '@vaadin/vaadin-button/vaadin-button.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+
 class VariableSearch extends PolymerElement {
   static get template() {
     return html`
@@ -229,15 +227,24 @@ class VariableSearch extends PolymerElement {
       <center><p style="width: 50%;">This interface provides a way to search variable presentation and standard names from all the models. Try it out by specifying a variable presentation or standard name in the search bar. For example: Type <b>SRAD</b> in search bar to obtain it's metadata. </p></center>
     </div>
     <div class="container flex-center-justified">
-      <vaadin-combo-box label="Model Search" class="incL" items="[[data]]"></vaadin-combo-box>
+      <vaadin-combo-box label="Search Variable Name" filter="{{filter}}" id="searchVariable" class="incL" items="[[data]]">
+        <template>
+          <style>
+            span[focused] {
+              color: var(--lumo-primary-color);
+            }
+
+            span[selected] {
+              font-weight: bold;
+            }
+          </style>
+          <span selected$="[[selected]]" focused$="[[focused]]">[[item]]</span>
+        </template>
+      </vaadin-combo-box>
     </div>
     <br>
     <div class="container flex-center-justified">
       <div id="search-bar">
-        <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
-        <paper-autocomplete-chips id="searchVariable" label="Search Variable Name" for="searchInput" source="[[accounts]]">
-        </paper-autocomplete-chips>
-        <br>
         <div class="grid">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
           </vaadin-button>
@@ -380,7 +387,8 @@ class VariableSearch extends PolymerElement {
   getAllVariables(){
     console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
-    var qt = _parent.queries[9].query;
+    //var qt = _parent.queries[9].query;
+    var qt = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var searchRes = []
     var test = {}
     $.ajax({
@@ -442,7 +450,8 @@ class VariableSearch extends PolymerElement {
 
   getMetadata(uri){
     var _parent = document.querySelector("mint-explorer-app");
-    var qt = _parent.queries[6].query;
+    //var qt = _parent.queries[6].query;
+    var qt = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var ts = {}
     $.ajax({
       url: qt,
@@ -485,6 +494,10 @@ class VariableSearch extends PolymerElement {
     return ts
   }
 
+  clearHandler(){
+    location.reload();
+  }
+
   processMetadata(kmp){
     var jump = []
     var _self = this
@@ -521,7 +534,8 @@ class VariableSearch extends PolymerElement {
   process(data, uri){
     var _self = this
     var _parent = document.querySelector("mint-explorer-app");
-    var qt = _parent.queries[10].query;
+    //var qt = _parent.queries[10].query;
+    var qt = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var kmp = [] 
     $.ajax({
       url: qt,
@@ -600,7 +614,8 @@ class VariableSearch extends PolymerElement {
   fetchConfiguration(e){
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
-      var query = _parent.queries[6].query;
+      //var query = _parent.queries[6].query;
+      var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
@@ -648,7 +663,8 @@ class VariableSearch extends PolymerElement {
   checkSN(vsn){
     console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
-    var qt = _parent.queries[9].query;
+    //var qt = _parent.queries[9].query;
+    var qt = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var flag = false
     var sntoLabel = ''
     var sntoURI = ''
@@ -717,16 +733,13 @@ class VariableSearch extends PolymerElement {
     var _self = this;
     _self.getAllVariables()
 
-    var autocompleteSuggestions = dom(this.root).querySelector('paper-autocomplete-chips');
-    autocompleteSuggestions.source = this.variables;
-
-    var combobox = dom(this.root).querySelector('vaadin-combo-box');
-    combobox.items = this.variables;
+    var comboBox = this.$.searchVariable;
+    comboBox.items = this.variables;
 
     var temp = this.dictMap
     var ks = this.variables
 
-    autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
+    comboBox.addEventListener('selected-item-changed', function(event){
       var input = dom(_self.root).querySelector("#searchVariable");
       input.value = event.detail.value;
       this.URI = temp[input.value]

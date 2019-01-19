@@ -224,10 +224,20 @@ class ModelSearch extends PolymerElement {
     </div>
     <div class="container flex-center-justified">
       <div id="search-bar">
-        <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
-        <!--<paper-autocomplete-chips id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]">
-        </paper-autocomplete-chips>-->
-        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData"></vaadin-combo-box>
+        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
+          <template>
+            <style>
+              span[focused] {
+                color: var(--lumo-primary-color);
+              }
+
+              span[selected] {
+                font-weight: bold;
+              }
+            </style>
+            <span selected$="[[selected]]" focused$="[[focused]]">[[item]]</span>
+          </template>
+        </vaadin-combo-box>
         <br>
         <br>
         <div class="grid">

@@ -23,12 +23,13 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
 
+import './loading-screen.js';
 import './model-search.js';
 import './view-model.js';
 import './model-configuration.js';
 import './variable-presentation.js';
+import './variable-search.js';
 import './my-about.js';
-import './loading-screen.js';
 import './not-found.js';
 
 
@@ -107,8 +108,6 @@ class MintExplorerApp extends PolymerElement {
         </app-toolbar>
       </app-header>
 
-      <loading-screen loading="true" id="pageLoading"></loading-screen>
-
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
@@ -118,6 +117,7 @@ class MintExplorerApp extends PolymerElement {
         <view-model id="viewModel" data="{{modelSelected}}" name="view-model" route="{{subroute}}"></view-model>
         <model-configuration id="modelConfiguration" data="{{variableSelected}}" tempmodel="{{configSelected}}" name="model-configuration" route="{{subroute}}"></model-configuration>
         <variable-presentation id="variablePresentation" data="{{variableSelected}}" name="variable-presentation" route="{{subroute}}"></variable-presentation>
+        <variable-search id="variableSearch" name="variable-search" route="{{subroute}}"></variable-search>
         <my-about name="my-about" route="{{subroute}}"></my-about>
         <not-found name="not-found"></not-found>
       </iron-pages>
@@ -169,7 +169,7 @@ class MintExplorerApp extends PolymerElement {
   _routePageChanged(page) {
     if (!page) {
       this.page = 'model-search';
-    } else if (['model-search', 'view-model', 'model-configuration', 'variable-presentation', 'my-about'].indexOf(page) !== -1) {
+    } else if (['model-search', 'view-model', 'model-configuration', 'variable-presentation', 'variable-search', 'my-about'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'not-found';
@@ -179,7 +179,7 @@ class MintExplorerApp extends PolymerElement {
   _pageChanged(page, oldPage) {
     if (page != null) {
       if(!this.loadedPages[page]) {
-        this.$.pageLoading.loading = true;
+        //this.$.pageLoading.loading = true;
         this.loadedPages[page] = true;
         let cb = this._pageLoaded.bind(this, Boolean(oldPage));
         switch (page) {
@@ -195,6 +195,9 @@ class MintExplorerApp extends PolymerElement {
           case 'variable-presentation':
             import('./variable-presentation.js').then(cb, cb, true);
             break;
+          case 'variable-search':
+            import('./variable-presentation.js').then(cb, cb, true);
+            break;
           case 'my-about':
             import('./my-about.js').then(cb, cb, true);
             break;
@@ -207,61 +210,13 @@ class MintExplorerApp extends PolymerElement {
   }
 
   _pageLoaded(page) {
-    this.$.pageLoading.loading = false;
-    console.log("LOADED", this.$.pageLoading.loading)
+    //this.$.pageLoading.loading = false;
+    this.style.zIndex = 2;
+    //console.log("LOADED", this.$.pageLoading.loading)
   }
 
   ready() {
     super.ready();
-    var _self = this;
-    var queries = [
-      {
-        "description": "What are all the models currently described in the catalog ?",
-        "query":"PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%3Flabel%0D%0AWHERE+%7B%0D%0A++%3Fmodel+a+model%3AModel.%0D%0A++%3Fmodel+rdfs%3Alabel+%3Flabel%0D%0A%7D"
-      },
-      {
-        "description": "Fetch data about this model",
-        "query": "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%24reln+%3Fprop%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22{}%22.%0D%0A++%3Fmodel+%3Freln+%3Fprop%0D%0A%7D"
-      },
-      {
-        "description": "Fetch this model configuration",
-        "query": "PREFIX+inst%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2Finstance%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0APREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0ASELECT+%3Fmodel_config%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Finput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Finput_variables%29%0D%0A%28GROUP_CONCAT%28DISTINCT+%3Foutput%3BSEPARATOR%3D%27%2C+%27%29+AS+%3Foutput_variables%29%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22{}%22.%0D%0A++%3Fmodel+model%3AhasConfiguration+%3Fmodel_config+.%0D%0A++%3Fmodel_config+model%3AhasInput+%3Finput+.%0D%0A++%3Fmodel_config+model%3AhasOutput+%3Foutput%0D%0A%7D%0D%0AGROUP+BY%28%3Fmodel_config%29"
-      },
-      {
-        "description": "Get all the models with their descriptions",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModels?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-      },
-      {
-        "description": "Get all the models related to a specific Category",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-      },
-      {
-        "description": "Fetch model configuration",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
-      },
-      {
-        "description": "Fetch version of a model",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-      },
-      {
-        "decription":"Fetch variable configuration",
-        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
-      },
-      {
-        "description":"Fetch model-configuration data",
-        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
-      },
-      {
-        "description": "Fetch all the variables",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-      },
-      {
-        "description": "Fetch model and configs from variable presentation",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-      }
-    ]
-
-    _self.queries = queries;
   }
 }
 

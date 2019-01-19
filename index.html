@@ -88,6 +88,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="node_modules/web-animations-js/web-animations-next.min.js"></script>
 
     <!-- Load your application shell -->
+    <script type="module" src="src/loading-screen.js"></script>
     <script type="module" src="src/mint-explorer-app.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
@@ -103,7 +104,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
   </head>
   <body>
-    <mint-explorer-app></mint-explorer-app>
+    <mint-explorer-app>
+      <loading-screen loading="true" id="pageLoading"></loading-screen>
+    </mint-explorer-app>
     <noscript>
       Please enable JavaScript to view this website.
     </noscript>

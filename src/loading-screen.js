@@ -14,7 +14,6 @@ class LoadingScreen extends PolymerElement {
         .screen{
           margin-top: 25%;
           position: absolute;
-          top: 50%;
           left: 50%;
           margin-right: -50%;
           transform: translate(-50%, -50%)
@@ -52,7 +51,6 @@ class LoadingScreen extends PolymerElement {
     }
     else{
       this.style.display = "block";
-      this.style.opacity = "1"
     }
   }
 }

@@ -240,13 +240,15 @@ class ModelConfiguration extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-      this.modelName = _parent.modelSelected.label;
-      this.varSelected=_parent.variableSelected.trim();
-      this.verSelected = _parent.versionSelected;
-      var x = [];
-      x = this.varSelected.split("#");
-      this.tempVar = x[1];
-      this.fetchConfiguration(this.varSelected);
+      if(_parent.configSelected){
+        this.modelName = _parent.modelSelected.label;
+        this.varSelected=_parent.variableSelected.trim();
+        this.verSelected = _parent.versionSelected;
+        var x = [];
+        x = this.varSelected.split("#");
+        this.tempVar = x[1];
+        this.fetchConfiguration(this.varSelected);
+      }
   }
 
   fetchConfiguration(e){

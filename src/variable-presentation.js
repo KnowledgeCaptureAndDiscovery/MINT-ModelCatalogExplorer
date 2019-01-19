@@ -234,11 +234,13 @@ class VariablePresentation extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-      this.varSelected=_parent.variableSelected.trim();
-      var x = []
-      x = this.varSelected.split("#")
-      this.tempVar = x[1]
-      this.fetchConfiguration(this.varSelected);
+      if(_parent.configSelected){
+        this.varSelected=_parent.variableSelected.trim();
+        var x = []
+        x = this.varSelected.split("#")
+        this.tempVar = x[1]
+        this.fetchConfiguration(this.varSelected);
+      }
   }
 
   process(data){
