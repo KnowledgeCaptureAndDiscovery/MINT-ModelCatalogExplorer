@@ -26,17 +26,19 @@ import '@polymer/app-layout/app-header/app-header.js'
 import '@polymer/app-layout/app-header-layout/app-header-layout.js'
 import '@polymer/app-layout/app-toolbar/app-toolbar.js'
 import '@polymer/iron-flex-layout/iron-flex-layout.js'
-import '../node_modules/paper-chip/paper-chip.js'
+import './paper-chip.js'
 import '@polymer/paper-input/paper-input.js'
 import '@polymer/paper-button/paper-button.js'
 import '@polymer/paper-icon-button/paper-icon-button.js'
 import '@polymer/iron-icon/iron-icon.js'
+import '@polymer/iron-icons/iron-icons.js'
 import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js'
 import '@polymer/paper-listbox/paper-listbox.js'
 import '@polymer/paper-item/paper-item.js'
 import '@polymer/paper-toggle-button/paper-toggle-button.js'
 import '@polymer/paper-card/paper-card.js'
 
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
 class ModelSearch extends PolymerElement {
   static get template() {
@@ -256,9 +258,6 @@ class ModelSearch extends PolymerElement {
         </template>
       </dom-repeat>
     </div>
-
-      <!-- <paper-button on-click="buttonPress">Fire</paper-button> -->
-    <!-- </app-header-layout> -->
 `;
   }
 

@@ -25,6 +25,8 @@ import './my-icons.js';
 
 import './model-search.js';
 import './view-model.js';
+import './model-configuration.js';
+import './variable-presentation.js';
 import './my-about.js';
 import './loading-screen.js';
 import './not-found.js';
@@ -114,6 +116,8 @@ class MintExplorerApp extends PolymerElement {
         role="main">
         <model-search id="modelSearch" name="model-search" route="{{subroute}}"></model-search>
         <view-model id="viewModel" data="{{modelSelected}}" name="view-model" route="{{subroute}}"></view-model>
+        <model-configuration id="modelConfiguration" data="{{variableSelected}}" tempmodel="{{configSelected}}" name="model-configuration" route="{{subroute}}"></model-configuration>
+        <variable-presentation id="variablePresentation" data="{{variableSelected}}" name="variable-presentation" route="{{subroute}}"></variable-presentation>
         <my-about name="my-about" route="{{subroute}}"></my-about>
         <not-found name="not-found"></not-found>
       </iron-pages>
@@ -165,7 +169,7 @@ class MintExplorerApp extends PolymerElement {
   _routePageChanged(page) {
     if (!page) {
       this.page = 'model-search';
-    } else if (['model-search', 'view-model', 'my-about'].indexOf(page) !== -1) {
+    } else if (['model-search', 'view-model', 'model-configuration', 'variable-presentation', 'my-about'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'not-found';
@@ -184,6 +188,12 @@ class MintExplorerApp extends PolymerElement {
             break;
           case 'view-model':
             import('./view-model.js').then(cb, cb, true);
+            break;
+          case 'model-configuration':
+            import('./model-configuration.js').then(cb, cb, true);
+            break;
+          case 'variable-presentation':
+            import('./variable-presentation.js').then(cb, cb, true);
             break;
           case 'my-about':
             import('./my-about.js').then(cb, cb, true);

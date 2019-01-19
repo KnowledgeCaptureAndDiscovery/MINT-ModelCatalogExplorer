@@ -1,10 +1,10 @@
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
-import 'vaadin-grid/vaadin-grid.js';
-import '/node_modules/vaadin-grid/vaadin-grid-sorter.js';
-import 'vaadin-grid/vaadin-grid-column.js';
-import 'vaadin-ordered-layout/vaadin-horizontal-layout.js';
-import '/node_modules/@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@vaadin/vaadin-grid/vaadin-grid.js';
+import '@vaadin/vaadin-grid/vaadin-grid-sorter.js';
+import '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import '@vaadin/vaadin-ordered-layout/vaadin-horizontal-layout.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
@@ -249,7 +249,8 @@ class VariablePresentation extends PolymerElement {
   fetchConfiguration(e){
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
-      var query = _parent.queries[7].query;
+      //var query = _parent.queries[7].query;
+      var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
