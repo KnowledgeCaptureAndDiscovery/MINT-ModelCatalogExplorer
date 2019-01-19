@@ -89,8 +89,8 @@ class ModelSearch extends PolymerElement {
           width: 50%;
         }
 
-        #search-input {
-          width: 1000%;
+        #searchInput {
+          width: 100%;
         }
         #searchIcon {
           width: 50%;
@@ -198,8 +198,6 @@ class ModelSearch extends PolymerElement {
           cursor: pointer;
         }
 
-
-
     </style>
 
     <div class="container flex-center-justified">
@@ -225,8 +223,10 @@ class ModelSearch extends PolymerElement {
     <div class="container flex-center-justified">
       <div id="search-bar">
         <!--<paper-input id="searchInput" label="Search Model Name" value="{{searchParameter}}"></paper-input>-->
-        <paper-autocomplete-chips id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]">
-        </paper-autocomplete-chips>
+        <!--<paper-autocomplete-chips id="searchInput" label="Search Model Name" for="searchInput" source="[[accounts]]">
+        </paper-autocomplete-chips>-->
+        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData"></vaadin-combo-box>
+        <br>
         <br>
         <div class="grid">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
@@ -282,6 +282,7 @@ class ModelSearch extends PolymerElement {
       results: Array,
       cts: Array,
       finResults: Array,
+      allOpts: Array,
     };
   }
 
@@ -313,7 +314,7 @@ class ModelSearch extends PolymerElement {
   }
 
   searchHandler(){
-    var searchString = dom(this.root).querySelector("#searchInput").value;
+    var searchString = this.$.searchInput.value;
     console.log("Done", searchString)
     var filtered = [];
     console.log(this.results)
@@ -498,24 +499,6 @@ class ModelSearch extends PolymerElement {
         }
     });
 
-    /*for(var i = 0; i < this.models.length; ++i) {
-      var result = {};
-      result.model = this.models[i].model.value;
-      result.label = this.models[i].label.value;
-      result.avail = false;
-      for(var j = 0; j < modelDescriptions.length; ++j) {
-        if(modelDescriptions[j].model == this.models[i].model.value) {
-          result.description = modelDescriptions[j].description;
-          if('link' in modelDescriptions[j]) {
-            result.link = modelDescriptions[j].link;
-          }
-          else{
-            result.avail = true;
-          }
-        }
-      }
-      results.push(result);
-    }*/
     var cts = [{'name': 'All'}]
     console.log(cats)
     for(var i = 0; i < cats.length; i++){
@@ -589,6 +572,10 @@ class ModelSearch extends PolymerElement {
     return catsByModel;
   }
 
+  _fillData(e) {
+    console.log("ok")
+  }
+
   _itemSelected(e) {
     var _self = this;
     var selectedItem = e.target.selectedItem;
@@ -623,23 +610,16 @@ class ModelSearch extends PolymerElement {
       })
       opts.push(this.results[i].label)
     }
-    console.log(opts)
+    this.allOpts = opts
 
-    //var autocompleteSuggestions = dom(this.root).querySelector('paper-autocomplete-chips');
-    //var dropdownContent = dom(this.root).querySelector('paper-dropdown-menu');
+    var comboBox = this.$.searchInput;
+    comboBox.items = this.allOpts;
 
-    //autocompleteSuggestions.source = opts;
-
-    /*autocompleteSuggestions.addEventListener('autocomplete-selected', function (event) {
-      //var paperToast = document.querySelector('paper-toast');
-      //var selected = event.detail.text;
-      //paperToast.text = 'Selected: ' + selected;
-      //paperToast.show();
-      var input = dom(_self.root).querySelector("#searchInput");
-      input.value = event.detail.value;
-      console.log(input.value)
+    comboBox.addEventListener('selected-item-changed', function(event){
+      var input = event.target.value;
+      console.log(input)
       _self.searchHandler()
-    });*/
+    });
   }
 }
 
