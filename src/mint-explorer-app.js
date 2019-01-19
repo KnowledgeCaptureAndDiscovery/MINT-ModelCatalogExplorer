@@ -23,6 +23,7 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
 
+import './model-search.js';
 import './my-about.js';
 import './loading-screen.js';
 import './not-found.js';
@@ -90,7 +91,6 @@ class MintExplorerApp extends PolymerElement {
         data="{{routeData}}"
         tail="{{subroute}}">
       </app-route>
-
       <app-header-layout>
       <app-header>
         <app-toolbar>
@@ -111,6 +111,7 @@ class MintExplorerApp extends PolymerElement {
         attr-for-selected="name"
         fallback-selection="not-found"
         role="main">
+        <model-search id="modelSearch" name="model-search" route="{{subroute}}"></model-search>
         <my-about name="my-about" route="{{subroute}}"></my-about>
         <not-found name="not-found"></not-found>
       </iron-pages>
