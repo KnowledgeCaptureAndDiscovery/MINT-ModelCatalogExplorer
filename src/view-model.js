@@ -30,7 +30,7 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-card/paper-card.js';
-//import '@polymer/paper-chip/paper-chip.js';
+import '../node_modules/paper-chip/paper-chip.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 
@@ -206,7 +206,7 @@ class ViewModel extends PolymerElement {
       <paper-chip label="URI: [[modelSelected.model]]" no-hover=""></paper-chip>
     </div>
     <div class="container flex-center-justified">
-      <paper-dropdown-menu id="version" label="Select Version">
+      <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
         <paper-listbox slot="dropdown-content" selected="0" class="dropdown-content" id="tempor">
           <paper-item>All</paper-item>
           <dom-repeat items="{{finVersions}}">
@@ -471,7 +471,8 @@ class ViewModel extends PolymerElement {
             var _self = this;
             var _parent = document.querySelector("mint-explorer-app");
             // Get Versions
-            var qs = _parent.queries[6].query
+            //var qs = _parent.queries[6].query
+            var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
             var r = []
             var cs;
             $.ajax({
@@ -534,7 +535,8 @@ class ViewModel extends PolymerElement {
     var _self = this;
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
-    var qs = _parent.queries[6].query
+    //var qs = _parent.queries[6].query
+    var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var r = []
     var finVersions = []
     for(var i = 0; i < versions.length; i++){
@@ -591,7 +593,8 @@ class ViewModel extends PolymerElement {
     var _self = this;
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
-    var qs = _parent.queries[6].query
+    //var qs = _parent.queries[6].query
+    var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var versions = []
     var r = []
     $.ajax({
@@ -643,7 +646,8 @@ class ViewModel extends PolymerElement {
         }
       });
 
-    var query = _parent.queries[5].query;
+    //var query = _parent.queries[5].query;
+    var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
     var endpoint = _parent.endpoint;
     $.ajax({
         url: query,
@@ -881,61 +885,64 @@ class ViewModel extends PolymerElement {
     }
   }
 
+  _itemChanged(e) {
+    var _self = this;
+    var selectedItem = e.target.selectedItem;
+    var versionNo = selectedItem.innerText
+    this.versionSelected = {"val": versionNo}
+    console.log(this.versionSelected)
+    if(versionNo != "All"){
+      console.log("Do Something")
+      _self.getDataFromVersion(versionNo)
+      var showVer = dom(_self.root).querySelectorAll('#showVer')
+      for(var i=0; i<showVer.length; i++){
+        showVer[i].style.display = "none"
+      }
+      var verC = dom(_self.root).querySelector('#verC')
+      verC.label = versionNo
+      var showAllVer = this.$.showAllVer
+      showAllVer.style.display = "none"
+      var changeVer = this.$.changeVer
+      changeVer.style.display = "block"
+    }
+    else{
+      console.log("Show All")
+      this.finVersions = []
+      var _parent = document.querySelector("mint-explorer-app");
+      this.modelSelected = _parent.modelSelected;
+      // console.log(this.modelSelected);
+      //this.fetchData();
+      if(this.modelSelected) {
+       _self.fetchConfiguration(_parent.modelSelected);
+      this.finConfigs = this.configurationResults
+      var showVer = this.$.showAllVer
+      for(var i=0; i<showVer.length; i++){
+        showVer[i].style.display = "block"
+      }
+      var changeVer = this.$.changeVer
+      changeVer.style.display = "none"
+      var showAllVer = this.$.showAllVer
+      showAllVer.style.display = "block" 
+      }
+      
+    }
+  }
+
   ready() {
     super.ready();
     var _self = this
     this.finVersions = []
-    var _parent = document.querySelector("mint-explorer-app");
+    var _parent = document.querySelector('mint-explorer-app')
     this.modelSelected = _parent.modelSelected;
-    console.log(_parent.modelSelected);
+    console.log("Hell", _parent.modelSelected);
     // console.log(this.modelSelected);
     //this.fetchData();
-    this.fetchConfiguration(_parent.modelSelected);
-    this.finConfigs = this.configurationResults
-    console.log("Ok Show the Val", this.finConfigs)
 
-    var dropdownContents = dom(this.root).querySelector('paper-dropdown-menu');
-
-    dropdownContents.addEventListener('selected-item-changed', function(event){
-      console.log("Item Changed")
-      var inp = dom(_self.root).querySelector('#version')
-      console.log(inp)
-      var versionNo = inp.value
-      this.versionSelected = {"val": versionNo}
-      console.log(this.versionSelected)
-      if(versionNo != "All"){
-        console.log("Do Something")
-        _self.getDataFromVersion(versionNo)
-        var showVer = dom(_self.root).querySelectorAll('#showVer')
-        for(var i=0; i<showVer.length; i++){
-          showVer[i].style.display = "none"
-        }
-        var verC = dom(_self.root).querySelector('#verC')
-        verC.label = versionNo
-        var showAllVer = dom(_self.root).querySelector('#showAllVer')
-        showAllVer.style.display = "none"
-        var changeVer = dom(_self.root).querySelector('#changeVer')
-        changeVer.style.display = "block"
-      }
-      else{
-        console.log("Show All")
-        this.finVersions = []
-        var _parent = document.querySelector("mint-explorer-app");
-        this.modelSelected = _parent.modelSelected;
-        // console.log(this.modelSelected);
-        //this.fetchData();
-        _self.fetchConfiguration(_parent.modelSelected);
-        this.finConfigs = this.configurationResults
-        var showVer = dom(_self.root).querySelectorAll('#showVer')
-        for(var i=0; i<showVer.length; i++){
-          showVer[i].style.display = "block"
-        }
-        var changeVer = dom(_self.root).querySelector('#changeVer')
-        changeVer.style.display = "none"
-        var showAllVer = dom(_self.root).querySelector('#showAllVer')
-        showAllVer.style.display = "block"
-      }
-    });
+    if(_parent.modelSelected != undefined) {
+      this.fetchConfiguration(_parent.modelSelected);
+      this.finConfigs = this.configurationResults
+      console.log("Ok Show the Val", this.finConfigs)
+    }
   }
 
   attributeChangedCallback(){

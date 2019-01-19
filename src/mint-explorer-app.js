@@ -24,6 +24,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
 
 import './model-search.js';
+import './view-model.js';
 import './my-about.js';
 import './loading-screen.js';
 import './not-found.js';
@@ -112,6 +113,7 @@ class MintExplorerApp extends PolymerElement {
         fallback-selection="not-found"
         role="main">
         <model-search id="modelSearch" name="model-search" route="{{subroute}}"></model-search>
+        <view-model id="viewModel" data="{{modelSelected}}" name="view-model" route="{{subroute}}"></view-model>
         <my-about name="my-about" route="{{subroute}}"></my-about>
         <not-found name="not-found"></not-found>
       </iron-pages>
@@ -163,7 +165,7 @@ class MintExplorerApp extends PolymerElement {
   _routePageChanged(page) {
     if (!page) {
       this.page = 'model-search';
-    } else if (['model-search', 'my-about'].indexOf(page) !== -1) {
+    } else if (['model-search', 'view-model', 'my-about'].indexOf(page) !== -1) {
       this.page = page;
     } else {
       this.page = 'not-found';
@@ -179,6 +181,9 @@ class MintExplorerApp extends PolymerElement {
         switch (page) {
           case 'model-search':
             import('./model-search.js').then(cb, cb, true);
+            break;
+          case 'view-model':
+            import('./view-model.js').then(cb, cb, true);
             break;
           case 'my-about':
             import('./my-about.js').then(cb, cb, true);
