@@ -263,9 +263,9 @@ class VariableSearch extends PolymerElement {
       </div>
       <br>
       <div class="container flex-center-justified">
-        <div><paper-chip label="Model: [[variableAndUnits.model]]" class="custom-background-k" no-hover=""></paper-chip></div>
-        <div><paper-chip label="Version: [[variableAndUnits.version]]" class="custom-background-k" no-hover=""></paper-chip></div>
-        <div><paper-chip label="Configuration: [[variableAndUnits.config]]" class="custom-background-k" no-hover=""></paper-chip></div>
+        <div><a href="[[routePath]]view-model"><paper-chip label="Model: [[variableAndUnits.model]]" class="custom-background-k" on-click="reachModel"></paper-chip></a></div>
+        <div><paper-chip label="Version: [[variableAndUnits.version]]" class="custom-background-k"></paper-chip></div>
+        <div><paper-chip label="Configuration: [[variableAndUnits.config]]" class="custom-background-k"></paper-chip></div>
       </div>
       <br>
       <div class="container flex-center-justified">
@@ -372,7 +372,8 @@ class VariableSearch extends PolymerElement {
      sntoURI: String,
      sntoLabel: String,
      inpVal: String,
-     URI: String
+     URI: String,
+     label: String
     };
   }
 
@@ -578,7 +579,7 @@ class VariableSearch extends PolymerElement {
       }
     });
     console.log("KMP", kmp)
-
+    this.label = kmp[0];
     var yes = {}
     yes = _self.processMetadata(kmp)
     console.log("Acheived", yes)
@@ -726,7 +727,23 @@ class VariableSearch extends PolymerElement {
     return flag
   }
 
+  reachModel() {
+    console.log("Clicked");
+    console.log(this.label);
+    var _parent = document.querySelector("mint-explorer-app");
 
+    _parent.modelSelected = {
+      label: this.variableAndUnits.model,
+      model: this.label.val
+    }
+    console.log("Here", _parent.modelSelected);
+    var _pages = dom(_parent.root).querySelector("#pages");
+    console.log(_pages);
+    console.log(_pages.selected);
+    //this.set('route.path', '/view-model');
+    console.log(_pages.selected);
+    
+  }
 
   ready() {
     super.ready();
