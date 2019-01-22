@@ -215,6 +215,8 @@ class VariableSearch extends PolymerElement {
         paper-chip.custom-background-k {
           --paper-chip-background-color: #007bff;
           --paper-chip-label-color: #fff;
+          cursor: pointer;
+          --paper-chip-avatar-background-color: #dc3545;
         }
         .incL {
           width: 50%;
@@ -224,7 +226,7 @@ class VariableSearch extends PolymerElement {
       <div><h1>Variable Search</h1></div>
     </div>
     <div class="container flex-center-justified">
-      <center><p style="width: 50%;">This interface provides a way to search variable presentation and standard names from all the models. Try it out by specifying a variable presentation or standard name in the search bar. For example: Type <b>SRAD</b> in search bar to obtain it's metadata. </p></center>
+      <center><p style="width: 50%;">This interface provides a way to search variable presentation and standard names from all the models. Try it out by specifying a variable presentation or standard name in the search bar. For example: Type <b>PRCP</b> in search bar to obtain it's metadata. </p></center>
     </div>
     <div class="container flex-center-justified">
       <vaadin-combo-box label="Search Variable Name" filter="{{filter}}" id="searchVariable" class="incL" items="[[data]]">
@@ -263,9 +265,19 @@ class VariableSearch extends PolymerElement {
       </div>
       <br>
       <div class="container flex-center-justified">
-        <div><a href="[[routePath]]view-model"><paper-chip label="Model: [[variableAndUnits.model]]" class="custom-background-k" on-click="reachModel"></paper-chip></a></div>
-        <div><paper-chip label="Version: [[variableAndUnits.version]]" class="custom-background-k"></paper-chip></div>
-        <div><paper-chip label="Configuration: [[variableAndUnits.config]]" class="custom-background-k"></paper-chip></div>
+        <div>
+          <a href="[[routePath]]view-model" title="View [[variableAndUnits.model]]">
+              <paper-chip label="Model: [[variableAndUnits.model]]" class="custom-background-k" on-click="reachModel" no-hover="">
+                <span class="chip-background" slot="avatar">
+                  <iron-icon icon="icons:launch"></iron-icon>
+                </span>
+              </paper-chip>
+          </a>
+      </div>
+        <div><paper-chip label="Version: [[variableAndUnits.version]]" class="custom-background-k" no-hover=""></paper-chip></div>
+        <div><a href="[[routePath]]model-configuration" title="View [[variableAndUnits.config]]"><paper-chip label="Configuration: [[variableAndUnits.config]]" class="custom-background-k" on-click="reachConfig" no-hover=""><span class="chip-background" slot="avatar">
+                  <iron-icon icon="icons:launch"></iron-icon>
+                </span></paper-chip></a></div>
       </div>
       <br>
       <div class="container flex-center-justified">
@@ -373,7 +385,8 @@ class VariableSearch extends PolymerElement {
      sntoLabel: String,
      inpVal: String,
      URI: String,
-     label: String
+     label: String,
+     configURI: String
     };
   }
 
@@ -580,6 +593,7 @@ class VariableSearch extends PolymerElement {
     });
     console.log("KMP", kmp)
     this.label = kmp[0];
+    this.configURI = kmp[1];
     var yes = {}
     yes = _self.processMetadata(kmp)
     console.log("Acheived", yes)
@@ -743,6 +757,17 @@ class VariableSearch extends PolymerElement {
     //this.set('route.path', '/view-model');
     console.log(_pages.selected);
     
+  }
+
+  reachConfig() {
+    console.log("LLllllllllllll")
+    var _parent = document.querySelector("mint-explorer-app");
+    _parent.modelSelected = {
+      label: this.variableAndUnits.model,
+      model: this.label.val
+    }
+    _parent.variableSelected = this.configURI.val;
+    console.log("Hello", this.configURI.val)
   }
 
   ready() {
