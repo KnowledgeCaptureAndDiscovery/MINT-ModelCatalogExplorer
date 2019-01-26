@@ -215,9 +215,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <div class="body">
                 <div>
                   <h4>Model Configuration: </h4>
-                  <template is="dom-repeat" items={{item.config.value}} as="stuff">
-                    <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>[[stuff]]</vaadin-button></a>
-                  </template>
+                  <!--<template is="dom-repeat" items={{item.config.value}} as="stuff">-->
+                    <a href="[[routePath]]model-configuration"><vaadin-button variable$="{{stuff}}" on-click="openConfigForUri" raised>{{item.config.value}}</vaadin-button></a>
+                  <!--</template>-->
                 </div>
                 <div>
                   <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
@@ -505,20 +505,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   var vars = [];
 
                   for(var j = 0; j<strs.length; ++j){
-                    var parts = strs[j].split("#");
-                    vars.push(parts[1]);
+                    //var parts = strs[j].split("#");
+                    vars.push(strs[j]);
                   }
                   obj.results.bindings[i][key].value = vars;
                 }
                 else {
                   var str = obj.results.bindings[i][key].value;
-                  var arr = str.split("#");
+                  // var arr = str.split("#");
                     var vars = [];
-                    vars.push(arr[1]);
-                    if(str.includes("#"))
+                    vars.push(str);
+                  //   if(str.includes("#"))
+                  //       obj.results.bindings[i][key].value = vars;
+                    // else
                         obj.results.bindings[i][key].value = vars;
-                    else
-                        obj.results.bindings[i][key].value = str;
                 }
               }
             }
@@ -894,7 +894,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         console.log("Ok Show the Val", this.finConfigs)
 
         var dropdownContents = Polymer.dom(this.root).querySelector('paper-dropdown-menu');
-  
+
         dropdownContents.addEventListener('selected-item-changed', function(event){
           console.log("Item Changed")
           var inp = Polymer.dom(_self.root).querySelector('#version')
