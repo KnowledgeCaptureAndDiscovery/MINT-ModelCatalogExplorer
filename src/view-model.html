@@ -505,16 +505,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   var vars = [];
 
                   for(var j = 0; j<strs.length; ++j){
-                    //var parts = strs[j].split("#");
-                    vars.push(strs[j]);
+                    var parts = strs[j].split("/");
+
+                    vars.push(parts[parts.length-1]);
                   }
                   obj.results.bindings[i][key].value = vars;
                 }
                 else {
                   var str = obj.results.bindings[i][key].value;
                   // var arr = str.split("#");
-                    var vars = [];
-                    vars.push(str);
+                    var vars=[]
+                    var parts = str.split("/");
+
+                    vars.push(parts[parts.length-1]);
+                    // vars.push(str);
                   //   if(str.includes("#"))
                   //       obj.results.bindings[i][key].value = vars;
                     // else
