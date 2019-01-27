@@ -203,8 +203,8 @@ class VariablePresentation extends PolymerElement {
       this.configSelected = _parent.configSelected;
       this.varSelected = _parent.variableSelected.trim();
       var x = []
-      x = this.varSelected.split("#")
-      this.tempVar = x[1]
+      x = this.varSelected.split("/")
+      this.tempVar = x[x.length - 1]
       this.fetchConfiguration(this.varSelected);
   }
 
@@ -237,8 +237,8 @@ class VariablePresentation extends PolymerElement {
       if(_parent.configSelected){
         this.varSelected=_parent.variableSelected.trim();
         var x = []
-        x = this.varSelected.split("#")
-        this.tempVar = x[1]
+        x = this.varSelected.split("/")
+        this.tempVar = x[x.length - 1]
         this.fetchConfiguration(this.varSelected);
       }
   }

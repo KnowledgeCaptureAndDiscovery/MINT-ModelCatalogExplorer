@@ -176,11 +176,11 @@ class ModelConfiguration extends PolymerElement {
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
       this.modelName = _parent.modelSelected.label;
-      this.varSelected =_parent.variableSelected.trim();
+      this.varSelected =_parent.variableSelected;
       this.verSelected = _parent.versionSelected;
       var x = [];
-      x = this.varSelected.split("#");
-      this.tempVar = x[1];
+      x = this.varSelected.split("/");
+      this.tempVar = x[x.length - 1];
       this.fetchConfiguration(this.varSelected);
   }
 
@@ -214,20 +214,20 @@ class ModelConfiguration extends PolymerElement {
                       var vars = [];
 
                       for(var j = 0; j<strs.length; ++j){
-                          var parts = strs[j].split("#");
-                          vars.push(parts[1]);
+                          var parts = strs[j].split("/");
+                          vars.push(parts[parts.length - 1]);
                       }
                       obj.results.bindings[i][key].value = vars;
                   }
                   else {
                       var str = obj.results.bindings[i][key].value;
-                      var arr = str.split("#");
+                      var arr = str.split("/");
                       var vars = [];
-                      vars.push(arr[1]);
-                      if(str.includes("#"))
+                      vars.push(arr[arr.length - 1]);
+                      //if(str.includes("#"))
+                      //obj.results.bindings[i][key].value = vars;
+                      //else
                       obj.results.bindings[i][key].value = vars;
-                      else
-                          obj.results.bindings[i][key].value = str;
                   }
               }
           }
@@ -242,11 +242,11 @@ class ModelConfiguration extends PolymerElement {
       this.configSelected = _parent.configSelected;
       if(_parent.configSelected){
         this.modelName = _parent.modelSelected.label;
-        this.varSelected=_parent.variableSelected.trim();
+        this.varSelected=_parent.variableSelected;
         this.verSelected = _parent.versionSelected;
         var x = [];
-        x = this.varSelected.split("#");
-        this.tempVar = x[1];
+        x = this.varSelected.split("/");
+        this.tempVar = x[x.length - 1];
         this.fetchConfiguration(this.varSelected);
       }
   }
@@ -261,7 +261,7 @@ class ModelConfiguration extends PolymerElement {
           url: query,
           type: "GET",
           data:{
-              modelConfig: e
+              modelConfig: e.trim()
           },
           cache: false,
           timeout: 5000,

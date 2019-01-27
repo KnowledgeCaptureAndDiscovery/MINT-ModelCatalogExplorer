@@ -439,8 +439,8 @@ class ViewModel extends PolymerElement {
                       var strs = this.unModifiedConfigurationResults.results.bindings[i][key].value.split(",");
                       for(var j = 0; j<strs.length; ++j){
                           var vars = [];
-                          var parts = strs[j].split("#");
-                         if(parts[1]===configuration){
+                          var parts = strs[j].split("/");
+                         if(parts[parts.length - 1]===configuration){
                              _parent.variableSelected=strs[j];
                              console.log("hello" + _parent.variableSelected);
                              break;
@@ -448,8 +448,8 @@ class ViewModel extends PolymerElement {
                       }
                   }else{
                       var str = this.unModifiedConfigurationResults.results.bindings[i][key].value;
-                      var arr = str.split("#");
-                      if(arr[1]===configuration){
+                      var arr = str.split("/");
+                      if(arr[arr.length - 1]===configuration){
                           _parent.variableSelected = str;
                           _parent.versionSelected = this.unModifiedConfigurationResults.results.bindings[i]["version"].value
                           break;
@@ -507,20 +507,21 @@ class ViewModel extends PolymerElement {
               var vars = [];
 
               for(var j = 0; j<strs.length; ++j){
-                var parts = strs[j].split("#");
-                vars.push(parts[1]);
+                var parts = strs[j].split("/");
+                vars.push(parts[parts.length-1]);
               }
               obj.results.bindings[i][key].value = vars;
             }
             else {
               var str = obj.results.bindings[i][key].value;
-              var arr = str.split("#");
-                var vars = [];
-                vars.push(arr[1]);
-                if(str.includes("#"))
-                    obj.results.bindings[i][key].value = vars;
-                else
-                    obj.results.bindings[i][key].value = str;
+              //var arr = str.split("#");
+              var vars = [];
+              var parts = str.split("/")
+              vars.push(parts[parts.length - 1]);
+              //if(str.includes("#"))
+                  //obj.results.bindings[i][key].value = vars;
+              //else
+              obj.results.bindings[i][key].value = vars;
             }
           }
         }
