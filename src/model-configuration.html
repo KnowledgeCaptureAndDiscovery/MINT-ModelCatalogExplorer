@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
 
 
 <dom-module id="model-configuration">
@@ -42,6 +43,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           position: relative;
           width: 47.5%;
           padding: 15px;
+          word-wrap: break-word;
         }
         .box .inner {
           background: rgba(255,255,255,0.5);
@@ -95,10 +97,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <paper-chip label="Version: [[verSelected]]" class="custom-background-m" no-hover></paper-chip>
     </div>
     <div class="flex-center-justified">
-      <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
+      <paper-chip label="Variable Code: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
     </div>
     <br>
-    <div class="container flex-center-justified">
+    <div class="grid flex-center-justified">
       <template is="dom-if" if="[[configurationResults.results.bindings]]">
         <template is="dom-repeat" items=[[configurationResults.results.bindings]]>
           <div class="box">
@@ -111,6 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
                   </template>
                 </div>
+                <br>
                 <div>
                   <template is="dom-if" if="[[_checkInpValue(item.desc.value)]]">
                     <b>Description </b>: [[item.desc.value]]
@@ -119,6 +122,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
                   </template>
                 </div>
+                <br>
                 <div>
                   <template is="dom-if" if="[[_checkInpValue(item.input_variables.value)]]">
                     <b>Input Variables </b>: [[item.input_variables.value]]
@@ -127,6 +131,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
                   </template>
                 </div>
+                <br>
                 <div>
                   <template is="dom-if" if="[[_checkInpValue(item.output_variables.value)]]">
                     <b>Output Variables </b>: [[item.output_variables.value]]

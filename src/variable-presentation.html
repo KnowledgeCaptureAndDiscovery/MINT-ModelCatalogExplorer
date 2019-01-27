@@ -112,14 +112,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h1>[[tempVar]]</h1>
     </div>
     <div class="container flex-center-justified">
-      <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
+      <paper-chip label="Variable Code: [[varSelected]]" class="custom-background-l" no-hover></paper-chip>
     </div>
     <br>
     <div class="container flex-center-justified">
       <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
         <vaadin-grid heightByRows="true" items="[[variableAndUnits.results.bindings]]">
           <vaadin-grid-column  text-align="center" resizable>
-            <template class="header"><strong>Label</strong></template>
+            <template class="header"><strong>Variable Code</strong></template>
             <template>[[item.label.value]]</template>
           </vaadin-grid-column>
           <vaadin-grid-column  text-align="center" resizable>
