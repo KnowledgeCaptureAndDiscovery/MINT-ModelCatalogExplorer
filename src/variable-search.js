@@ -548,8 +548,8 @@ class VariableSearch extends PolymerElement {
         }
       }
       else if(i === 1){
-        var kj = kmp[i].val.split("#")
-        jump.push(kj[1])
+        var kj = kmp[i].val.split("/")
+        jump.push(kj[kj.length - 1])
       }
       else if(i === 2){
         u = _self.getMetadata(kmp[i].val)
@@ -677,6 +677,7 @@ class VariableSearch extends PolymerElement {
               break
             }
           }
+          console.log(inp_val, out_val)
           for(var i=0; i<inp_val.length; i++){
             if(_self.searchIO(inp_val[i], var_name) === true){
               dsSpec = inp_val[i]
@@ -732,6 +733,7 @@ class VariableSearch extends PolymerElement {
     var arr = []
     arr = dsSpec.split("/")
     this.dataSetSpecLk = arr[arr.length - 1]
+    console.log("DDDD", this.dataSetSpec)
   }
 
   searchIO(var_data, var_name){
@@ -933,6 +935,7 @@ class VariableSearch extends PolymerElement {
   reachVarPresentation() {
     var _parent = document.querySelector("mint-explorer-app");
     console.log("TP", this.variableAndUnits.model)
+    _parent.configSelected = this.configURI.val;
     _parent.modelSelected = {"label": this.variableAndUnits.model, "model": this.label.val }
     _parent.variableSelected = this.dataSetSpec;
   }

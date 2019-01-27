@@ -151,6 +151,7 @@ class MintExplorerApp extends PolymerElement {
         variable:String,
       },
       versionSelected: String,
+      modelConfigSelected: String,
       queries: Array,
       modelDescriptions: Array,
       endpoint: {
