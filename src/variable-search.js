@@ -208,6 +208,12 @@ class VariableSearch extends PolymerElement {
           --paper-chip-background-color: purple;
           --paper-chip-label-color: #fff;
         }
+        paper-chip.custom-background-u {
+          --paper-chip-background-color: orange;
+          --paper-chip-label-color: white;
+          cursor: pointer;
+          --paper-chip-avatar-background-color: #dc3545;
+        }
         paper-chip.custom-background-l {
             --paper-chip-background-color: #ffc107;
             --paper-chip-label-color: #fff;
@@ -258,10 +264,20 @@ class VariableSearch extends PolymerElement {
     <br><br>
     <div id="displayRes" style="display: none;">
       <div class="container flex-center-justified">
-        <div><h2>{{variableAndUnits.label}} &nbsp;&nbsp;&nbsp;<paper-chip label="Variable Presentation" class="custom-background-m" no-hover=""></paper-chip></h2></div>
+        <div><h2>{{variableAndUnits.label}} &nbsp;&nbsp;&nbsp;<paper-chip label="[[verType]]" class="custom-background-m" no-hover=""></paper-chip></h2></div>
       </div>
       <div class="container flex-center-justified">
         <div><paper-chip label="URI: [[variableAndUnits.uri]]" no-hover=""></paper-chip></div>
+      </div>
+      <br>
+      <div class="container flex-center-justified">
+        <a href="[[routePath]]variable-presentation" title="View Data Set Specification">
+          <paper-chip label="[[dataSetSpecLk]]" no-hover="" class="custom-background-u" on-click="reachVarPresentation">
+            <span class="chip-background" slot="avatar">
+              <iron-icon icon="icons:launch"></iron-icon>
+            </span>
+          </paper-chip>
+        </a>
       </div>
       <br>
       <div class="container flex-center-justified">
@@ -386,7 +402,11 @@ class VariableSearch extends PolymerElement {
      inpVal: String,
      URI: String,
      label: String,
-     configURI: String
+     configURI: String,
+     verName: String,
+     verType: String,
+     dataSetSpecLk: String,
+     dataSetSpec: String
     };
   }
 
@@ -594,6 +614,7 @@ class VariableSearch extends PolymerElement {
     console.log("KMP", kmp)
     this.label = kmp[0];
     this.configURI = kmp[1];
+    this.verName = kmp[2];
     var yes = {}
     yes = _self.processMetadata(kmp)
     console.log("Acheived", yes)
@@ -624,6 +645,156 @@ class VariableSearch extends PolymerElement {
     }
     console.log(obj)
     this.variableAndUnits = obj;
+    _self.findIOVariable(this.label, this.verName, this.variableAndUnits.uri)
+  }
+
+  findIOVariable(model_name, version_name, var_name){
+    console.log(model_name.val, version_name.val)
+    var _self = this;
+    var flag = 0;
+    var dsSpec = '';
+    var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    $.ajax({
+        url: query,
+        type: "GET",
+        data:{
+            model: model_name.val
+        },
+        cache: false,
+        timeout: 5000,
+        async: false,
+
+        success: function(data) {
+          console.log("mod", data);
+          var x = []
+          var inp_val = []
+          var out_val = []
+          x = data.results.bindings;
+          for(var i=0; i<x.length; i++){
+            if(x[i].version.value === version_name.val) {
+              inp_val = x[i].input_files.value.split(", ")
+              out_val = x[i].output_files.value.split(", ")
+              break
+            }
+          }
+          for(var i=0; i<inp_val.length; i++){
+            if(_self.searchIO(inp_val[i], var_name) === true){
+              dsSpec = inp_val[i]
+              flag = 1
+              break
+            }
+          }
+          if(flag != 1) {
+            for(var i=0; i<out_val.length; i++){
+              if(_self.searchIO(out_val[i], var_name) === true){
+                dsSpec = out_val[i]
+                break
+              }
+            }
+          }
+
+          //console.log(inp_val, out_val)
+        },
+
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            // console.log(msg);
+        }
+    });
+    if(flag === 1){
+      this.verType = "Input Variable"
+    }
+    else {
+      this.verType = "Output Variable"
+    }
+    this.dataSetSpec = dsSpec
+    var arr = []
+    arr = dsSpec.split("/")
+    this.dataSetSpecLk = arr[arr.length - 1]
+  }
+
+  searchIO(var_data, var_name){
+    //console.log("Ok", var_name)
+    var checker = 0
+    var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+    $.ajax({
+        url: query,
+        type: "GET",
+        data:{
+            io: var_data
+        },
+        cache: false,
+        timeout: 5000,
+        async: false,
+        complete: function() {
+            // console.log("GET request sent");
+        },
+
+        success: function(data) {
+          var temp = data.results.bindings
+          for(var j=0; j < temp.length; j++){
+            //console.log(temp[j].vp.value)
+            if(temp[j].vp.value === var_name){
+              checker = 1
+              break
+            }
+          }
+        },
+
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            // console.log(msg);
+        }
+    });
+    console.log(checker)
+    if(checker === 1){
+      return true
+    }
+    else {
+      return false
+    }
   }
 
   fetchConfiguration(e){
@@ -757,6 +928,13 @@ class VariableSearch extends PolymerElement {
     //this.set('route.path', '/view-model');
     console.log(_pages.selected);
     
+  }
+
+  reachVarPresentation() {
+    var _parent = document.querySelector("mint-explorer-app");
+    console.log("TP", this.variableAndUnits.model)
+    _parent.modelSelected = {"label": this.variableAndUnits.model, "model": this.label.val }
+    _parent.variableSelected = this.dataSetSpec;
   }
 
   reachConfig() {

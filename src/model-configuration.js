@@ -179,6 +179,7 @@ class ModelConfiguration extends PolymerElement {
       this.varSelected =_parent.variableSelected;
       this.verSelected = _parent.versionSelected;
       var x = [];
+      console.log("Got this", this.configSelected, this.modelName, this.varSelected)
       x = this.varSelected.split("/");
       this.tempVar = x[x.length - 1];
       this.fetchConfiguration(this.varSelected);
