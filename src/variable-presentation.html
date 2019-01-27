@@ -212,8 +212,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.configSelected = _parent.configSelected;
         this.varSelected = _parent.variableSelected.trim();
         var x = []
-        x = this.varSelected.split("#")
-        this.tempVar = x[1]
+        x = this.varSelected.split("/")
+        this.tempVar = x[x.length - 1]
         this.fetchConfiguration(this.varSelected);
     }
 
@@ -245,8 +245,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.configSelected = _parent.configSelected;
         this.varSelected=_parent.variableSelected.trim();
         var x = []
-        x = this.varSelected.split("#")
-        this.tempVar = x[1]
+        x = this.varSelected.split("/")
+        this.tempVar = x[x.length - 1]
         this.fetchConfiguration(this.varSelected);
     }
 
