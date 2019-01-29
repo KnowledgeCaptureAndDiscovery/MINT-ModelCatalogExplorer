@@ -12,6 +12,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid.html">
  <link rel="import" href="/bower_components/vaadin-grid/vaadin-grid-sorter.html"> 
 <link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-column.html">
+<link rel="import" href="../bower_components/vaadin-grid/vaadin-grid-filter-column.html">
 <link rel="import" href="../bower_components/vaadin-ordered-layout/vaadin-horizontal-layout.html">
 <link rel="import" href="/bower_components/iron-flex-layout/iron-flex-layout.html">
 
@@ -103,6 +104,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         flex-basis: 50%;
         max-width: 100%;
       }
+      vaadin-grid {
+        height: 70vh;
+      }
+
     </style>
     <br>
     <div>
@@ -117,8 +122,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <br>
     <div class="container flex-center-justified">
       <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
-        <vaadin-grid heightByRows="true" items="[[variableAndUnits.results.bindings]]">
-          <vaadin-grid-column  text-align="center" resizable>
+        <vaadin-grid items="[[variableAndUnits.results.bindings]]" theme="no-row-borders row-stripes wrap-cell-content">
+          <vaadin-grid-column text-align="center" resizable>
             <template class="header"><strong>Variable Code</strong></template>
             <template>[[item.label.value]]</template>
           </vaadin-grid-column>

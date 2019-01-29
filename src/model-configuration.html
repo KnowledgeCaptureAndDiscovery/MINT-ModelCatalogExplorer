@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--<h4>[[configSelected.config]]</h4>-->
     <br>
     <div class="flex-center-justified">
-      <h1>[[tempVar]]</h1>
+      <h1>[[tempVar]] &nbsp; <a href="[[downloadLink]]" title="Download Component"><iron-icon icon="file-download"></iron-icon></a></h1>
     </div>
     <div class="flex-center-justified">
       <paper-chip label="Model: [[modelName]]" class="custom-background" no-hover></paper-chip>
@@ -120,6 +120,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.desc.value)]]">
                     <b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
+                  </template>
+                </div>
+                <br>
+                <div>
+                  <template is="dom-if" if="[[_checkInpValue(item.processes.value)]]">
+                    <b>Processes </b>: [[item.processes.value]]
+                  </template>
+                  <template is="dom-if" if="[[_checkNegInpValue(item.processes.value)]]">
+                    <b>Processes : <paper-chip label="Not Found" class="custom-background-b" no-hover></paper-chip></b>
                   </template>
                 </div>
                 <br>
@@ -168,7 +177,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           varSelected:String,
           verSelected: String,
           tempVar: String,
-          configurationResults:Object
+          configurationResults:Object,
+          downloadLink: String
         };
       }
 
@@ -227,20 +237,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         obj.results.bindings[i][key].value = vars;
                     }
                     else {
-                        var str = obj.results.bindings[i][key].value;
-                        var arr = str.split("/");
-                        var vars = [];
-                        vars.push(arr[arr.length - 1]);
-                        console.log("Dp", vars)
-                        //if(str.includes("#"))
-                        //obj.results.bindings[i][key].value = vars;
-                        //else
-                        obj.results.bindings[i][key].value = vars;
+                        if(key != "compLoc"){
+                          var str = obj.results.bindings[i][key].value;
+                          var arr = str.split("/");
+                          var vars = [];
+                          vars.push(arr[arr.length - 1]);
+                          console.log("Dp", vars)
+                          //if(str.includes("#"))
+                          //obj.results.bindings[i][key].value = vars;
+                          //else
+                          obj.results.bindings[i][key].value = vars;
+                        }
                     }
                 }
             }
             console.log("this is config");
             console.log(obj);
+            console.log(obj.results.bindings[0].compLoc.value)
+            this.downloadLink = obj.results.bindings[0].compLoc.value
             this.configurationResults = obj;
         }
 
