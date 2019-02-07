@@ -82,7 +82,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <br>
     <div>
-    <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
+    <!--<a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>-->
     </div>
     <!--<h2>Configurations</h2>-->
     <!--<h4>[[configSelected.model.label]]</h4>-->
@@ -182,11 +182,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         };
       }
 
-    goBack(){
-      var _parent = document.querySelector("mint-explorer-app");
-      var _pages = Polymer.dom(_parent.root).querySelector("#pages");
-      _pages.selected = "view-model";
-    }
+    /*goBack(){
+      history.back(-1);
+    }*/
 
     _varChanged(data){
         var _parent = document.querySelector("mint-explorer-app");

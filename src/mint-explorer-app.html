@@ -164,10 +164,16 @@ output presentations.s
           variableSelected:{
             variable:String,
           },
+          rowIndexes: {
+            type: String,
+            observer: '_rowIndexChanged'
+          },
+          varForDialog: String,
           versionSelected: String,
           modelConfigSelected: String, 
           queries: Array,
           modelDescriptions: Array,
+          varAndUnits: Object,
           endpoint: {
           	type: String,
           	value: "http://ontosoft.isi.edu:3030/ds"
@@ -186,6 +192,17 @@ output presentations.s
         // Default to 'model-search' in that case.
         this.page = page || 'model-search';
 
+      }
+
+      _rowIndexChanged(data){
+        var v = document.querySelector('mint-explorer-app');
+        var vk = v.varAndUnits
+        v.varForDialog = vk.results.bindings[data-2].vp.value
+        console.log(vk.results.bindings[data-2].vp.value)
+        var vsp = Polymer.dom(v.root).querySelector("#variableSearch");
+        vsp.dialogVal = vk.results.bindings[data-2].vp.value
+        var _pages = Polymer.dom(v.root).querySelector("#pages");
+        _pages.selected = "variable-search";
       }
 
       _pageChanged(page, oldPage) {

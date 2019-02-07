@@ -111,7 +111,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <br>
     <div>
-      <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>
+      <!--<a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised><< Back</vaadin-button></a>-->
     </div>
     <div class="container flex-center-justified">
       <h1>[[tempVar]]</h1>
@@ -194,6 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
   <script>
 
+
     class VariablePresentation extends Polymer.Element {
       static get is() { return 'variable-presentation'; }
       static get properties() {
@@ -211,6 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           variableAndUnits:Object
         };
       }
+
 
     _variableChanged(data){
         var _parent = document.querySelector("mint-explorer-app");
@@ -238,11 +240,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       return true
     }
 
-    goBack(){
-        var _parent = document.querySelector("mint-explorer-app");
-        var _pages = Polymer.dom(_parent.root).querySelector("#pages");
-        _pages.selected = "view-model";
-      }
+    /*goBack(){
+        history.back(-1);
+      }*/
+
 
     ready() {
         super.ready();
@@ -258,6 +259,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     process(data){
         var obj = JSON.parse(JSON.stringify(data));
         this.variableAndUnits=obj;
+        var _parent = document.querySelector("mint-explorer-app")
+        _parent.varAndUnits = obj
+    }
+
+    _openVariablePage(rowIdx){
+      console.log("Inside Polymer Element", rowIdx);
     }
 
     fetchConfiguration(e){
@@ -321,5 +328,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   }
 
     window.customElements.define(VariablePresentation.is, VariablePresentation);
+
   </script>
 </dom-module>
+
+<script type="text/javascript">
+  function _clickHandle(x){
+      var _self = this;
+      var cs = x.getAttribute("aria-rowindex")
+      console.log(cs)
+      var _parent = Polymer.dom(_self.root).querySelector('mint-explorer-app');
+      _parent.rowIndexes = cs
+      console.log(_parent)
+      //var_presentation.openVariablePage(cs)
+    }
+</script>

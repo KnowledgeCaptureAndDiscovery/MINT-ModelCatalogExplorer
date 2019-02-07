@@ -27,7 +27,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="/bower_components/paper-chip/paper-chip.html">
 <!--<link rel="stylesheet" href="../src/css/components.css">-->
 
-
+<link rel="import" href="loading-screen.html">
 <link rel="lazy-import" href="model-search.html">
 <link rel="lazy-import" href="view-model.html">
 <link rel="lazy-import" href="model-configuration.html">
@@ -388,6 +388,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          configURI: String,
          verName: String,
          verType: String,
+         dialogVal: {
+          type: String,
+          observer: '_dialogChanged'
+         },
          dataSetSpecLk: String,
          dataSetSpec: String
         };
@@ -397,9 +401,34 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return typeof stuff !== 'undefined';
       }
 
-      _checkNegValue(stuff){
-        return typeof stuff === 'undefined';
+    _checkNegValue(stuff){
+      return typeof stuff === 'undefined';
+    }
+
+    _dialogChanged(data){
+      console.log("From", data)
+      var _self = this
+      this.URI = data
+      var arr = data.split("/")
+      var flag = _self.checkSN(arr[arr.length - 1])
+      if(flag === false){
+        _self.fetchConfiguration(data)
+        var data = Polymer.dom(_self.root).querySelector("#displayRes");
+        data.style.display = "block"
+        console.log(this.variableAndUnits)
+        var kisp = Polymer.dom(_self.root).querySelector("#dispSN");
+        kisp.style.display = "none"
       }
+      else{
+        console.log("Standard Variable Found")
+        var ksp = Polymer.dom(_self.root).querySelector("#displayRes");
+        ksp.style.display = "none"
+        var tr = Polymer.dom(_self.root).querySelector("#dispSN");
+        tr.style.display = "block"
+        //var kisp = Polymer.dom(_self.root).querySelector("#displayRes");
+        //kisp.style.display = "none"
+      }
+    }
 
     getAllVariables(){
       console.log("Hello")
