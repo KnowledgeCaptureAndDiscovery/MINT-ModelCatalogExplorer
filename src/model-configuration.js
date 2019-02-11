@@ -81,7 +81,7 @@ class ModelConfiguration extends PolymerElement {
     </style>
     <br>
     <div>
-    <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>
+    <!--<a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     </div>
     <!--<h2>Configurations</h2>-->
     <!--<h4>[[configSelected.model.label]]</h4>-->
@@ -166,11 +166,11 @@ class ModelConfiguration extends PolymerElement {
     };
   }
 
-  goBack(){
+  /*goBack(){
     var _parent = document.querySelector("mint-explorer-app");
     var _pages = dom(_parent.root).querySelector("#pages");
     _pages.selected = "view-model";
-  }
+  }*/
 
   _varChanged(data){
       var _parent = document.querySelector("mint-explorer-app");

@@ -92,6 +92,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script type="module" src="src/mint-explorer-app.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
+    <script type="text/javascript">
+      function clickHandle(x){
+          var _self = this;
+          var cs = x.getAttribute("aria-rowindex")
+          console.log(cs)
+          var _parent = document.querySelector('mint-explorer-app');
+          _parent.rowIndexes = cs
+          console.log(_parent)
+          //var_presentation.openVariablePage(cs)
+        }
+    </script>
+
     <!-- Add any global styles for body, document, etc. -->
     <style>
       body {

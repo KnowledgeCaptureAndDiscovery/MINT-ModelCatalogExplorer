@@ -8,6 +8,7 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
+
 class VariablePresentation extends PolymerElement {
   static get template() {
     return html`
@@ -100,7 +101,7 @@ class VariablePresentation extends PolymerElement {
     </style>
     <br>
     <div>
-      <a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>
+    <!--<a href="[[routePath]]view-model"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     </div>
     <div class="container flex-center-justified">
       <h1>[[tempVar]]</h1>
@@ -111,7 +112,7 @@ class VariablePresentation extends PolymerElement {
     <br>
     <div class="container flex-center-justified">
       <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
-        <vaadin-grid heightbyrows="true" items="[[variableAndUnits.results.bindings]]">
+        <vaadin-grid items="[[variableAndUnits.results.bindings]]" theme="column-borders row-stripes wrap-cell-content">
           <vaadin-grid-column text-align="center" resizable="">
             <template class="header"><strong>Label</strong></template>
             <template>[[item.label.value]]</template>
@@ -224,11 +225,11 @@ class VariablePresentation extends PolymerElement {
     return true
   }
 
-  goBack(){
+  /*goBack(){
       var _parent = document.querySelector("mint-explorer-app");
       var _pages = dom(_parent.root).querySelector("#pages");
       _pages.selected = "view-model";
-    }
+    }*/
 
   ready() {
       super.ready();
@@ -247,6 +248,8 @@ class VariablePresentation extends PolymerElement {
   process(data){
       var obj = JSON.parse(JSON.stringify(data));
       this.variableAndUnits=obj;
+      var _parent = document.querySelector("mint-explorer-app")
+      _parent.varAndUnits = obj
   }
 
   fetchConfiguration(e){
@@ -310,3 +313,6 @@ class VariablePresentation extends PolymerElement {
 }
 
 window.customElements.define(VariablePresentation.is, VariablePresentation);
+
+
+

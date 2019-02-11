@@ -399,6 +399,10 @@ class VariableSearch extends PolymerElement {
      varSN: Object,
      sntoURI: String,
      sntoLabel: String,
+     dialogVal: {
+        type: String,
+        observer: '_dialogChanged'
+      },
      inpVal: String,
      URI: String,
      label: String,
@@ -417,6 +421,31 @@ class VariableSearch extends PolymerElement {
   _checkNegValue(stuff){
     return typeof stuff === 'undefined';
   }
+
+  _dialogChanged(data){
+      console.log("From", data)
+      var _self = this
+      this.URI = data
+      var arr = data.split("/")
+      var flag = _self.checkSN(arr[arr.length - 1])
+      if(flag === false){
+        _self.fetchConfiguration(data)
+        var data = dom(_self.root).querySelector("#displayRes");
+        data.style.display = "block"
+        console.log(this.variableAndUnits)
+        var kisp = dom(_self.root).querySelector("#dispSN");
+        kisp.style.display = "none"
+      }
+      else{
+        console.log("Standard Variable Found")
+        var ksp = dom(_self.root).querySelector("#displayRes");
+        ksp.style.display = "none"
+        var tr = dom(_self.root).querySelector("#dispSN");
+        tr.style.display = "block"
+        //var kisp = Polymer.dom(_self.root).querySelector("#displayRes");
+        //kisp.style.display = "none"
+      }       
+    }
 
   getAllVariables(){
     console.log("Hello")
@@ -985,6 +1014,7 @@ class VariableSearch extends PolymerElement {
         //kisp.style.display = "none"
       }
     });
+
   }
 }
 

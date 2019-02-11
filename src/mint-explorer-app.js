@@ -50,6 +50,8 @@ import '@polymer/paper-toggle-button/paper-toggle-button.js'
 import '@polymer/paper-card/paper-card.js'
 import '@polymer/iron-ajax/iron-ajax.js'
 
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+
 // Gesture events like tap and track generated from touch will not be
 // preventable, allowing for better scrolling performance.
 setPassiveTouchGestures(true);
@@ -150,9 +152,14 @@ class MintExplorerApp extends PolymerElement {
       variableSelected:{
         variable:String,
       },
+      rowIndexes: {
+        type: String,
+        observer: '_rowIndexChanged'
+      },
       versionSelected: String,
       modelConfigSelected: String,
       queries: Array,
+      varAndUnits: Object,
       modelDescriptions: Array,
       endpoint: {
         type: String,
@@ -175,6 +182,19 @@ class MintExplorerApp extends PolymerElement {
     } else {
       this.page = 'not-found';
     }
+  }
+
+  _rowIndexChanged(data){
+    var _self = this
+    var v = document.querySelector('mint-explorer-app');
+    var vk = v.varAndUnits
+    v.varForDialog = vk.results.bindings[data-2].vp.value
+    console.log(vk.results.bindings[data-2].vp.value)
+    var vsp = dom(_self.root).querySelector("#variableSearch");
+    console.log(vsp);
+    vsp.dialogVal = vk.results.bindings[data-2].vp.value
+    var _pages = dom(_self.root).querySelector("#pages");
+    _pages.selected = "variable-search";
   }
 
   _pageChanged(page, oldPage) {

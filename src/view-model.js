@@ -198,7 +198,7 @@ class ViewModel extends PolymerElement {
     </style>
     <br>
 
-    <a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>
+    <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     <div class="flex-center-justified">
       <h1 style="text-align:center;">[[modelSelected.label]] &nbsp;&nbsp;<div id="showAllVer"><center><paper-chip label="Showing All Versions" class="custom-background-j"></paper-chip></center></div><div id="changeVer" style="display: none;"><center><paper-chip id="verC" class="custom-background-m"></paper-chip></center></div></h1>
     </div>
@@ -390,7 +390,7 @@ class ViewModel extends PolymerElement {
     this.finConfigs = this.configurationResults
   }
 
-  goBack(){
+  /*goBack(){
     var _self = this
     var _parent = document.querySelector("mint-explorer-app");
     var _pages = dom(_parent.root).querySelector("#pages");
@@ -399,7 +399,7 @@ class ViewModel extends PolymerElement {
     var dropdownContents = dom(this.root).querySelector('paper-dropdown-menu');
     var inp = dom(_self.root).querySelector('#tempor')
     inp.selected = "0"
-  }
+  }*/
 
   openConfig(e) {
     var configuration = e.target.getAttribute("config");
