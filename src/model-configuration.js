@@ -43,6 +43,7 @@ class ModelConfiguration extends PolymerElement {
           position: relative;
           width: 47.5%;
           padding: 15px;
+          word-wrap: break-word;
         }
         .box .inner {
           background: rgba(255,255,255,0.5);
