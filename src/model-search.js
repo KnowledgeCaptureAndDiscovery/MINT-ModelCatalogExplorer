@@ -206,7 +206,7 @@ class ModelSearch extends PolymerElement {
       <div><h1>Model Search</h1></div>
     </div>
     <div class="container flex-center-justified">
-      <center><p style="width: 50%;">This interface provides a way to search models. You can also filter the models by their categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model. </p></center>
+      <center><p style="width: 50%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model. </p></center>
     </div>
     <div class="container flex-center-justified">
       <div id="options">
