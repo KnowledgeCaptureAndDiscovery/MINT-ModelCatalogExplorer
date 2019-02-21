@@ -98,6 +98,16 @@ class VariablePresentation extends PolymerElement {
         flex-basis: 50%;
         max-width: 100%;
       }
+
+      vaadin-grid {
+        cursor: pointer;
+      }
+      vaadin-grid-column {
+        cursor: pointer;
+      }
+      vaadin-grid-cell-content {
+        cursor: pointer;
+      }
     </style>
     <br>
     <div>
