@@ -510,6 +510,7 @@ class ModelSearch extends PolymerElement {
 
     var cts = [{'name': 'All'}]
     console.log(cats)
+    cats.sort();
     for(var i = 0; i < cats.length; i++){
       cts.push({
         "name": cats[i]
