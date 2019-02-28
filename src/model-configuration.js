@@ -257,7 +257,7 @@ class ModelConfiguration extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[8].query;
-      var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,

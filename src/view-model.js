@@ -472,7 +472,7 @@ class ViewModel extends PolymerElement {
             var _parent = document.querySelector("mint-explorer-app");
             // Get Versions
             //var qs = _parent.queries[6].query
-            var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+            var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
             var r = []
             var cs;
             $.ajax({
@@ -537,7 +537,7 @@ class ViewModel extends PolymerElement {
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
     //var qs = _parent.queries[6].query
-    var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var r = []
     var finVersions = []
     for(var i = 0; i < versions.length; i++){
@@ -595,7 +595,7 @@ class ViewModel extends PolymerElement {
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
     //var qs = _parent.queries[6].query
-    var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
     var versions = []
     var r = []
     $.ajax({
@@ -648,7 +648,7 @@ class ViewModel extends PolymerElement {
       });
 
     //var query = _parent.queries[5].query;
-    var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
+    var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
     var endpoint = _parent.endpoint;
     $.ajax({
         url: query,
@@ -923,9 +923,9 @@ class ViewModel extends PolymerElement {
       var changeVer = this.$.changeVer
       changeVer.style.display = "none"
       var showAllVer = this.$.showAllVer
-      showAllVer.style.display = "block" 
+      showAllVer.style.display = "block"
       }
-      
+
     }
   }
 

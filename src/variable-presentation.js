@@ -245,7 +245,7 @@ class VariablePresentation extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-      
+
       if(_parent.configSelected){
         this.varSelected=_parent.variableSelected.trim();
         var x = []
@@ -266,7 +266,7 @@ class VariablePresentation extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[7].query;
-      var query = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,

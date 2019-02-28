@@ -371,7 +371,7 @@ class ModelSearch extends PolymerElement {
       var _parent = document.querySelector("mint-explorer-app");
       // Get Versions
       //var qs = _parent.queries[6].query
-      var qs = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+      var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
       var r = []
       var finVersions = []
       for(var i = 0; i < versions.length; i++){
@@ -436,7 +436,7 @@ class ModelSearch extends PolymerElement {
     console.log("hfkjdf")
     //console.log(query)
     $.ajax({
-      url: "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModels?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery",
+      url: "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModels?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery",
       type: "GET",
       cache: false,
       timeout: 5000,
@@ -530,7 +530,7 @@ class ModelSearch extends PolymerElement {
   getModelsByCategory(category){
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[4].query;
-    var qt = "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery";
+    var qt = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery";
     var query = qt + "&cat=" + category
     var catsByModel = []
     console.log("Done", query)
