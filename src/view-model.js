@@ -203,7 +203,7 @@ class ViewModel extends PolymerElement {
       <h1 style="text-align:center;">[[modelSelected.label]] &nbsp;&nbsp;<div id="showAllVer"><center><paper-chip label="Showing All Versions" class="custom-background-j"></paper-chip></center></div><div id="changeVer" style="display: none;"><center><paper-chip id="verC" class="custom-background-m"></paper-chip></center></div></h1>
     </div>
     <div class="flex-center-justified">
-      <paper-chip label="URI: [[modelSelected.model]]" no-hover=""></paper-chip>
+      <a href="[[modelSelected.model]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[modelSelected.model]]" no-hover=""></paper-chip></a>
     </div>
     <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
@@ -472,7 +472,7 @@ class ViewModel extends PolymerElement {
             var _parent = document.querySelector("mint-explorer-app");
             // Get Versions
             //var qs = _parent.queries[6].query
-            var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+              var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
             var r = []
             var cs;
             $.ajax({

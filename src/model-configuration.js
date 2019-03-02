@@ -15,6 +15,8 @@ import './shared-styles.js';
 import '@polymer/paper-card/paper-card.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/iron-icons/iron-icons.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 class ModelConfiguration extends PolymerElement {
   static get template() {
@@ -90,14 +92,20 @@ class ModelConfiguration extends PolymerElement {
     <!--<h4>[[configSelected.config]]</h4>-->
     <br>
     <div class="flex-center-justified">
-      <h1>[[tempVar]]</h1>
+      
+      </div>
+     <div class="flex-center-justified">
+      <template is="dom-repeat" items="[[configurationResults.results.bindings]]">
+     <h1>[[tempVar]] <a href="[[item.compLoc.value]]"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a></h1>
+     </template>
     </div>
+     
     <div class="flex-center-justified">
       <paper-chip label="Model: [[modelName]]" class="custom-background" no-hover=""></paper-chip>
       <paper-chip label="Version: [[verSelected]]" class="custom-background-m" no-hover=""></paper-chip>
     </div>
     <div class="flex-center-justified">
-      <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip>
+     <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer">  <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
     <br>
     <div class="container flex-center-justified">
@@ -209,33 +217,39 @@ class ModelConfiguration extends PolymerElement {
           //this.unModifiedConfigurationResults=JSON.parse(JSON.stringify(data));
           for(var i = 0; i < obj.results.bindings.length; ++i) {
               for(var key in obj.results.bindings[i]) {
+                  if (obj.results.bindings[i][key].value.includes("github")) {
 
-                  if(obj.results.bindings[i][key].value.includes(",")) {
-                      var strs = obj.results.bindings[i][key].value.split(",");
-
-                      var vars = [];
-
-                      for(var j = 0; j<strs.length; ++j){
-                          var parts = strs[j].split("/");
-                          vars.push(parts[parts.length - 1]);
-                      }
-                      obj.results.bindings[i][key].value = vars;
                   }
                   else {
-                      var str = obj.results.bindings[i][key].value;
-                      var arr = str.split("/");
-                      var vars = [];
-                      vars.push(arr[arr.length - 1]);
-                      //if(str.includes("#"))
-                      //obj.results.bindings[i][key].value = vars;
-                      //else
-                      obj.results.bindings[i][key].value = vars;
+                      if (obj.results.bindings[i][key].value.includes(",")) {
+                          var strs = obj.results.bindings[i][key].value.split(",");
+
+                          var vars = [];
+
+                          for (var j = 0; j < strs.length; ++j) {
+                              var parts = strs[j].split("/");
+                              vars.push(parts[parts.length - 1]);
+                          }
+                          obj.results.bindings[i][key].value = vars;
+                      }
+                      else {
+                          var str = obj.results.bindings[i][key].value;
+                          var arr = str.split("/");
+                          var vars = [];
+                          vars.push(arr[arr.length - 1]);
+                          //if(str.includes("#"))
+                          //obj.results.bindings[i][key].value = vars;
+                          //else
+                          obj.results.bindings[i][key].value = vars;
+                      }
                   }
               }
           }
           console.log("this is config");
           console.log(obj);
           this.configurationResults = obj;
+          console.log("hhhhhhhhh");
+          console.log(this.configurationResults);
       }
 
   ready() {

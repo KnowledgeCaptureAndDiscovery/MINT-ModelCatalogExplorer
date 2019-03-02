@@ -267,7 +267,7 @@ class VariableSearch extends PolymerElement {
         <div><h2>{{variableAndUnits.label}} &nbsp;&nbsp;&nbsp;<paper-chip label="[[verType]]" class="custom-background-m" no-hover=""></paper-chip></h2></div>
       </div>
       <div class="container flex-center-justified">
-        <div><paper-chip label="URI: [[variableAndUnits.uri]]" no-hover=""></paper-chip></div>
+        <div> <a href="[[variableAndUnits.uri]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[variableAndUnits.uri]]" no-hover=""></paper-chip></a></div>
       </div>
       <br>
       <div class="container flex-center-justified">
