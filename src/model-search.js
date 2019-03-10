@@ -199,6 +199,7 @@ class ModelSearch extends PolymerElement {
         .clear-icon{
           cursor: pointer;
         }
+        
 
     </style>
 
@@ -261,8 +262,9 @@ class ModelSearch extends PolymerElement {
               <h2><strong>[[item.label]]
                 &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
                 &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover=""></paper-chip></strong></h2>
-              <p>[[item.description]]</p>
-              <a href="[[routePath]]view-model"><vaadin-button theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
+             <p>[[item.description]]</p>
+              <p>[[item.assumptions]]</p>
+              <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
             </div>
         </div>
         </template>
@@ -447,16 +449,20 @@ class ModelSearch extends PolymerElement {
 
       success: function(data) {
           var x = data.results.bindings
+
+          console.log(x);
           var res = []
           for(var i = 0;i < x.length; i++){
-            var result = {}
+            var result = {};
             versions = [];
-            result.model = x[i].model.value
-            result.label = x[i].label.value
-            result.description = x[i].desc.value
-            result.category = x[i].categories.value
+            result.model = x[i].model.value;
+            result.label = x[i].label.value;
+            result.description = x[i].desc.value;
+            result.category = x[i].categories.value;
+            if ("assumptions" in x[i])
+              result.assumptions=x[i].assumptions.value;
             if('doc' in x[i]){
-              result.link = x[i].doc.value
+              result.link = x[i].doc.value;
               result.avail = false
             }
             else{
@@ -477,7 +483,7 @@ class ModelSearch extends PolymerElement {
             result.version = h
             results.push(result)
           }
-          console.log("This", results)
+          console.log("This", results);
           cats = Array.from(categories);
       },
 

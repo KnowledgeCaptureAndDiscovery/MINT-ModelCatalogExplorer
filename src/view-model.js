@@ -195,6 +195,10 @@ class ViewModel extends PolymerElement {
           --paper-chip-background-color: purple;
           --paper-chip-label-color: #fff;
         }
+        
+        .pointer{
+          cursor: pointer;
+        }
     </style>
     <br>
 
@@ -234,7 +238,7 @@ class ViewModel extends PolymerElement {
                 <div>
                   <h4>Model Configuration: </h4>
                   <template is="dom-repeat" items="{{item.config.value}}" as="stuff">
-                    <a href="[[routePath]]model-configuration"><vaadin-button variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
+                    <a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
                   </template>
                 </div>
                 <div>
@@ -252,7 +256,7 @@ class ViewModel extends PolymerElement {
                   <template is="dom-if" if="[[_checkValue(item.input_files.value)]]">
                     <h4>Input Files:</h4>
                     <template is="dom-repeat" items="{{item.input_files.value}}" as="stuff">
-                      <a href="[[routePath]]variable-presentation"><vaadin-button variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
+                      <a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.input_files.value)]]">
@@ -264,7 +268,7 @@ class ViewModel extends PolymerElement {
                   <template is="dom-if" if="[[_checkValue(item.output_files.value)]]">
                     <h4>Output Files:</h4>
                     <template is="dom-repeat" items="{{item.output_files.value}}" as="stuff">
-                      <a href="[[routePath]]variable-presentation"><vaadin-button variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
+                      <a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">

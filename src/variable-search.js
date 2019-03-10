@@ -227,6 +227,9 @@ class VariableSearch extends PolymerElement {
         .incL {
           width: 50%;
         }
+       .pointer{
+          cursor: pointer;
+        }
     </style>
    <div class="container flex-center-justified">
       <div><h1>Variable Search</h1></div>
@@ -254,9 +257,9 @@ class VariableSearch extends PolymerElement {
     <div class="container flex-center-justified">
       <div id="search-bar">
         <div class="grid">
-          <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
+          <vaadin-button class="pointer" theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
           </vaadin-button>
-          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+          <vaadin-button class="pointer" theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
           </vaadin-button>
         </div>
       </div> 
