@@ -276,6 +276,18 @@ class ViewModel extends PolymerElement {
                     <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                   </template>
                 </div>
+                <div>
+                  <template is="dom-if" if="[[_checkArray(item.parameter)]]">
+                    <h4>Parameters:</h4>
+                    <template is="dom-repeat" items="{{item.parameter}}" as="stuff">
+                      <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]]</vaadin-button></a>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
+                    <!--<h4>Parameters:</h4>-->
+                    <!--<paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                  </template>
+                </div>
               </div>
             </div>
           </div>
@@ -351,6 +363,7 @@ class ViewModel extends PolymerElement {
         observer: '_configChanged'
       },
       unModifiedConfigurationResults:Object
+
     };
   }
 
@@ -375,9 +388,15 @@ class ViewModel extends PolymerElement {
     console.log("Detected", stuff)
     return typeof stuff === 'undefined';
   }
+  _checkArray(stuff){
+      return stuff.length!=0;
+  }
+  _checkNegArray(stuff){
+      return stuff.length==0;
+  }
 
   _checkVal(ver){
-    console.log("DOund", ver, this.versionSelected)
+    console.log("DOund", ver, this.versionSelected);
     return true
   }
 
@@ -467,17 +486,38 @@ class ViewModel extends PolymerElement {
   processConfigurationResults(data) {
     var obj = JSON.parse(JSON.stringify(data));
       this.unModifiedConfigurationResults = JSON.parse(JSON.stringify(data));
-      console.log("Ok Done", this.unModifiedConfigurationResults)
+      console.log("Ok Done", this.unModifiedConfigurationResults);
       for(var i = 0; i < obj.results.bindings.length; ++i) {
         for(var key in obj.results.bindings[i]) {
-          var temp = []
+          var temp = [];
+          if(key==="config"){
+              var qs="http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getConfigIParameters?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery";
+              var originalParameters = [];
+              var parameterDict={};
+              $.ajax({
+                  url: qs,
+                  type: "GET",
+                  data:{
+                      config: obj.results.bindings[i][key].value
+                  },
+                  cache: false,
+                  timeout: 5000,
+                  async: false,
+                  success: function(data) {
+                      originalParameters = data.results.bindings;
+                  },
+                  error: function(jqXHR, exception) {
+                  }
+              });
+              obj.results.bindings[i]["parameter"]=originalParameters;
+          }
           if(key === "version"){
             var _self = this;
             var _parent = document.querySelector("mint-explorer-app");
             // Get Versions
             //var qs = _parent.queries[6].query
               var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
-            var r = []
+            var r = [];
             var cs;
             $.ajax({
               url: qs,
@@ -501,9 +541,12 @@ class ViewModel extends PolymerElement {
               error: function(jqXHR, exception) {
               }
             });
+
             obj.results.bindings[i][key].value = cs;
             this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
           }
+
+
           else{
             if(obj.results.bindings[i][key].value.includes(",")) {
               var strs = obj.results.bindings[i][key].value.split(",");
