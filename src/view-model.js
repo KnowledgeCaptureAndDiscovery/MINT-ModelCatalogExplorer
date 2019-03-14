@@ -30,9 +30,13 @@ import '@polymer/paper-listbox/paper-listbox.js';
 import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-card/paper-card.js';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/paper-dialog-behavior/paper-dialog-behavior.js';
 import './paper-chip.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/neon-animation/animations/scale-up-animation.js';
+import '@polymer/neon-animation/animations/fade-out-animation.js';
 
 import '@vaadin/vaadin-button/vaadin-button.js'
 import '@vaadin/vaadin-grid/vaadin-grid.js';
@@ -136,6 +140,13 @@ class ViewModel extends PolymerElement {
           background-color: #e51c23;
         }
 
+        paper-dialog.colored {
+          border: 2px solid;
+          border-color: #4caf50;
+          background-color: #f1f8e9;
+          color: #4caf50;
+        }
+
       .title{
         display: inline-block;
       }
@@ -195,6 +206,21 @@ class ViewModel extends PolymerElement {
           --paper-chip-background-color: purple;
           --paper-chip-label-color: #fff;
         }
+
+        .link {
+          stroke: #aaa;
+          }
+
+          .node text {
+          stroke:#333;
+          cursos:pointer;
+          }
+
+          .node circle{
+          stroke:#fff;
+          stroke-width:3px;
+          fill:#555;
+        }
         
         .pointer{
           cursor: pointer;
@@ -225,8 +251,8 @@ class ViewModel extends PolymerElement {
     <div id="content"></div>
     <div class="grid flex-center-justified">
      <!--<div id="configuration">-->
-      <template is="dom-repeat" items="{{configurationResults.results.bindings}}">
-        <template is="dom-if" if="[[_checkVal(item.version.value)]]">
+      <template is="dom-repeat" items="{{configurationResults.results.bindings}}" id="r">
+        <template is="dom-if" if="[[_checkVal(item.version.value)]]" id="k">
           <div class="box" id="[[item.version.value]]">
             <div class="card-content">
               <div class="title">
@@ -277,6 +303,16 @@ class ViewModel extends PolymerElement {
                   </template>
                 </div>
                 <div>
+                  <template is="dom-if" if="[[_checkArray(item.cags.value)]]">
+                    <h4>CAGs:</h4>
+                    <template is="dom-repeat" items="{{item.cags.value}}" as="stuff" id="t">
+                      <vaadin-button class="pointer" on-click="openDialog" variable\$="{{stuff}}" raised="">[[stuff]]</vaadin-button>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[_checkNegArray(item.output_files.value)]]">
+                  </template>
+                </div>
+                <div>
                   <template is="dom-if" if="[[_checkArray(item.parameter)]]">
                     <h4>Parameters:</h4>
                     <template is="dom-repeat" items="{{item.parameter}}" as="stuff">
@@ -293,46 +329,15 @@ class ViewModel extends PolymerElement {
           </div>
       </template>
     </template>
+    <paper-dialog id="dialog" class="colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Causal Analysis Graph</h2>
+      <div id="graph"></div>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+      </div>
+    </paper-dialog>
+    
     </div>
-    <!--<div id="configuration">-->
-    <!--<h3>Configurations</h3>-->
-    <!--<vaadin-grid heightByRows="true" items="[[configurationResults.results.bindings]]">-->
-      <!--<vaadin-grid-column flex-grow="0">-->
-        <!--<template class="header">Inspect</template>-->
-        <!--<template><a href="[[routePath]]model-configuration"><vaadin-button config\$="{{item.model_config.value}}" on-click="openConfig" raised><iron-icon icon="icons:open-in-new"></iron-icon></vaadin-button></a></template>-->
-      <!--</vaadin-grid-column>-->
-
-      <!--<vaadin-grid-column resizable>-->
-        <!--<template class="header">-->
-          <!--Model Configuration-->
-        <!--</template>-->
-        <!--<template>[[item.config.value]]</template>-->
-      <!--</vaadin-grid-column>-->
-
-      <!--<vaadin-grid-column resizable>-->
-        <!--<template class="header">-->
-          <!--Input Variables-->
-        <!--</template>-->
-          <!--<template>-->
-            <!--<a href="[[routePath]]variable-configuration"><vaadin-button variable\$="[[item.input_variable.value]]" on-click="openConfigForUri" raised>[[item.input_variables.value]]</vaadin-button></a>-->
-
-          <!--</template>-->
-
-      <!--</vaadin-grid-column>-->
-
-      <!--<vaadin-grid-column resizable>-->
-        <!--<template class="header">-->
-          <!--Output Variables-->
-        <!--</template>-->
-        <!--<template>-->
-        <!--<a href="[[routePath]]variable-configuration">-->
-          <!--<span>[[item.output_variables.value]]</span>-->
-        <!--</a>-->
-        <!--</template>-->
-      <!--</vaadin-grid-column>-->
-
-    <!--</vaadin-grid>-->
-    <!--</div>-->
 `;
   }
 
@@ -362,8 +367,8 @@ class ViewModel extends PolymerElement {
       configurationResults: {
         observer: '_configChanged'
       },
-      unModifiedConfigurationResults:Object
-
+      unModifiedConfigurationResults:Object,
+      cags: Array
     };
   }
 
@@ -423,6 +428,165 @@ class ViewModel extends PolymerElement {
     var inp = dom(_self.root).querySelector('#tempor')
     inp.selected = "0"
   }*/
+
+  uriSplit(x){
+    var j = x.split("/")
+    return j[j.length - 1]
+  }
+
+  openDialog(e){
+    console.log("Ok")
+    var cag = e.target.getAttribute("variable");
+    var cagURI;
+    for(var i = 0; i < this.cags.length; i++){
+      if(this.cags[i].includes(cag)){
+          cagURI = this.cags[i]
+      } 
+    }
+
+    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getProcessForCAG?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var cagData;
+    $.ajax({
+        url: qs,
+        type: "GET",
+        data:{
+            cag: cagURI
+        },
+        cache: false,
+        timeout: 5000,
+        async: false,
+        success: function(data) {
+            console.log(data)
+            cagData = data
+        },
+
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            // console.log(msg);
+        }
+      });
+
+    var processes = []
+    var influences = []
+    var obj = {}
+    var cagh = cagData.results.bindings
+    for(var i=0; i<cagh.length; i++){
+        processes.push(this.uriSplit(cagh[i].e.value))
+        obj[this.uriSplit(cagh[i].e.value)] = []
+        var inf = cagh[i].process_influences.value
+        if(inf.includes(",")){
+          var jmp = inf.split(", ")
+          for(var j=0; j<jmp.length; j++){
+            influences.push(this.uriSplit(jmp[j]))
+            obj[this.uriSplit(cagh[i].e.value)].push(this.uriSplit(jmp[j]))
+          }
+        }
+        else{
+          influences.push(this.uriSplit(inf))
+          obj[this.uriSplit(cagh[i].e.value)].push(this.uriSplit(inf))
+        }
+        
+    }
+    console.log(processes)
+    console.log(influences)
+    console.log(obj)
+
+    var ks = processes.concat(influences)
+
+    var uInf = Array.from(new Set(ks));
+    console.log(uInf)
+
+    var data = {}
+    data["nodes"] = []
+    data["links"] = []
+
+    for(var i=0; i< uInf.length; i++){
+      data["nodes"].push({"name": uInf[i], "index": i})
+    }
+
+    var objMap = {}
+    for(var i=0;i < data.nodes.length; i++){
+        objMap[data.nodes[i].name] = data.nodes[i].index
+    }
+    console.log(objMap)
+
+    for(var key in obj){
+      for (var i=0; i < obj[key].length; i++){
+         data["links"].push({"source": objMap[key], "target": objMap[obj[key][i]], "weight": 1})
+      }
+      
+    }
+
+    console.log(data)
+
+    var width = 700,height = 700
+    d3.select(this.$.graph).select("svg").remove();
+    var svg = d3.select(this.$.graph).append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+    var force = d3.layout.force()
+        .gravity(.05)
+        .distance(100)
+        .charge(-100)
+        .size([width, height]);
+
+      force
+          .nodes(data.nodes)
+          .links(data.links)
+          .start();
+
+      var link = svg.selectAll(".link")
+          .data(data.links)
+        .enter().append("line")
+          .attr("class", "link")
+        .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
+
+      var node = svg.selectAll(".node")
+          .data(data.nodes)
+        .enter().append("g")
+          .attr("class", "node")
+          .call(force.drag);
+
+      node.append("circle")
+          .attr("r","10");
+
+      node.append("text")
+          .attr("dx", 12)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.name });
+
+      force.on("tick", function() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; });
+
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+      });
+    this.$.dialog.open()
+  }
 
   openConfig(e) {
     var configuration = e.target.getAttribute("config");
@@ -544,6 +708,7 @@ class ViewModel extends PolymerElement {
 
             obj.results.bindings[i][key].value = cs;
             this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
+            console.log("Completed", this.unModifiedConfigurationResults)
           }
 
 
@@ -573,9 +738,15 @@ class ViewModel extends PolymerElement {
           }
         }
       }
+    var conf = []
+    for(var i=0; i < this.unModifiedConfigurationResults.results.bindings.length; i++){
+      conf.push(this.unModifiedConfigurationResults.results.bindings[i].config.value)
+    }
+    
     console.log("this is config");
     console.log(obj);
     this.configurationResults = obj;
+    _self.fetchMetaDataConfiguration(conf)
   }
 
 
@@ -751,6 +922,85 @@ class ViewModel extends PolymerElement {
             // console.log(msg);
         }
       });
+  }
+
+
+  fetchMetaDataConfiguration(e){
+    var kmp = []
+    for(var j =0; j < e.length; j++){
+      var _self = this;
+      var _parent = document.querySelector("mint-explorer-app");
+      //var query = _parent.queries[8].query;
+      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+      var endpoint = _parent.endpoint;
+      var arr = []
+      $.ajax({
+          url: query,
+          type: "GET",
+          data:{
+              modelConfig: e[j].trim()
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          complete: function() {
+              // console.log("GET request sent");
+          },
+
+          success: function(data) {
+              console.log("GET success");
+              /*if(data.results.length === 0) {
+                  Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
+              }*/
+              //else {
+                  console.log("sjgf");
+                  console.log(data);
+                  for(var i=0; i < data.results.bindings.length; i++){
+                    if(data.results.bindings[i].cag){
+                      arr.push(data.results.bindings[i].cag.value)
+                      kmp.push(data.results.bindings[i].cag.value)
+                    }
+                  }
+                  
+                  console.log(arr)
+              //}
+          },
+
+          error: function(jqXHR, exception) {
+              var msg = '';
+              if (jqXHR.status === 0) {
+                  msg = 'Not connected.\n Verify Network.';
+              }
+              else if (jqXHR.status == 404) {
+                  msg = 'Requested page not found. [404]';
+              }
+              else if (jqXHR.status == 500) {
+                  msg = 'Internal Server Error [500].';
+              }
+              else if (exception === 'parsererror') {
+                  msg = 'Requested JSON parse failed.';
+              }
+              else if (exception === 'timeout') {
+                  msg = 'Time out error.';
+              }
+              else if (exception === 'abort') {
+                  msg = 'Ajax request aborted.';
+              }
+              else {
+                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
+              }
+              // console.log(msg);
+          }
+      });
+      var ans = []
+      for(var i = 0; i<arr.length; i++){
+        var x = arr[i].split("/")
+        ans.push(x[x.length-1])
+      }
+      var pc = {type: "uri", value: ans}
+      this.configurationResults.results.bindings[j].cags = pc
+    }
+     this.cags = kmp 
   }
 
   // }
