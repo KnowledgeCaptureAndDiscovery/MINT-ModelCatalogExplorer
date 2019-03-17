@@ -1,0 +1,7 @@
+version: '3'
+services:
+  modelcatalog:
+    image: "mint-project/modelcatalog:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile

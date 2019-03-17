@@ -1,0 +1,7 @@
+#Environment dev
+version: '3'
+services:
+  modelcatalog:
+    image: "mint-project/modelcatalog:dev"
+    ports:
+      - 9091:8081
