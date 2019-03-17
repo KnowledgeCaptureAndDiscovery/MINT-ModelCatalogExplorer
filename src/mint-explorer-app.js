@@ -23,14 +23,14 @@ import '@polymer/iron-selector/iron-selector.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
 import './my-icons.js';
 
-import './loading-screen.js';
-import './model-search.js';
-import './view-model.js';
-import './model-configuration.js';
-import './variable-presentation.js';
-import './variable-search.js';
-import './my-about.js';
-import './not-found.js';
+// import './loading-screen.js';
+// import './model-search.js';
+// import './view-model.js';
+// import './model-configuration.js';
+// import './variable-presentation.js';
+// import './variable-search.js';
+// import './my-about.js';
+// import './not-found.js';
 
 
 import '@polymer/app-layout/app-layout.js'
@@ -217,7 +217,7 @@ class MintExplorerApp extends PolymerElement {
             import('./variable-presentation.js').then(cb, cb, true);
             break;
           case 'variable-search':
-            import('./variable-presentation.js').then(cb, cb, true);
+            import('./variable-search.js').then(cb, cb, true);
             break;
           case 'my-about':
             import('./my-about.js').then(cb, cb, true);

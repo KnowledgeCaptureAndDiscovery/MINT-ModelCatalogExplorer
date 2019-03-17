@@ -16,6 +16,7 @@ import '@vaadin/vaadin-combo-box/vaadin-combo-box.js'
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
 
 
+//import './loading-screen.js'
 import './model-search.js'
 import './view-model.js'
 import './model-configuration.js'

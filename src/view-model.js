@@ -303,13 +303,13 @@ class ViewModel extends PolymerElement {
                   </template>
                 </div>
                 <div>
-                  <template is="dom-if" if="[[_checkArray(item.cags.value)]]">
+                  <template is="dom-if" if="[[_checkValue(item.cags.value)]]">
                     <h4>CAGs:</h4>
                     <template is="dom-repeat" items="{{item.cags.value}}" as="stuff" id="t">
                       <vaadin-button class="pointer" on-click="openDialog" variable\$="{{stuff}}" raised="">[[stuff]]</vaadin-button>
                     </template>
                   </template>
-                  <template is="dom-if" if="[[_checkNegArray(item.output_files.value)]]">
+                  <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
                   </template>
                 </div>
                 <div>
@@ -441,7 +441,7 @@ class ViewModel extends PolymerElement {
     for(var i = 0; i < this.cags.length; i++){
       if(this.cags[i].includes(cag)){
           cagURI = this.cags[i]
-      } 
+      }
     }
 
     var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getProcessForCAG?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
@@ -506,7 +506,7 @@ class ViewModel extends PolymerElement {
           influences.push(this.uriSplit(inf))
           obj[this.uriSplit(cagh[i].e.value)].push(this.uriSplit(inf))
         }
-        
+
     }
     console.log(processes)
     console.log(influences)
@@ -535,7 +535,7 @@ class ViewModel extends PolymerElement {
       for (var i=0; i < obj[key].length; i++){
          data["links"].push({"source": objMap[key], "target": objMap[obj[key][i]], "weight": 1})
       }
-      
+
     }
 
     console.log(data)
@@ -742,7 +742,7 @@ class ViewModel extends PolymerElement {
     for(var i=0; i < this.unModifiedConfigurationResults.results.bindings.length; i++){
       conf.push(this.unModifiedConfigurationResults.results.bindings[i].config.value)
     }
-    
+
     console.log("this is config");
     console.log(obj);
     this.configurationResults = obj;
@@ -961,7 +961,7 @@ class ViewModel extends PolymerElement {
                       kmp.push(data.results.bindings[i].cag.value)
                     }
                   }
-                  
+
                   console.log(arr)
               //}
           },
@@ -1000,7 +1000,7 @@ class ViewModel extends PolymerElement {
       var pc = {type: "uri", value: ans}
       this.configurationResults.results.bindings[j].cags = pc
     }
-     this.cags = kmp 
+     this.cags = kmp
   }
 
   // }
