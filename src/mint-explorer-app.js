@@ -109,7 +109,9 @@ class MintExplorerApp extends PolymerElement {
           </div>
         </app-toolbar>
       </app-header>
-
+       <template is="dom-if" if="[[loading]]">
+  <loading-screen loading="true" id="pageLoading"></loading-screen>
+  </template>
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
@@ -164,7 +166,8 @@ class MintExplorerApp extends PolymerElement {
       endpoint: {
         type: String,
         value: "http://ontosoft.isi.edu:3030/ds"
-      }
+      },
+        loading:Boolean
     };
   }
 
@@ -231,6 +234,7 @@ class MintExplorerApp extends PolymerElement {
   }
 
   _pageLoaded(page) {
+    this.loading=false;
     //this.$.pageLoading.loading = false;
     this.style.zIndex = 2;
     //console.log("LOADED", this.$.pageLoading.loading)
@@ -238,6 +242,7 @@ class MintExplorerApp extends PolymerElement {
 
   ready() {
     super.ready();
+    this.loading=true;
   }
 }
 

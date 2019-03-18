@@ -105,7 +105,7 @@ class ModelConfiguration extends PolymerElement {
       <paper-chip label="Version: [[verSelected]]" class="custom-background-m" no-hover=""></paper-chip>
     </div>
     <div class="flex-center-justified">
-     <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer">  <paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
+     <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer">  <paper-chip label="URI: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
     <br>
     <div class="container flex-center-justified">
