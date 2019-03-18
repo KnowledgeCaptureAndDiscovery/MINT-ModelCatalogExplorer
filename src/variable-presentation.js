@@ -117,7 +117,7 @@ class VariablePresentation extends PolymerElement {
       <h1>[[tempVar]]</h1>
     </div>
     <div class="container flex-center-justified">
-       <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer"><paper-chip label="Label: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
+       <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
     <br>
     <div class="container flex-center-justified">
