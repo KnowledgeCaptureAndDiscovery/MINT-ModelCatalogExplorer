@@ -273,8 +273,8 @@ class ViewModel extends PolymerElement {
                   {{item.configDesc.value}}
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.configDesc.value)]]">
-                    <!--<h4>Description:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                    <h4>Description:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                   </template>
                 </div>
 
@@ -286,8 +286,8 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.input_files.value)]]">
-                    <!--<h4>Input Files:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                    <h4>Input Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                   </template>
                 </div>
                 <div>
@@ -298,8 +298,8 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
-                    <!--<h4>Output Files:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                    <h4>Output Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                   </template>
                 </div>
                 <div>
@@ -320,8 +320,8 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
-                    <!--<h4>Parameters:</h4>-->
-                    <!--<paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                    <!--<h4>Parameters:</h4
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
               </div>

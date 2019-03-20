@@ -311,8 +311,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.shortName}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.shortName)]]">
-                        <!--<h4>Short Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                        <h4>Short Name:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                     </template>
                   </div>
                   <div>
@@ -321,8 +321,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.longName}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.longName)]]">
-                        <!--<h4>Long Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                        <h4>Long Name:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                     </template>
                   </div>
                   <div>
@@ -331,8 +331,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.description}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.description)]]">
-                        <!--<h4>Description:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                        <h4>Description:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                     </template>
                   </div>
                   <div>
@@ -341,8 +341,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.sn}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.sn)]]">
-                        <!--<h4>Standard Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                        <h4>Standard Name:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                     </template>
                   </div>
                   <div>
@@ -351,8 +351,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.unit}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.unit)]]">
-                        <!--<h4>Unit:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                        <h4>Unit:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
                     </template>
                   </div>
                 </div>

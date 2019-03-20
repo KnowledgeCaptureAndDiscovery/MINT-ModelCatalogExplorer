@@ -118,7 +118,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>CAG </b>: [[item.cag.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.cag.value)]]">
-                    <!--<b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
+                    <b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
                   </template>
                 </div>
                 <div>
@@ -126,7 +126,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Description </b>: [[item.desc.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.desc.value)]]">
-                    <!--<b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
+                    <b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
                   </template>
                 </div>
                 <div>
@@ -134,7 +134,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Input Variables </b>: [[item.input_variables.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.input_variables.value)]]">
-                    <!--<b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
+                    <b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
                   </template>
                 </div>
                 <div>
@@ -142,7 +142,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Output Variables </b>: [[item.output_variables.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.output_variables.value)]]">
-                    <!--<b>Output Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
+                    <b>Output Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
                   </template>
                 </div>
               </div>
@@ -150,7 +150,7 @@ class ModelConfiguration extends PolymerElement {
         </template>
       </template>
       <template is="dom-if" if="[[_checkConf(configurationResults.results.bindings)]]">
-        <!--<paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background-b" no-hover=""></paper-chip>-->
+        <paper-chip label="Currently there is no data for [[tempVar]]" class="custom-background-b" no-hover=""></paper-chip>
       </template>
     </div>
 `;
