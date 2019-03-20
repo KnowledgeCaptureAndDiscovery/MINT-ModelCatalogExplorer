@@ -273,8 +273,8 @@ class ViewModel extends PolymerElement {
                   {{item.configDesc.value}}
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.configDesc.value)]]">
-                    <h4>Description:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                    <!--<h4>Description:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
 
@@ -286,8 +286,8 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.input_files.value)]]">
-                    <h4>Input Files:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                    <!--<h4>Input Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
                 <div>
@@ -298,18 +298,18 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
-                    <h4>Output Files:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                    <!--<h4>Output Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
                 <div>
-                  <template is="dom-if" if="[[_checkValue(item.cags.value)]]">
+                  <template is="dom-if" if="[[_checkArray(item.cags.value)]]">
                     <h4>CAGs:</h4>
                     <template is="dom-repeat" items="{{item.cags.value}}" as="stuff" id="t">
                       <vaadin-button class="pointer" on-click="openDialog" variable\$="{{stuff}}" raised="">[[stuff]]</vaadin-button>
                     </template>
                   </template>
-                  <template is="dom-if" if="[[_checkNegValue(item.output_files.value)]]">
+                  <template is="dom-if" if="[[_checkNegArray(item.cags.value)]]">
                   </template>
                 </div>
                 <div>

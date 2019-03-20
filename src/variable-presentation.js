@@ -122,7 +122,7 @@ class VariablePresentation extends PolymerElement {
     <br>
     <div class="container flex-center-justified">
       <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
-        <vaadin-grid items="[[variableAndUnits.results.bindings]]" theme="column-borders row-stripes wrap-cell-content">
+        <vaadin-grid items="[[variableAndUnits.results.bindings]]" theme="column-borders wrap-cell-content">
           <vaadin-grid-column text-align="center" resizable="">
             <template class="header"><strong>Label</strong></template>
             <template>[[item.label.value]]</template>
