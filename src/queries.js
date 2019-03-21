@@ -13,34 +13,34 @@ var queries = [
       },
       {
         "description": "Get all the models with their descriptions",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Get all the models related to a specific Category",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Fetch model configuration",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
       },
       {
         "description": "Fetch version of a model",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "decription":"Fetch variable configuration",
-        "query":"https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+        "query":"https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
       },
       {
         "description":"Fetch model-configuration data",
-        "query":"https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+        "query":"https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
       },
       {
         "description": "Fetch all the variables",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Fetch model and configs from variable presentation",
-        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       }
     ]
