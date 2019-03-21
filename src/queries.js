@@ -13,34 +13,34 @@ var queries = [
       },
       {
         "description": "Get all the models with their descriptions",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModels?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Get all the models related to a specific Category",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Fetch model configuration",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
       },
       {
         "description": "Fetch version of a model",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "decription":"Fetch variable configuration",
-        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+        "query":"https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
       },
       {
         "description":"Fetch model-configuration data",
-        "query":"http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+        "query":"https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
       },
       {
         "description": "Fetch all the variables",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       },
       {
         "description": "Fetch model and configs from variable presentation",
-        "query": "http://ontosoft.isi.edu:8001/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+        "query": "https://query.mint.isi.edu/api/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       }
     ]

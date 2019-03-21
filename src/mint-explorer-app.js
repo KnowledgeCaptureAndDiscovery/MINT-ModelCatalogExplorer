@@ -165,7 +165,7 @@ class MintExplorerApp extends PolymerElement {
       modelDescriptions: Array,
       endpoint: {
         type: String,
-        value: "http://ontosoft.isi.edu:3030/ds"
+        value: "https://endpoint.mint.isi.edu/ds"
       },
         loading:Boolean
     };
