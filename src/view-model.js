@@ -225,6 +225,15 @@ class ViewModel extends PolymerElement {
         .pointer{
           cursor: pointer;
         }
+
+        #graph {
+          margin-left: 30px;
+          margin-right: 30px;
+          max-width: 1200px;
+          max-height 700px;
+          border: 2px solid black; 
+          overflow-y: hidden;
+        }
     </style>
     <br>
 
@@ -331,6 +340,9 @@ class ViewModel extends PolymerElement {
     </template>
     <paper-dialog id="dialog" class="colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Causal Analysis Graph</h2>
+      <p><ul style='color: #000'>
+      <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
+      <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
       <div id="graph"></div>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -522,12 +534,12 @@ class ViewModel extends PolymerElement {
     data["links"] = []
 
     for(var i=0; i< uInf.length; i++){
-      data["nodes"].push({"name": uInf[i], "index": i})
+      data["nodes"].push({"name": uInf[i], "id": i})
     }
 
     var objMap = {}
     for(var i=0;i < data.nodes.length; i++){
-        objMap[data.nodes[i].name] = data.nodes[i].index
+        objMap[data.nodes[i].name] = data.nodes[i].id
     }
     console.log(objMap)
 
@@ -540,16 +552,16 @@ class ViewModel extends PolymerElement {
 
     console.log(data)
 
-    var width = 700,height = 700
+    /*var width = 700,height = 700
     d3.select(this.$.graph).select("svg").remove();
     var svg = d3.select(this.$.graph).append("svg")
                 .attr("width", width)
                 .attr("height", height);
 
     var force = d3.layout.force()
-        .gravity(.05)
-        .distance(100)
-        .charge(-100)
+        //.gravity(.05)
+        .distance(300)
+        //.charge(-100)
         .size([width, height]);
 
       force
@@ -584,7 +596,286 @@ class ViewModel extends PolymerElement {
             .attr("y2", function(d) { return d.target.y; });
 
         node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+      });*/
+
+
+    //var colors = d3.scaleOrdinal(d3.schemeCategory10);
+
+    var w = 1200, h = 700;
+    var size = d3.scale.pow().exponent(1)
+  .domain([1,100])
+  .range([8,24]);
+    var focus_node = null, highlight_node = null;
+    var highlight_color = "blue";
+    var highlight_trans = 0.1;
+    var text_center = false;
+    var outline = false;
+    var default_node_color = "rgb(204, 204, 204)";
+    var default_link_color = "#888";
+    var nominal_base_node_size = 20;
+    var nominal_text_size = 10;
+    var max_text_size = 24;
+    var nominal_stroke = 1.5;
+    var max_stroke = 4.5;
+    var max_base_node_size = 36;
+    var min_zoom = 0.1;
+    var max_zoom = 7;
+    var zoom = d3.behavior.zoom().scaleExtent([min_zoom,max_zoom])
+    d3.select(this.$.graph).select("svg").remove();
+    var svg = d3.select(this.$.graph).append("svg")
+                .attr("width", w)
+                .attr("height", h),
+                node,
+                link,
+                text,
+                edgepaths;
+
+    var g = svg.append("g");
+
+    svg.append('defs').append('marker')
+        .attrs({'id':'arrowhead',
+            'viewBox':'0 -5 10 10',
+            'refX': 20,
+            'refY': 0,
+            'orient':'auto',
+            'markerWidth': 20,
+            'markerHeight': 20,
+            'xoverflow':'visible'})
+        .append('svg:path')
+        .attr('d', 'M 0,-5 L 10 ,0 L 0,5')
+        .attr('fill', '#999')
+        .style('stroke','none');
+
+    var simulation = d3.layout.force()
+        .linkDistance(400)
+        .charge(-300)
+        .size([w,h]);
+
+    update(data.links, data.nodes);
+
+    function update(links, nodes) {
+      var linkedByIndex = {};
+      links.forEach(function(d) {
+          linkedByIndex[d.source + "," + d.target] = true;
       });
+
+      function isConnected(a, b) {
+          return linkedByIndex[a.index + "," + b.index] || linkedByIndex[b.index + "," + a.index] || a.index == b.index;
+      }
+
+      function hasConnections(a) {
+          for (var property in linkedByIndex) {
+              s = property.split(",");
+              if ((s[0] == a.index || s[1] == a.index) && linkedByIndex[property]) return true;
+          }
+          return false;
+      }
+
+      simulation
+        .nodes(nodes)
+        .links(links)
+        .start();
+
+
+      link = g.selectAll(".link")
+          .data(links)
+          .enter()
+          .append("line")
+          .attr("class", "link")
+          .attr('marker-end','url(#arrowhead)')
+
+      edgepaths = g.selectAll(".edgepath")
+          .data(links)
+          .enter()
+          .append('path')
+          .attrs({
+              'class': 'edgepath',
+              'fill-opacity': 0,
+              'stroke-opacity': 0,
+              'id': function (d, i) {return 'edgepath' + i}
+          })
+          .style("pointer-events", "none");
+
+      node = g.selectAll(".node")
+          .data(nodes)
+          .enter()
+          .append("g")
+          .attr("class", "node")
+          .call(simulation.drag)
+
+      node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
+        var dcx = (w/2-d.x*zoom.scale());
+        var dcy = (h/2-d.y*zoom.scale());
+        zoom.translate([dcx,dcy]);
+         g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
+         
+         
+        });
+
+      var tocolor = "fill";
+      var towhite = "stroke";
+      if (outline) {
+          tocolor = "stroke"
+          towhite = "fill"
+      }
+
+      var circle = node.append("path")
+        .attr("d", d3.svg.symbol()
+          .size(function(d) { return Math.PI*Math.pow(size(d.size)||nominal_base_node_size,2); })
+          .type(function(d) { return d.type; }))
+        .style(tocolor, default_node_color)
+        .style("stroke-width", nominal_stroke)
+        .style(towhite, "white");
+
+      text = g.selectAll(".text")
+        .data(nodes)
+        .enter().append("text")
+        .attr("dy", ".35em")
+        .style("font-size", nominal_text_size + "px")
+
+      if (text_center)
+        text.text(function(d) {
+            return d.name;
+        })
+        .style("text-anchor", "middle");
+      else
+        text.attr("dx", function(d) {
+            return (size(d.size) || nominal_base_node_size);
+        })
+        .text(function(d) {
+            return '\u2002' + d.name;
+        });
+
+      node.on("mouseover", function(d) {
+          set_highlight(d);
+      })
+      .on("mousedown", function(d) {
+          d3.event.stopPropagation();
+          focus_node = d;
+          set_focus(d)
+          if (highlight_node === null) set_highlight(d)
+
+      }).on("mouseout", function(d) {
+          exit_highlight();
+
+      });
+
+      d3.select(window).on("mouseup",
+          function() {
+              if (focus_node !== null) {
+                  focus_node = null;
+                  if (highlight_trans < 1) {
+
+                      circle.style("opacity", 1);
+                      text.style("opacity", 1);
+                      link.style("opacity", 1);
+                  }
+              }
+
+              if (highlight_node === null) exit_highlight();
+          });
+
+      function exit_highlight() {
+          highlight_node = null;
+          if (focus_node === null) {
+            svg.style("cursor", "move");
+            if (highlight_color != "white") {
+              circle.style(towhite, "white");
+              text.style("font-weight", "normal");
+              text.style("font-size", nominal_text_size + 'px');
+              link.style("stroke", function(o) {
+                return default_link_color
+              });
+            }
+          }
+      }
+
+      function set_focus(d) {
+        if (highlight_trans < 1) {
+          circle.style("opacity", function(o) {
+            return isConnected(d, o) ? 1 : highlight_trans;
+          });
+
+          text.style("opacity", function(o) {
+            return isConnected(d, o) ? 1 : highlight_trans;
+          });
+
+          link.style("opacity", function(o) {
+            return o.source.index == d.index || o.target.index == d.index ? 1 : highlight_trans;
+          });
+        }
+      }
+
+
+      function set_highlight(d) {
+        svg.style("cursor", "pointer");
+        if (focus_node !== null) d = focus_node;
+        highlight_node = d;
+        var x = 1.3 * nominal_text_size + "px"
+        var y = nominal_text_size + "px"
+        if (highlight_color != "white") {
+          circle.style(towhite, function(o) {
+            return isConnected(d, o) ? highlight_color : "white";
+          });
+          text.style("font-weight", function(o) {
+            return isConnected(d, o) ? "bold" : "normal";
+          }); 
+          text.style("font-size", function(o) {
+            return isConnected(d, o) ? x : y
+          });         
+          link.style("stroke", function(o) {
+            return o.source.index == d.index || o.target.index == d.index ? highlight_color : ((isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color);
+          });
+        }
+      }
+
+      simulation
+        .on("tick", ticked);
+        
+    }
+
+    function ticked() {
+      link
+        .attr("x1", function (d) {return d.source.x;})
+        .attr("y1", function (d) {return d.source.y;})
+        .attr("x2", function (d) {return d.target.x;})
+        .attr("y2", function (d) {return d.target.y;});
+
+      node
+        .attr("transform", function (d) {return "translate(" + d.x + ", " + d.y + ")";});
+
+      text.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+      edgepaths.attr('d', function (d) {
+        return 'M ' + d.source.x + ' ' + d.source.y + ' L ' + d.target.x + ' ' + d.target.y;
+      });
+    }
+
+    function resize() {
+      var width = window.innerWidth,
+          height = window.innerHeight;
+      svg.attr("width", width).attr("height", height);
+
+      simulation.size([simulation.size()[0] + (width - w) / zoom.scale(), simulation.size()[1] + (height - h) / zoom.scale()]).resume();
+      w = width;
+      h = height;
+    }
+
+    function dragstarted(d) {
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+      d.fx = d.x;
+      d.fy = d.y;
+    }
+
+    function dragged(d) {
+      d.fx = d3.event.x;
+      d.fy = d3.event.y;
+    }
+
+    function isNumber(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
     this.$.dialog.open()
   }
 
