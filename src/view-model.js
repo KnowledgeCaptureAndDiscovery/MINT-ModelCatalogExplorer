@@ -272,10 +272,13 @@ class ViewModel extends PolymerElement {
               <div class="body">
                 <div>
                   <h4>Model Configuration: </h4>
-                  <template is="dom-repeat" items="{{item.config.value}}" as="stuff">
-                    <a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[stuff]]</vaadin-button></a>
-                  </template>
+                  <!--<template is="dom-repeat" items="{{item.config.value}}" as="stuff">-->
+                    <!--<a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[item.label]]</vaadin-button></a>-->
+                 <a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer">[[item.label]]</vaadin-button></a>
+                 <a href="[[item.compLoc.value]]"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
+                  <!--</template>-->
                 </div>
+                
                 <div>
                   <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
                   <h4>Description:</h4>
@@ -708,8 +711,8 @@ class ViewModel extends PolymerElement {
         var dcy = (h/2-d.y*zoom.scale());
         zoom.translate([dcx,dcy]);
          g.attr("transform", "translate("+ dcx + "," + dcy  + ")scale(" + zoom.scale() + ")");
-         
-         
+
+
         });
 
       var tocolor = "fill";
@@ -819,10 +822,10 @@ class ViewModel extends PolymerElement {
           });
           text.style("font-weight", function(o) {
             return isConnected(d, o) ? "bold" : "normal";
-          }); 
+          });
           text.style("font-size", function(o) {
             return isConnected(d, o) ? x : y
-          });         
+          });
           link.style("stroke", function(o) {
             return o.source.index == d.index || o.target.index == d.index ? highlight_color : ((isNumber(o.score) && o.score >= 0) ? color(o.score) : default_link_color);
           });
@@ -831,7 +834,7 @@ class ViewModel extends PolymerElement {
 
       simulation
         .on("tick", ticked);
-        
+
     }
 
     function ticked() {
@@ -906,8 +909,6 @@ class ViewModel extends PolymerElement {
           configuration=configuration[0];
           configuration=configuration.trim();
       }
-      console.log("ygayfdadaad");
-      console.log(configuration);
       console.log(this.unModifiedConfigurationResults);
       var _parent = document.querySelector("mint-explorer-app");
 
@@ -1004,7 +1005,10 @@ class ViewModel extends PolymerElement {
 
 
           else{
-            if(obj.results.bindings[i][key].value.includes(",")) {
+              if (key==='compLoc' || key==='config') {
+
+              }
+            else if(obj.results.bindings[i][key].value.includes(",")) {
               var strs = obj.results.bindings[i][key].value.split(",");
 
               var vars = [];
@@ -1222,7 +1226,7 @@ class ViewModel extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[8].query;
-      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
+      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata";
       var endpoint = _parent.endpoint;
       var arr = []
       $.ajax({
@@ -1239,21 +1243,27 @@ class ViewModel extends PolymerElement {
           },
 
           success: function(data) {
-              console.log("GET success");
+              //console.log("GET success");
               /*if(data.results.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }*/
               //else {
-                  console.log("sjgf");
+                 // console.log("sjgf");
+             // alert('hi');
                   console.log(data);
                   for(var i=0; i < data.results.bindings.length; i++){
                     if(data.results.bindings[i].cag){
-                      arr.push(data.results.bindings[i].cag.value)
-                      kmp.push(data.results.bindings[i].cag.value)
+                      arr.push(data.results.bindings[i].cag.value);
+                      kmp.push(data.results.bindings[i].cag.value);
                     }
+                    if(data.results.bindings[i].label){
+                        _self.configurationResults.results.bindings[j].label = data.results.bindings[i].label.value;
+                       // alert(data.results.bindings[i].compLoc)
+                    }
+
                   }
 
-                  console.log(arr)
+                 // console.log(arr)
               //}
           },
 
@@ -1283,15 +1293,17 @@ class ViewModel extends PolymerElement {
               // console.log(msg);
           }
       });
-      var ans = []
+      var ans = [];
       for(var i = 0; i<arr.length; i++){
-        var x = arr[i].split("/")
+        var x = arr[i].split("/");
         ans.push(x[x.length-1])
       }
       var pc = {type: "uri", value: ans}
       this.configurationResults.results.bindings[j].cags = pc
+
     }
      this.cags = kmp
+      console.log(this.configurationResults.results);
   }
 
   // }
