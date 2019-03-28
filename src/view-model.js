@@ -236,7 +236,7 @@ class ViewModel extends PolymerElement {
         }
     </style>
     <br>
-
+    <loading-screen loading=[[loading]] id="pageLoading"></loading-screen>
     <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     <div class="flex-center-justified">
       <h1 style="text-align:center;">[[modelSelected.label]] &nbsp;&nbsp;<div id="showAllVer"><center><paper-chip label="Showing All Versions" class="custom-background-j"></paper-chip></center></div><div id="changeVer" style="display: none;"><center><paper-chip id="verC" class="custom-background-m"></paper-chip></center></div></h1>
@@ -326,9 +326,9 @@ class ViewModel extends PolymerElement {
                 </div>
                 <div>
                   <template is="dom-if" if="[[_checkArray(item.parameter)]]">
-                    <h4>Parameters:</h4>
+                    <h4>Parameters(&nbsp;DataType,&nbsp;&nbsp;DefaultValue):</h4>
                     <template is="dom-repeat" items="{{item.parameter}}" as="stuff">
-                      <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]]</vaadin-button></a>
+                      <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]](&nbsp;[[stuff.pdatatype.value]],&nbsp;&nbsp;[[stuff.defaultvalue.value]])</vaadin-button></a>
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
@@ -383,11 +383,13 @@ class ViewModel extends PolymerElement {
         observer: '_configChanged'
       },
       unModifiedConfigurationResults:Object,
-      cags: Array
+      cags: Array,
+        loading:Boolean
     };
   }
 
   _activeChanged(modelSelected){
+
 
   }
 
@@ -431,6 +433,7 @@ class ViewModel extends PolymerElement {
     console.log("Ojj", data);
     this.fetchConfiguration(data);
     this.finConfigs = this.configurationResults
+      this.loading=false;
   }
 
   /*goBack(){
@@ -1531,6 +1534,7 @@ class ViewModel extends PolymerElement {
 
   ready() {
     super.ready();
+    this.loading=true;
     var _self = this
     this.finVersions = []
     var _parent = document.querySelector('mint-explorer-app')
