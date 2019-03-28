@@ -1,7 +1,7 @@
 # MINT-ModelCatalogExplorer
 A repository to show and explore models included in the MINT Model Catalog
 
-A demo of this application may be found at http://ontosoft.isi.edu:8081/
+A demo of this application may be found at https://model.mint.isi.edu/
 
 At the moment, **we only support Google Chrome browser**.
 

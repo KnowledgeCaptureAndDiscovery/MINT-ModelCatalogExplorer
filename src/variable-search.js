@@ -454,7 +454,7 @@ class VariableSearch extends PolymerElement {
     console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[9].query;
-    var qt = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var searchRes = []
     var test = {}
     $.ajax({
@@ -517,7 +517,7 @@ class VariableSearch extends PolymerElement {
   getMetadata(uri){
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[6].query;
-    var qt = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var ts = {}
     $.ajax({
       url: qt,
@@ -601,7 +601,7 @@ class VariableSearch extends PolymerElement {
     var _self = this
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[10].query;
-    var qt = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationsForVariablePresentation?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var kmp = []
     $.ajax({
       url: qt,
@@ -685,7 +685,7 @@ class VariableSearch extends PolymerElement {
     var _self = this;
     var flag = 0;
     var dsSpec = '';
-    var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     $.ajax({
         url: query,
         type: "GET",
@@ -771,7 +771,7 @@ class VariableSearch extends PolymerElement {
   searchIO(var_data, var_name){
     //console.log("Ok", var_name)
     var checker = 0
-    var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+    var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
     $.ajax({
         url: query,
         type: "GET",
@@ -835,7 +835,7 @@ class VariableSearch extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[6].query;
-      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
@@ -884,7 +884,7 @@ class VariableSearch extends PolymerElement {
     console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[9].query;
-    var qt = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var flag = false
     var sntoLabel = ''
     var sntoURI = ''

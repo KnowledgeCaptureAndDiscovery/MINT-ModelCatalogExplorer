@@ -332,8 +332,8 @@ class ViewModel extends PolymerElement {
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
-                    <!--<h4>Parameters:</h4>-->
-                    <!--<paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                    <!--<h4>Parameters:</h4
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
               </div>
@@ -462,7 +462,7 @@ class ViewModel extends PolymerElement {
       }
     }
 
-    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getProcessForCAG?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getProcessForCAG?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var cagData;
     $.ajax({
         url: qs,
@@ -950,7 +950,7 @@ class ViewModel extends PolymerElement {
         for(var key in obj.results.bindings[i]) {
           var temp = [];
           if(key==="config"){
-              var qs="http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getConfigIParameters?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery";
+              var qs="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigIParameters?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
               var originalParameters = [];
               var parameterDict={};
               $.ajax({
@@ -975,7 +975,7 @@ class ViewModel extends PolymerElement {
             var _parent = document.querySelector("mint-explorer-app");
             // Get Versions
             //var qs = _parent.queries[6].query
-              var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+              var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
             var r = [];
             var cs;
             $.ajax({
@@ -1053,7 +1053,7 @@ class ViewModel extends PolymerElement {
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
     //var qs = _parent.queries[6].query
-    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var r = []
     var finVersions = []
     for(var i = 0; i < versions.length; i++){
@@ -1111,7 +1111,7 @@ class ViewModel extends PolymerElement {
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
     //var qs = _parent.queries[6].query
-    var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=http%3A%2F%2Fontosoft.isi.edu%3A3030%2Fds%2Fquery"
+    var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
     var versions = []
     var r = []
     $.ajax({
@@ -1164,7 +1164,7 @@ class ViewModel extends PolymerElement {
       });
 
     //var query = _parent.queries[5].query;
-    var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
+    var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariablePresentationsForModel"
     var endpoint = _parent.endpoint;
     $.ajax({
         url: query,
@@ -1229,7 +1229,7 @@ class ViewModel extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[8].query;
-      var query = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata";
+      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelConfigurationMetadata"
       var endpoint = _parent.endpoint;
       var arr = []
       $.ajax({
