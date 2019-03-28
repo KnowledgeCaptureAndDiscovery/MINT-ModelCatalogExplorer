@@ -98,7 +98,7 @@ class MyAbout extends PolymerElement {
     </div>
     <footer>
       <hr>
-      <center><p>Copyright &copy; {{year}} Model Catalog Explorer <a href="https://github.com/KnowledgeCaptureAndDiscovery/MINT-ModelCatalogExplorer/" target="_blank" title="View on GitHub" style="position: relative; top: 10px;"><img src= "./images/github.png" width="40"></a></p></center>
+      <center><p>Copyright &copy; {{year}} Model Catalog Explorer <a href="https://github.com/mintproject/MINT-ModelCatalogExplorer/" target="_blank" title="View on GitHub" style="position: relative; top: 10px;"><img src= "./images/github.png" width="40"></a></p></center>
     </footer>
     `;
   }
