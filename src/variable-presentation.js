@@ -266,7 +266,7 @@ class VariablePresentation extends PolymerElement {
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[7].query;
-      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits";
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
@@ -283,12 +283,12 @@ class VariablePresentation extends PolymerElement {
 
           success: function(data) {
                console.log("GET success");
-               console.log(data)
+               //console.log(data)
               /*if(data.results.bindings.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }*/
               //else {
-                  console.log(data);
+                 // console.log(data);
                  _self.process(data);
               //}
           },

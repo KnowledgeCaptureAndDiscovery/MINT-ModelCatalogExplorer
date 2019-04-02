@@ -468,7 +468,7 @@ class VariableSearch extends PolymerElement {
       },
 
       success: function(data) {
-        console.log(data)
+        //console.log(data)
         var res = data.results.bindings
         for(var i=0; i<res.length; i++){
           if('sn' in res[i]){
@@ -508,7 +508,7 @@ class VariableSearch extends PolymerElement {
           console.log(msg);
       }
     });
-    console.log(searchRes)
+    //console.log(searchRes)
     this.variables = searchRes
     this.dictMap = test
     console.log(this.dictMap)

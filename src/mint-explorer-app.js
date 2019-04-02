@@ -109,9 +109,9 @@ class MintExplorerApp extends PolymerElement {
           </div>
         </app-toolbar>
       </app-header>
-       <template is="dom-if" if="[[loading]]">
-  <loading-screen loading="true" id="pageLoading"></loading-screen>
-  </template>
+       <!--<template is="dom-if" if="[[loading]]">-->
+  <loading-screen loading="[[loading]]" id="pageLoading"></loading-screen>
+  <!--</template>-->
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
@@ -202,6 +202,7 @@ class MintExplorerApp extends PolymerElement {
 
   _pageChanged(page, oldPage) {
     if (page != null) {
+
       if(!this.loadedPages[page]) {
         //this.$.pageLoading.loading = true;
         this.loadedPages[page] = true;
