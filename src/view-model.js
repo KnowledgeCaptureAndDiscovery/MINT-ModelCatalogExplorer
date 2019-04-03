@@ -622,9 +622,7 @@ class ViewModel extends PolymerElement {
     //var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
     var w = 1200, h = 700;
-    var size = d3.scale.pow().exponent(1)
-  .domain([1,100])
-  .range([8,24]);
+    var size = d3.scale.pow().exponent(1).domain([1,100]).range([8,24]);
     var focus_node = null, highlight_node = null;
     var highlight_color = "blue";
     var highlight_trans = 0.1;
@@ -691,6 +689,29 @@ class ViewModel extends PolymerElement {
           return false;
       }
 
+      var node_drag = d3.behavior.drag()
+        .on("dragstart", dragstart)
+        .on("drag", dragmove)
+        .on("dragend", dragend);
+
+      function dragstart(d, i) {
+        simulation.stop() // stops the force auto positioning before you start dragging
+      }
+
+      function dragmove(d, i) {
+        d.px += d3.event.dx;
+        d.py += d3.event.dy;
+        d.x += d3.event.dx;
+        d.y += d3.event.dy;
+        ticked(); // this is the key to make it work together with updating both px,py,x,y on d !
+      }
+
+      function dragend(d, i) {
+        d.fixed = true; // of course set the node to fixed so the force doesn't include the node in its auto positioning stuff
+        ticked();
+        //simulation.resume();
+      }
+
       simulation
         .nodes(nodes)
         .links(links)
@@ -721,7 +742,7 @@ class ViewModel extends PolymerElement {
           .enter()
           .append("g")
           .attr("class", "node")
-          .call(simulation.drag)
+          .call(node_drag)
 
       node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
         var dcx = (w/2-d.x*zoom.scale());
