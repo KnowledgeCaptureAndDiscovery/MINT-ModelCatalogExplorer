@@ -262,7 +262,7 @@ class ModelSearch extends PolymerElement {
          <div class="card-content" identity\$="{{index}}">
               <h2><strong>[[item.label]]
                 &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
-                &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover=""></paper-chip></strong></h2>
+                &nbsp;<paper-chip label="Total Versions: {{item.version.len}}" class="custom-background" no-hover=""></paper-chip></strong></h2>
              <p>[[item.description]]</p>
               <p>[[item.assumptions]]</p>
               <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
@@ -369,67 +369,6 @@ class ModelSearch extends PolymerElement {
     location.reload();
   }
 
-  getVersion(versions){
-      // Get All the related Versions for the model
-     // console.log("Temp", versions)
-      var _self = this;
-      var _parent = document.querySelector("mint-explorer-app");
-      // Get Versions
-      //var qs = _parent.queries[6].query
-      var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
-      var r = []
-      var finVersions = []
-      for(var i = 0; i < versions.length; i++){
-        $.ajax({
-          url: qs,
-          type: "GET",
-          data:{
-              mv: versions[i]
-          },
-          cache: false,
-          timeout: 5000,
-          async: false,
-            //success:_self.handle,
-          success: function(data) {
-            r = data.results.bindings;
-            var temp = []
-            for(var i = 0; i < r.length; i++){
-              temp = r[i].prop.value.split("#");
-              if(temp[1] === "hasVersionId"){
-                finVersions.push(r[i].value.value)
-              }
-            }
-          },
-          error: function(jqXHR, exception) {
-              var msg = '';
-              if (jqXHR.status === 0) {
-                  msg = 'Not connected.\n Verify Network.';
-              }
-              else if (jqXHR.status == 404) {
-                  msg = 'Requested page not found. [404]';
-              }
-              else if (jqXHR.status == 500) {
-                  msg = 'Internal Server Error [500].';
-              }
-              else if (exception === 'parsererror') {
-                  msg = 'Requested JSON parse failed.';
-              }
-              else if (exception === 'timeout') {
-                  msg = 'Time out error.';
-              }
-              else if (exception === 'abort') {
-                  msg = 'Ajax request aborted.';
-              }
-              else {
-                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
-              }
-          }
-        });
-      }
-     //
-      //console.log("Final Versions", finVersions)
-      return finVersions
-  }
 
   handle(data){
       var r = [];
@@ -494,10 +433,12 @@ class ModelSearch extends PolymerElement {
             else{
               versions.push(x[i].versions.value.trim())
             }
-            res = _self.getVersion(versions);
+            result.tVersion = versions
+            //res = _self.getVersion(versions);
+            //console.log("KK", res);
             var h = {
-              data: res,
-              len: res.length
+              data: versions,
+              len: versions.length
             }
             result.version = h
             results.push(result)
@@ -543,6 +484,80 @@ class ModelSearch extends PolymerElement {
     }
     this.cts = cts
     this.results = results;
+
+   /* async function getVersion(versions) {
+      // Get All the related Versions for the model
+      // console.log("Temp", versions)
+      var _self = this;
+      var _parent = document.querySelector("mint-explorer-app");
+      // Get Versions
+      //var qs = _parent.queries[6].query
+      var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+      var r = []
+      var finVersions = []
+      for (var i = 0; i < versions.length; i++) {
+        $.ajax({
+          url: qs,
+          type: "GET",
+          data: {
+            mv: versions[i]
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          //success:_self.handle,
+          success: function (data) {
+            r = data.results.bindings;
+            var temp = []
+            for (var i = 0; i < r.length; i++) {
+              temp = r[i].prop.value.split("#");
+              if (temp[1] === "hasVersionId") {
+                finVersions.push(r[i].value.value)
+              }
+            }
+          },
+          error: function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+              msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+              msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+              msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+              msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+              msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+              msg = 'Ajax request aborted.';
+            }
+            else {
+              msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+          }
+        });
+      }
+      //
+      //console.log("Final Versions", finVersions)
+      return finVersions
+    }
+    console.log(this.results);
+    let promises = [];
+    for(var i = 0; i < this.results.length; i++){
+      promises.push(getVersion(this.results.tVersion))
+    }
+    console.log(promises);
+    Promise.all(promises).then((res) => {
+      for(let j = 0; j < res.length; j++) {
+        this.results[j].version = res;
+        console.log(res)
+      }
+    })*/
     this.totalRes = results.length.toString();
     this.searchResults = results;
     var newArray = results.slice();
