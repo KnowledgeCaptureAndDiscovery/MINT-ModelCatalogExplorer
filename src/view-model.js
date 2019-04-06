@@ -1645,6 +1645,7 @@ class ViewModel extends PolymerElement {
     var selectedItem = e.target.selectedItem;
     var versionNo = selectedItem.innerText;
     this.versionSelected = {"val": versionNo};
+      this.finConfigs = this.configurationResults;
    // console.log(this.versionSelected)
     if(versionNo != "All"){
      // console.log("Do Something")
@@ -1654,7 +1655,7 @@ class ViewModel extends PolymerElement {
         showVer[i].style.display = "none"
       }
       var verC = dom(_self.root).querySelector('#verC');
-      verC.label = versionNo
+      verC.label = versionNo;
       var showAllVer = this.$.showAllVer;
       showAllVer.style.display = "none";
       var changeVer = this.$.changeVer;
@@ -1662,7 +1663,7 @@ class ViewModel extends PolymerElement {
     }
     else{
      // console.log("Show All")
-      this.finVersions = []
+      this.finVersions = [];
       var _parent = document.querySelector("mint-explorer-app");
       this.modelSelected = _parent.modelSelected;
       // console.log(this.modelSelected);
@@ -1670,7 +1671,7 @@ class ViewModel extends PolymerElement {
       if(this.modelSelected) {
        _self.fetchConfiguration(_parent.modelSelected);
       this.finConfigs = this.configurationResults;
-      var showVer = this.$.showAllVer
+      var showVer = this.$.showAllVer;
       for(var i=0; i<showVer.length; i++){
         showVer[i].style.display = "block"
       }
