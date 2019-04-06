@@ -18,7 +18,7 @@ import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
 
 //import './loading-screen.js'
 import './model-search.js'
-//import './view-model.js'
+import './view-model.js'
 import './model-configuration.js'
 import './not-found.js'
 
@@ -377,7 +377,7 @@ class ModelSearch extends PolymerElement {
       // Get Versions
       //var qs = _parent.queries[6].query
       var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
-      var r = []
+      var r = [];
       var finVersions = []
       for(var i = 0; i < versions.length; i++){
         $.ajax({
@@ -470,7 +470,7 @@ class ModelSearch extends PolymerElement {
           var x = data.results.bindings
 
         //  console.log(x);
-          var res = []
+          var res = [];
           for(var i = 0;i < x.length; i++){
             var result = {};
             versions = [];
@@ -556,8 +556,8 @@ class ModelSearch extends PolymerElement {
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[4].query;
     var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
-    var query = qt + "&cat=" + category
-    var catsByModel = []
+    var query = qt + "&cat=" + category;
+    var catsByModel = [];
    // console.log("Done", query)
     $.ajax({
       url: query,
@@ -571,7 +571,7 @@ class ModelSearch extends PolymerElement {
 
       success: function(data) {
         var x = []
-        x = data.results.bindings
+        x = data.results.bindings;
         for(var i=0; i< x.length; i++){
           catsByModel.push(x[i].model.value)
         }
