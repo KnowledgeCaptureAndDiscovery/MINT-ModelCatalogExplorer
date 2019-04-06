@@ -18,7 +18,7 @@ import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
 
 //import './loading-screen.js'
 import './model-search.js'
-//import './view-model.js'
+import './view-model.js'
 import './model-configuration.js'
 import './not-found.js'
 
