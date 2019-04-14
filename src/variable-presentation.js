@@ -115,7 +115,11 @@ class VariablePresentation extends PolymerElement {
     </div>
     <div class="container flex-center-justified">
       <h1>[[tempVar]]</h1>
+      
     </div>
+    <!--<div class="flex-center-justified">-->
+    <!--[[description]]-->
+<!--</div>-->
     <div class="container flex-center-justified">
        <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
@@ -205,18 +209,23 @@ class VariablePresentation extends PolymerElement {
       },
       tempVar: String,
       varSelected:String,
-      variableAndUnits:Object
+      variableAndUnits:Object,
+        description:String
     };
   }
 
   _variableChanged(data){
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-      this.varSelected = _parent.variableSelected.trim();
+      this.varSelected = _parent.variableSelected.variable.trim();
       var x = []
-      x = this.varSelected.split("/")
-      this.tempVar = x[x.length - 1]
+      x = this.varSelected.split("/");
+     // this.tempVar = x[x.length - 1]
+      this.tempVar=_parent.variableSelected.label;
+      this.description=_parent.modelDescriptions;
       this.fetchConfiguration(this.varSelected);
+      this.description=_parent.modelDescriptions;
+      console.log("yaha aaya####");
   }
 
   _checkBVal(stuff){
@@ -245,21 +254,27 @@ class VariablePresentation extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-
+        console.log("yaha aaya");
       if(_parent.configSelected){
-        this.varSelected=_parent.variableSelected.trim();
+          console.log(_parent.variableSelected);
+        this.varSelected=_parent.variableSelected.variable.trim();
         var x = []
-        x = this.varSelected.split("/")
-        this.tempVar = x[x.length - 1]
+        x = this.varSelected.split("/");
+       // this.tempVar = x[x.length - 1];
+          this.tempVar=_parent.variableSelected.label;
         this.fetchConfiguration(this.varSelected);
+
       }
+      this.description=_parent.modelDescriptions;
+
   }
 
   process(data){
       var obj = JSON.parse(JSON.stringify(data));
       this.variableAndUnits=obj;
       var _parent = document.querySelector("mint-explorer-app")
-      _parent.varAndUnits = obj
+      _parent.varAndUnits = obj;
+      this.description=_parent.modelDescriptions;
   }
 
   fetchConfiguration(e){

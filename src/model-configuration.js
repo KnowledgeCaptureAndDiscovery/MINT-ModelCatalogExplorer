@@ -165,7 +165,7 @@ class ModelConfiguration extends PolymerElement {
       },
       data: {
         variable:String,
-        observer: '_varChanged'
+        //observer: '_varChanged'
       },
       modelName: String,
       varSelected:String,
@@ -181,18 +181,18 @@ class ModelConfiguration extends PolymerElement {
     _pages.selected = "view-model";
   }*/
 
-  _varChanged(data){
-      var _parent = document.querySelector("mint-explorer-app");
-      this.configSelected = _parent.configSelected;
-      this.modelName = _parent.modelSelected.label;
-      this.varSelected =_parent.variableSelected;
-      this.verSelected = _parent.versionSelected;
-      var x = [];
-      console.log("Got this", this.configSelected, this.modelName, this.varSelected)
-      x = this.varSelected.split("/");
-      this.tempVar = x[x.length - 1];
-      this.fetchConfiguration(this.varSelected);
-  }
+  // _varChanged(data){
+  //     var _parent = document.querySelector("mint-explorer-app");
+  //     this.configSelected = _parent.configSelected;
+  //     this.modelName = _parent.modelSelected.label;
+  //     this.varSelected =_parent.variableSelected;
+  //     this.verSelected = _parent.versionSelected;
+  //     var x = [];
+  //     console.log("Got this", this.configSelected, this.modelName, this.varSelected)
+  //     x = this.varSelected.split("/");
+  //     this.tempVar = x[x.length - 1];
+  //     this.fetchConfiguration(this.varSelected);
+  // }
 
   _checkInpValue(stuff){
       console.log("Detected", stuff)
