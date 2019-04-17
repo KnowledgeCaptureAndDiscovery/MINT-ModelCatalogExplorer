@@ -341,7 +341,8 @@ class ViewModel extends PolymerElement {
                   <template is="dom-if" if="[[_checkArray(item.parameter)]]">
                     <h4>These are the Parameters used by the model. It is shown as Parameter(&nbsp;It's DataType,&nbsp;&nbsp;It's DefaultValue). Click to know more:</h4>
                     <template is="dom-repeat" items="{{item.parameter}}" as="stuff">
-                      <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]](&nbsp;[[stuff.pdatatype.value]],&nbsp;&nbsp;[[stuff.defaultvalue.value]])</vaadin-button></a>
+                      <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]]</vaadin-button></a>
+                   (&nbsp;[[stuff.pdatatype.value]],&nbsp;&nbsp;[[stuff.defaultvalue.value]])<br>
                     </template>
                   </template>
                   <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
