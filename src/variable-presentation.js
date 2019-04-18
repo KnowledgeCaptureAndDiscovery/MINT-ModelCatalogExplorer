@@ -225,11 +225,11 @@ class VariablePresentation extends PolymerElement {
       this.description=_parent.modelDescriptions;
       this.fetchConfiguration(this.varSelected);
       this.description=_parent.modelDescriptions;
-      console.log("yaha aaya####");
+      //console.log("yaha aaya####");
   }
 
   _checkBVal(stuff){
-    console.log("Found", stuff)
+    //console.log("Found", stuff)
     if(stuff.length === 0){
       return true
     }
@@ -237,7 +237,7 @@ class VariablePresentation extends PolymerElement {
   }
 
   _checkBNegVal(stuff){
-    console.log("Found", stuff)
+    //console.log("Found", stuff)
     if(stuff.length === 0){
       return false
     }
@@ -254,9 +254,9 @@ class VariablePresentation extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-        console.log("yaha aaya");
+        //console.log("yaha aaya");
       if(_parent.configSelected){
-          console.log(_parent.variableSelected);
+          //console.log(_parent.variableSelected);
         this.varSelected=_parent.variableSelected.variable.trim();
         var x = []
         x = this.varSelected.split("/");
@@ -293,11 +293,11 @@ class VariablePresentation extends PolymerElement {
           timeout: 5000,
           async: false,
           complete: function() {
-              // console.log("GET request sent");
+              // //console.log("GET request sent");
           },
 
           success: function(data) {
-               console.log("GET success");
+               //console.log("GET success");
                //console.log(data)
               /*if(data.results.bindings.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";

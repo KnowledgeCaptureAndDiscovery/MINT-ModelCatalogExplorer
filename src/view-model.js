@@ -46,7 +46,7 @@ import './my-icons.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
-console.log("Hello")
+//console.log("Hello")
 String.prototype.format = function () {
   var i = 0, args = arguments;
   return this.replace(/{}/g, function () {
@@ -1009,15 +1009,15 @@ class ViewModel extends PolymerElement {
       //             }
       //         }
       //     }
-        console.log("jhfgdf"+_parent.variableSelected);
-        console.log(_parent.variableSelected);
-        console.log(_parent.modelDescriptions);
+        //console.log("jhfgdf"+_parent.variableSelected);
+        //console.log(_parent.variableSelected);
+        //console.log(_parent.modelDescriptions);
   }
 
   processConfigurationResults(data) {
     var obj = JSON.parse(JSON.stringify(data));
       this.unModifiedConfigurationResults = JSON.parse(JSON.stringify(data));
-      console.log("Ok Done", this.unModifiedConfigurationResults);
+      //console.log("Ok Done", this.unModifiedConfigurationResults);
       for(var i = 0; i < obj.results.bindings.length; ++i) {
           this.input_file=[];
           this.output_file=[];
@@ -1113,7 +1113,7 @@ class ViewModel extends PolymerElement {
 
             obj.results.bindings[i][key].value = cs;
             this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
-            console.log("Completed", this.unModifiedConfigurationResults)
+            //console.log("Completed", this.unModifiedConfigurationResults)
           }
             // if(key === "input_files" || key==="output_files"){
             //
@@ -1427,8 +1427,8 @@ class ViewModel extends PolymerElement {
               }*/
               //else {
                  // console.log("sjgf");
-                   console.log("hhhhh@@@");
-                  console.log(data);
+                   //console.log("hhhhh@@@");
+                  //console.log(data);
                   for(var i=0; i < data.results.bindings.length; i++){
                     if(data.results.bindings[i].cag){
                       arr.push(data.results.bindings[i].cag.value);
@@ -1651,7 +1651,7 @@ class ViewModel extends PolymerElement {
   //     elem.innerHTML = string;
   //   }
   getDataFromVersion(inpV){
-   console.log(inpV, this.finConfigs);
+   //console.log(inpV, this.finConfigs);
     var arr = []
     if(inpV != ''){
       for(var i=0; i<this.finConfigs.results.bindings.length; i++){
@@ -1661,7 +1661,7 @@ class ViewModel extends PolymerElement {
         }
       }
     var obj = {"head": this.finConfigs.head, "results": {"bindings": arr}};
-      console.log(obj);
+      //console.log(obj);
     this.configurationResults = obj
     }
   }
@@ -1723,7 +1723,7 @@ class ViewModel extends PolymerElement {
     if(_parent.modelSelected != undefined) {
       this.fetchConfiguration(_parent.modelSelected);
       this.finConfigs = this.configurationResults;
-      console.log("Ok Show the Val", this.finConfigs);
+      //console.log("Ok Show the Val", this.finConfigs);
     }
 
   }

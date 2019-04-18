@@ -192,9 +192,9 @@ class MintExplorerApp extends PolymerElement {
     var v = document.querySelector('mint-explorer-app');
     var vk = v.varAndUnits
     v.varForDialog = vk.results.bindings[data-2].vp.value
-    console.log(vk.results.bindings[data-2].vp.value)
+    //console.log(vk.results.bindings[data-2].vp.value)
     var vsp = dom(_self.root).querySelector("#variableSearch");
-    console.log(vsp);
+    //console.log(vsp);
     vsp.dialogVal = vk.results.bindings[data-2].vp.value
     var _pages = dom(_self.root).querySelector("#pages");
     _pages.selected = "variable-search";

@@ -299,14 +299,14 @@ class ModelSearch extends PolymerElement {
   }
 
   queriesChange(newValue, oldValue) {
-    console.log(newValue);
-    console.log(oldValue);
+    //console.log(newValue);
+    //console.log(oldValue);
   }
 
   goToModel(e) {
-    console.log(e.target);
+    //console.log(e.target);
     var _label = e.target.getAttribute("label");
-    console.log("From", _label);
+    //console.log("From", _label);
     var _model = e.target.getAttribute("model");
     var _desc=e.target.getAttribute("desc");
     var _parent = document.querySelector("mint-explorer-app");
@@ -316,22 +316,22 @@ class ModelSearch extends PolymerElement {
       label: _label,
         desc:_desc
     };
-    console.log("Here", _parent.modelSelected);
+    //console.log("Here", _parent.modelSelected);
     var _pages = dom(_parent.root).querySelector("#pages");
-    console.log(_pages);
-    console.log(_pages.selected);
+    //console.log(_pages);
+    //console.log(_pages.selected);
     _pages.selected = "view-model";
     window.dispatchEvent(new CustomEvent('location-changed'));
     //this.set('route.path', '/view-model');
-    console.log(_pages.selected);
+    //console.log(_pages.selected);
 
   }
 
   searchHandler(){
     var searchString = this.$.searchInput.value;
-    console.log("Done", searchString)
+    //console.log("Done", searchString)
     var filtered = [];
-    console.log(this.results)
+    //console.log(this.results)
     for(var i=0; i<this.results.length; ++i) {
       if(this.results[i].label === searchString){
         var obj = JSON.parse(JSON.stringify(this.results[i]));
@@ -341,7 +341,7 @@ class ModelSearch extends PolymerElement {
     this.tempResults = filtered;
     this.totalRes = this.tempResults.length.toString();
     this.numberofRes = this.tempResults.length.toString();
-    console.log(this.searchResults);
+    //console.log(this.searchResults);
   }
 
   displayLabel(tp){
@@ -355,7 +355,7 @@ class ModelSearch extends PolymerElement {
           }
         }
       }
-      console.log("From Disp", this.finResults)
+      //console.log("From Disp", this.finResults)
       this.results = temp;
       this.totalRes = temp.length.toString();
       this.searchResults = temp;
@@ -373,7 +373,7 @@ class ModelSearch extends PolymerElement {
   handle(data){
       var r = [];
       var finVersions = []
-      console.log(data);
+      //console.log(data);
       r = data.results.bindings;
         var temp = []
         for(var i = 0; i < r.length; i++){

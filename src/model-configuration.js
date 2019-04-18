@@ -195,17 +195,17 @@ class ModelConfiguration extends PolymerElement {
   // }
 
   _checkInpValue(stuff){
-      console.log("Detected", stuff)
+      //console.log("Detected", stuff)
       return typeof stuff !== 'undefined';
     }
 
   _checkNegInpValue(stuff){
-    console.log("Detected", stuff)
+    //console.log("Detected", stuff)
     return typeof stuff === 'undefined';
   }
 
   _checkConf(stuff){
-    console.log("This", stuff)
+    //console.log("This", stuff)
     if(stuff.length === 0){
       return true
     }
@@ -245,11 +245,11 @@ class ModelConfiguration extends PolymerElement {
                   }
               }
           }
-          console.log("this is config");
-          console.log(obj);
+          //console.log("this is config");
+          //console.log(obj);
           this.configurationResults = obj;
-          console.log("hhhhhhhhh");
-          console.log(this.configurationResults);
+          //console.log("hhhhhhhhh");
+          //console.log(this.configurationResults);
       }
 
   ready() {
@@ -283,17 +283,17 @@ class ModelConfiguration extends PolymerElement {
           timeout: 5000,
           async: false,
           complete: function() {
-              // console.log("GET request sent");
+              // //console.log("GET request sent");
           },
 
           success: function(data) {
-              console.log("GET success");
+              //console.log("GET success");
               /*if(data.results.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }*/
               //else {
-                  console.log("sjgf");
-                  console.log(data);
+                  //console.log("sjgf");
+                  //console.log(data);
                   _self.processConfigurationResults(data);
               //}
           },
