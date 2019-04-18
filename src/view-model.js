@@ -140,6 +140,13 @@ class ViewModel extends PolymerElement {
           background-color: #e51c23;
         }
 
+        paper-dialog.red-colored {
+          border: 2px solid;
+          border-color: #dc3545;
+          background-color: #dc3545;
+          color: #fff;
+        }
+
         paper-dialog.colored {
           border: 2px solid;
           border-color: #4caf50;
@@ -369,6 +376,12 @@ class ViewModel extends PolymerElement {
         <paper-button dialog-dismiss>Cancel</paper-button>
       </div>
     </paper-dialog>
+    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <p class="font-size: 22px;">There is no data currently available for this CAG.</p>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+      </div>
+    </paper-dialog>
     
     </div>
 `;
@@ -582,58 +595,10 @@ class ViewModel extends PolymerElement {
 
     }
 
-   // console.log(data);
-
-    /*var width = 700,height = 700
-    d3.select(this.$.graph).select("svg").remove();
-    var svg = d3.select(this.$.graph).append("svg")
-                .attr("width", width)
-                .attr("height", height);
-
-    var force = d3.layout.force()
-        //.gravity(.05)
-        .distance(300)
-        //.charge(-100)
-        .size([width, height]);
-
-      force
-          .nodes(data.nodes)
-          .links(data.links)
-          .start();
-
-      var link = svg.selectAll(".link")
-          .data(data.links)
-        .enter().append("line")
-          .attr("class", "link")
-        .style("stroke-width", function(d) { return Math.sqrt(d.weight); });
-
-      var node = svg.selectAll(".node")
-          .data(data.nodes)
-        .enter().append("g")
-          .attr("class", "node")
-          .call(force.drag);
-
-      node.append("circle")
-          .attr("r","10");
-
-      node.append("text")
-          .attr("dx", 12)
-          .attr("dy", ".35em")
-          .text(function(d) { return d.name });
-
-      force.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; });
-
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-      });*/
-
-
-    //var colors = d3.scaleOrdinal(d3.schemeCategory10);
-
-    var w = 1200, h = 600;
+    if(data["nodes"].length == 0) {
+      this.$.edialog.open()
+    } else {
+      var w = 1200, h = 600;
     var size = d3.scale.pow().exponent(1).domain([1,100]).range([8,24]);
     var focus_node = null, highlight_node = null;
     var highlight_color = "blue";
@@ -947,6 +912,9 @@ class ViewModel extends PolymerElement {
     }
 
     this.$.dialog.open()
+    }
+
+    
   }
 
   openConfig(e) {
