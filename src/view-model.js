@@ -361,6 +361,9 @@ class ViewModel extends PolymerElement {
       <p><ul style='color: #000'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
+      <svg width="50" height="50">
+        <circle cx="25" cy="25" r="25" fill="rgb(204, 204, 204)" />
+      </svg><span style="position: relative; top: -20px; left: -25px; font-size: 20px; color: #000"> represents different <b>processes</b></span>
       <div id="graph"></div>
       <div class="buttons">
         <paper-button dialog-dismiss>Cancel</paper-button>
@@ -630,7 +633,7 @@ class ViewModel extends PolymerElement {
 
     //var colors = d3.scaleOrdinal(d3.schemeCategory10);
 
-    var w = 1200, h = 700;
+    var w = 1200, h = 600;
     var size = d3.scale.pow().exponent(1).domain([1,100]).range([8,24]);
     var focus_node = null, highlight_node = null;
     var highlight_color = "blue";
@@ -752,6 +755,23 @@ class ViewModel extends PolymerElement {
           .append("g")
           .attr("class", "node")
           .call(node_drag)
+
+      var edgelabels = svg.selectAll(".edgelabel")
+        .data(links)
+        .enter()
+        .append('text')
+        .style("pointer-events", "none")
+        .attr({'class':'edgelabel',
+               'id':function(d,i){return 'edgelabel'+i},
+               'dx':80,
+               'dy':0,
+               'font-size':10,
+               'fill':'#aaa'});
+
+      edgelabels.append('textPath')
+          .attr('xlink:href',function(d,i) {return '#edgepath'+i})
+          .style("pointer-events", "none")
+        .text(function(d,i){return 'influences'});
 
       node.on("dblclick.zoom", function(d) { d3.event.stopPropagation();
         var dcx = (w/2-d.x*zoom.scale());
