@@ -144,7 +144,7 @@ class VariablePresentation extends PolymerElement {
             <template>[[item.sn.value]]</template>
           </vaadin-grid-column>
           <vaadin-grid-column width="9em" flex-grow="2" text-align="center" resizable="">
-            <template class="header"><strong>Unit</strong></template>
+            <template class="header"><strong>Units</strong></template>
             <template>[[item.unit.value]]</template>
           </vaadin-grid-column>
         </vaadin-grid>
