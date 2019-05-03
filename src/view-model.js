@@ -351,7 +351,7 @@ class ViewModel extends PolymerElement {
                                  <!--<div class="header">Label</div>-->
                                   <!--<div class="header">Description</div>-->
                              <!--</div>-->
-                        <template is="dom-repeat" items="{{item.output}}">
+                        <template is="dom-repeat" items="{{item.input}}">
                              <div class="row">
                                 <div class="cell flex-center-justified"><a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{item.io.value}}" label$="{{item.iolabel.value}}" desc$="{{stuff.ioDescription.value}}" on-click="openConfigForUri" raised="">{{item.iolabel.value}}</vaadin-button></a></div>        
                                 <div class="cell flex-center-justified"> &nbsp;&nbsp; {{item.ioDescription.value}}</div>         
@@ -1117,7 +1117,7 @@ class ViewModel extends PolymerElement {
               obj.results.bindings[i]["parameter"]=originalParameters;
 
 
-              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariablesAndStandardNames?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
+              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
               var originalFiles = [];
               $.ajax({
                   url: qs1,
@@ -1156,7 +1156,9 @@ class ViewModel extends PolymerElement {
                           this.outputDes = false;
 
                       }
+
                   }
+                  console.log(this.input_file);
                   // temp = r[k].prop.value.split("#");
                   // if (temp[1] === "hasVersionId") {
                   //     cs = r[i].value.value;
