@@ -1152,7 +1152,7 @@ class ViewModel extends PolymerElement {
               obj.results.bindings[i]["parameter"]=originalParameters;
 
 
-              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariablesAndStandardNames?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
+              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
               var originalFiles = [];
               $.ajax({
                   url: qs1,
