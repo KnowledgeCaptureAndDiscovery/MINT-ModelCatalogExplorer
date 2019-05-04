@@ -115,7 +115,11 @@ class VariablePresentation extends PolymerElement {
     </div>
     <div class="container flex-center-justified">
       <h1>[[tempVar]]</h1>
+      
     </div>
+    <!--<div class="flex-center-justified">-->
+    <!--[[description]]-->
+<!--</div>-->
     <div class="container flex-center-justified">
        <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
@@ -140,7 +144,7 @@ class VariablePresentation extends PolymerElement {
             <template>[[item.sn.value]]</template>
           </vaadin-grid-column>
           <vaadin-grid-column width="9em" flex-grow="2" text-align="center" resizable="">
-            <template class="header"><strong>Unit</strong></template>
+            <template class="header"><strong>Units</strong></template>
             <template>[[item.unit.value]]</template>
           </vaadin-grid-column>
         </vaadin-grid>
@@ -205,22 +209,27 @@ class VariablePresentation extends PolymerElement {
       },
       tempVar: String,
       varSelected:String,
-      variableAndUnits:Object
+      variableAndUnits:Object,
+        description:String
     };
   }
 
   _variableChanged(data){
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-      this.varSelected = _parent.variableSelected.trim();
+      this.varSelected = _parent.variableSelected.variable.trim();
       var x = []
-      x = this.varSelected.split("/")
-      this.tempVar = x[x.length - 1]
+      x = this.varSelected.split("/");
+     // this.tempVar = x[x.length - 1]
+      this.tempVar=_parent.variableSelected.label;
+      this.description=_parent.modelDescriptions;
       this.fetchConfiguration(this.varSelected);
+      this.description=_parent.modelDescriptions;
+      //console.log("yaha aaya####");
   }
 
   _checkBVal(stuff){
-    console.log("Found", stuff)
+    //console.log("Found", stuff)
     if(stuff.length === 0){
       return true
     }
@@ -228,7 +237,7 @@ class VariablePresentation extends PolymerElement {
   }
 
   _checkBNegVal(stuff){
-    console.log("Found", stuff)
+    //console.log("Found", stuff)
     if(stuff.length === 0){
       return false
     }
@@ -245,28 +254,34 @@ class VariablePresentation extends PolymerElement {
       super.ready();
       var _parent = document.querySelector("mint-explorer-app");
       this.configSelected = _parent.configSelected;
-
+        //console.log("yaha aaya");
       if(_parent.configSelected){
-        this.varSelected=_parent.variableSelected.trim();
+          //console.log(_parent.variableSelected);
+        this.varSelected=_parent.variableSelected.variable.trim();
         var x = []
-        x = this.varSelected.split("/")
-        this.tempVar = x[x.length - 1]
+        x = this.varSelected.split("/");
+       // this.tempVar = x[x.length - 1];
+          this.tempVar=_parent.variableSelected.label;
         this.fetchConfiguration(this.varSelected);
+
       }
+      this.description=_parent.modelDescriptions;
+
   }
 
   process(data){
       var obj = JSON.parse(JSON.stringify(data));
       this.variableAndUnits=obj;
       var _parent = document.querySelector("mint-explorer-app")
-      _parent.varAndUnits = obj
+      _parent.varAndUnits = obj;
+      this.description=_parent.modelDescriptions;
   }
 
   fetchConfiguration(e){
       var _self = this;
       var _parent = document.querySelector("mint-explorer-app");
       //var query = _parent.queries[7].query;
-      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits"
+      var query = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getI_OVariablesAndUnits";
       var endpoint = _parent.endpoint;
       $.ajax({
           url: query,
@@ -278,17 +293,17 @@ class VariablePresentation extends PolymerElement {
           timeout: 5000,
           async: false,
           complete: function() {
-              // console.log("GET request sent");
+              // //console.log("GET request sent");
           },
 
           success: function(data) {
-               console.log("GET success");
-               console.log(data)
+               //console.log("GET success");
+               //console.log(data)
               /*if(data.results.bindings.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }*/
               //else {
-                  console.log(data);
+                 // console.log(data);
                  _self.process(data);
               //}
           },

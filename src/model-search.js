@@ -19,7 +19,7 @@ import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
 //import './loading-screen.js'
 import './model-search.js'
 import './view-model.js'
-import './model-configuration.js'
+//import './model-configuration.js'
 import './not-found.js'
 
 import '@polymer/app-layout/app-layout.js'
@@ -262,10 +262,10 @@ class ModelSearch extends PolymerElement {
          <div class="card-content" identity\$="{{index}}">
               <h2><strong>[[item.label]]
                 &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
-                &nbsp;<paper-chip label="Total Versions: [[item.version.len]]" class="custom-background" no-hover=""></paper-chip></strong></h2>
+                &nbsp;<paper-chip label="Total Versions: {{item.version.len}}" class="custom-background" no-hover=""></paper-chip></strong></h2>
              <p>[[item.description]]</p>
               <p>[[item.assumptions]]</p>
-              <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
+              <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
             </div>
         </div>
         </template>
@@ -299,37 +299,39 @@ class ModelSearch extends PolymerElement {
   }
 
   queriesChange(newValue, oldValue) {
-    console.log(newValue);
-    console.log(oldValue);
+    //console.log(newValue);
+    //console.log(oldValue);
   }
 
   goToModel(e) {
-    console.log(e.target);
+    //console.log(e.target);
     var _label = e.target.getAttribute("label");
-    console.log("From", _label);
+    //console.log("From", _label);
     var _model = e.target.getAttribute("model");
+    var _desc=e.target.getAttribute("desc");
     var _parent = document.querySelector("mint-explorer-app");
 
     _parent.modelSelected = {
       model: _model,
-      label: _label
-    }
-    console.log("Here", _parent.modelSelected);
+      label: _label,
+        desc:_desc
+    };
+    //console.log("Here", _parent.modelSelected);
     var _pages = dom(_parent.root).querySelector("#pages");
-    console.log(_pages);
-    console.log(_pages.selected);
+    //console.log(_pages);
+    //console.log(_pages.selected);
     _pages.selected = "view-model";
     window.dispatchEvent(new CustomEvent('location-changed'));
     //this.set('route.path', '/view-model');
-    console.log(_pages.selected);
+    //console.log(_pages.selected);
 
   }
 
   searchHandler(){
     var searchString = this.$.searchInput.value;
-    console.log("Done", searchString)
+    //console.log("Done", searchString)
     var filtered = [];
-    console.log(this.results)
+    //console.log(this.results)
     for(var i=0; i<this.results.length; ++i) {
       if(this.results[i].label === searchString){
         var obj = JSON.parse(JSON.stringify(this.results[i]));
@@ -339,7 +341,7 @@ class ModelSearch extends PolymerElement {
     this.tempResults = filtered;
     this.totalRes = this.tempResults.length.toString();
     this.numberofRes = this.tempResults.length.toString();
-    console.log(this.searchResults);
+    //console.log(this.searchResults);
   }
 
   displayLabel(tp){
@@ -353,7 +355,7 @@ class ModelSearch extends PolymerElement {
           }
         }
       }
-      console.log("From Disp", this.finResults)
+      //console.log("From Disp", this.finResults)
       this.results = temp;
       this.totalRes = temp.length.toString();
       this.searchResults = temp;
@@ -367,76 +369,31 @@ class ModelSearch extends PolymerElement {
     location.reload();
   }
 
-  getVersion(versions){
-      // Get All the related Versions for the model
-      console.log("Temp", versions)
-      var _self = this;
-      var _parent = document.querySelector("mint-explorer-app");
-      // Get Versions
-      //var qs = _parent.queries[6].query
-      var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
-      var r = []
+
+  handle(data){
+      var r = [];
       var finVersions = []
-      for(var i = 0; i < versions.length; i++){
-        $.ajax({
-          url: qs,
-          type: "GET",
-          data:{
-              mv: versions[i]
-          },
-          cache: false,
-          timeout: 5000,
-          async: false,
-          success: function(data) {
-            r = data.results.bindings
-            var temp = []
-            for(var i = 0; i < r.length; i++){
-              temp = r[i].prop.value.split("#")
-              if(temp[1] === "hasVersionId"){
-                finVersions.push(r[i].value.value)
-              }
-            }
-          },
-          error: function(jqXHR, exception) {
-              var msg = '';
-              if (jqXHR.status === 0) {
-                  msg = 'Not connected.\n Verify Network.';
-              }
-              else if (jqXHR.status == 404) {
-                  msg = 'Requested page not found. [404]';
-              }
-              else if (jqXHR.status == 500) {
-                  msg = 'Internal Server Error [500].';
-              }
-              else if (exception === 'parsererror') {
-                  msg = 'Requested JSON parse failed.';
-              }
-              else if (exception === 'timeout') {
-                  msg = 'Time out error.';
-              }
-              else if (exception === 'abort') {
-                  msg = 'Ajax request aborted.';
-              }
-              else {
-                  msg = 'Uncaught Error.\n' + jqXHR.responseText;
-              }
+      //console.log(data);
+      r = data.results.bindings;
+        var temp = []
+        for(var i = 0; i < r.length; i++){
+          temp = r[i].prop.value.split("#");
+          if(temp[1] === "hasVersionId"){
+            finVersions.push(r[i].value.value)
           }
-        });
-      }
-      console.log("Final Versions", finVersions)
-      return finVersions
+        }
   }
 
   populateSearchResults() {
     var results = [];
     var cats = [];
     var versions = [];
-    var _self = this
+    var _self = this;
     var categories = new Set();
     var _parent = document.querySelector("mint-explorer-app");
     //console.log(_parent.queries)
     //var query = _parent.queries[3].query
-    console.log("hfkjdf")
+   // console.log("hfkjdf")
     //console.log(query)
     $.ajax({
       url: "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery",
@@ -445,13 +402,13 @@ class ModelSearch extends PolymerElement {
       timeout: 5000,
       async: false,
       complete: function() {
-          console.log("GET request sent");
+        //  console.log("GET request sent");
       },
 
       success: function(data) {
           var x = data.results.bindings
 
-          console.log(x);
+        //  console.log(x);
           var res = []
           for(var i = 0;i < x.length; i++){
             var result = {};
@@ -469,22 +426,24 @@ class ModelSearch extends PolymerElement {
             else{
               result.avail = true
             }
-            categories.add(x[i].categories.value)
+            categories.add(x[i].categories.value);
             if(x[i].versions.value.includes(",")){
               versions = x[i].versions.value.split(", ")
             }
             else{
               versions.push(x[i].versions.value.trim())
             }
-            res = _self.getVersion(versions)
+            result.tVersion = versions
+            //res = _self.getVersion(versions);
+            //console.log("KK", res);
             var h = {
-              data: res,
-              len: res.length
+              data: versions,
+              len: versions.length
             }
             result.version = h
             results.push(result)
           }
-          console.log("This", results);
+         // console.log("This", results);
           cats = Array.from(categories);
       },
 
@@ -511,12 +470,12 @@ class ModelSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+         // console.log(msg);
         }
     });
 
     var cts = [{'name': 'All'}]
-    console.log(cats)
+   // console.log(cats)
     cats.sort();
     for(var i = 0; i < cats.length; i++){
       cts.push({
@@ -525,13 +484,87 @@ class ModelSearch extends PolymerElement {
     }
     this.cts = cts
     this.results = results;
+
+   /* async function getVersion(versions) {
+      // Get All the related Versions for the model
+      // console.log("Temp", versions)
+      var _self = this;
+      var _parent = document.querySelector("mint-explorer-app");
+      // Get Versions
+      //var qs = _parent.queries[6].query
+      var qs = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+      var r = []
+      var finVersions = []
+      for (var i = 0; i < versions.length; i++) {
+        $.ajax({
+          url: qs,
+          type: "GET",
+          data: {
+            mv: versions[i]
+          },
+          cache: false,
+          timeout: 5000,
+          async: false,
+          //success:_self.handle,
+          success: function (data) {
+            r = data.results.bindings;
+            var temp = []
+            for (var i = 0; i < r.length; i++) {
+              temp = r[i].prop.value.split("#");
+              if (temp[1] === "hasVersionId") {
+                finVersions.push(r[i].value.value)
+              }
+            }
+          },
+          error: function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+              msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+              msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+              msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+              msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+              msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+              msg = 'Ajax request aborted.';
+            }
+            else {
+              msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+          }
+        });
+      }
+      //
+      //console.log("Final Versions", finVersions)
+      return finVersions
+    }
+    console.log(this.results);
+    let promises = [];
+    for(var i = 0; i < this.results.length; i++){
+      promises.push(getVersion(this.results.tVersion))
+    }
+    console.log(promises);
+    Promise.all(promises).then((res) => {
+      for(let j = 0; j < res.length; j++) {
+        this.results[j].version = res;
+        console.log(res)
+      }
+    })*/
     this.totalRes = results.length.toString();
     this.searchResults = results;
     var newArray = results.slice();
     this.tempResults = newArray.splice(0, 10);
     this.numberofRes = this.tempResults.length.toString();
-    console.log("Got", this.results)
-    console.log("Complete", this.numberofRes)
+   // console.log("Got", this.results)
+    //console.log("Complete", this.numberofRes)
   }
 
   getModelsByCategory(category){
@@ -540,7 +573,7 @@ class ModelSearch extends PolymerElement {
     var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModelsForCategory?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
     var query = qt + "&cat=" + category
     var catsByModel = []
-    console.log("Done", query)
+   // console.log("Done", query)
     $.ajax({
       url: query,
       type: "GET",
@@ -548,7 +581,7 @@ class ModelSearch extends PolymerElement {
       timeout: 5000,
       async: false,
       complete: function() {
-          console.log("GET request sent");
+         // console.log("GET request sent");
       },
 
       success: function(data) {
@@ -582,15 +615,15 @@ class ModelSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+          //console.log(msg);
       }
     });
-    console.log("BOB" + catsByModel)
+   // console.log("BOB" + catsByModel)
     return catsByModel;
   }
 
   _fillData(e) {
-    console.log("ok")
+   // console.log("ok")
   }
 
   _itemSelected(e) {
@@ -603,7 +636,7 @@ class ModelSearch extends PolymerElement {
         _self.displayLabel(tp);
       }
       else{
-        console.log("Empty String")
+       // console.log("Empty String")
         _self.populateSearchResults();
         this.finResults = this.results
       }
@@ -617,14 +650,14 @@ class ModelSearch extends PolymerElement {
     this.finResults = this.results
     var states = [];
     var opts = [];
-    console.log("Hellop");
-    console.log(this.results);
-    console.log(this.cts)
+    //console.log("Hellop");
+    //console.log(this.results);
+    //console.log(this.cts)
     for(var i = 0; i < this.results.length; ++i) {
       states.push({
         "text": this.results[i].label+" "+this.results[i].description,
         "value": this.results[i].label
-      })
+      });
       opts.push(this.results[i].label)
     }
     this.allOpts = opts
@@ -634,7 +667,7 @@ class ModelSearch extends PolymerElement {
 
     comboBox.addEventListener('selected-item-changed', function(event){
       var input = event.target.value;
-      console.log(input)
+     // console.log(input)
       _self.searchHandler()
     });
   }

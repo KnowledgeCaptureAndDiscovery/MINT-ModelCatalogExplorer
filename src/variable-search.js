@@ -311,8 +311,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.shortName}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.shortName)]]">
-                        <h4>Short Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                        <!--<h4>Short Name:</h4>
+                      <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                     </template>
                   </div>
                   <div>
@@ -321,8 +321,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.longName}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.longName)]]">
-                        <h4>Long Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                        <!--<h4>Long Name:</h4>
+                      <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                     </template>
                   </div>
                   <div>
@@ -331,8 +331,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.description}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.description)]]">
-                        <h4>Description:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                        <!--<h4>Description:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                     </template>
                   </div>
                   <div>
@@ -341,8 +341,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.sn}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.sn)]]">
-                        <h4>Standard Name:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                        <!--<h4>Standard Name:</h4>
+                      <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                     </template>
                   </div>
                   <div>
@@ -351,8 +351,8 @@ class VariableSearch extends PolymerElement {
                       {{variableAndUnits.unit}}
                     </template>
                       <template is="dom-if" if="[[_checkNegValue(variableAndUnits.unit)]]">
-                        <h4>Unit:</h4>
-                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>
+                        <!--<h4>Unit:</h4>
+                        <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                     </template>
                   </div>
                 </div>
@@ -426,7 +426,7 @@ class VariableSearch extends PolymerElement {
   }
 
   _dialogChanged(data){
-      console.log("From", data)
+      //console.log("From", data)
       var _self = this
       this.URI = data
       var arr = data.split("/")
@@ -435,12 +435,12 @@ class VariableSearch extends PolymerElement {
         _self.fetchConfiguration(data)
         var data = dom(_self.root).querySelector("#displayRes");
         data.style.display = "block"
-        console.log(this.variableAndUnits)
+        //console.log(this.variableAndUnits)
         var kisp = dom(_self.root).querySelector("#dispSN");
         kisp.style.display = "none"
       }
       else{
-        console.log("Standard Variable Found")
+        //console.log("Standard Variable Found")
         var ksp = dom(_self.root).querySelector("#displayRes");
         ksp.style.display = "none"
         var tr = dom(_self.root).querySelector("#dispSN");
@@ -451,7 +451,7 @@ class VariableSearch extends PolymerElement {
     }
 
   getAllVariables(){
-    console.log("Hello")
+    //console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[9].query;
     var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
@@ -464,11 +464,11 @@ class VariableSearch extends PolymerElement {
       timeout: 5000,
       async: false,
       complete: function() {
-          console.log("GET request sent");
+          //console.log("GET request sent");
       },
 
       success: function(data) {
-        console.log(data)
+        //console.log(data)
         var res = data.results.bindings
         for(var i=0; i<res.length; i++){
           if('sn' in res[i]){
@@ -505,13 +505,13 @@ class VariableSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+          //console.log(msg);
       }
     });
-    console.log(searchRes)
+    //console.log(searchRes)
     this.variables = searchRes
     this.dictMap = test
-    console.log(this.dictMap)
+    //console.log(this.dictMap)
   }
 
   getMetadata(uri){
@@ -554,7 +554,7 @@ class VariableSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+          //console.log(msg);
       }
     });
     return ts
@@ -640,16 +640,16 @@ class VariableSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+          //console.log(msg);
       }
     });
-    console.log("KMP", kmp)
+    //console.log("KMP", kmp)
     this.label = kmp[0];
     this.configURI = kmp[1];
     this.verName = kmp[2];
     var yes = {}
     yes = _self.processMetadata(kmp)
-    console.log("Acheived", yes)
+    //console.log("Acheived", yes)
 
     var obj = {"uri": uri, "model": yes[0], "config": yes[1], "version": yes[2]}
     for(var i=0; i<data.length; i++){
@@ -675,13 +675,13 @@ class VariableSearch extends PolymerElement {
         }
       }
     }
-    console.log(obj)
+    //console.log(obj)
     this.variableAndUnits = obj;
     _self.findIOVariable(this.label, this.verName, this.variableAndUnits.uri)
   }
 
   findIOVariable(model_name, version_name, var_name){
-    console.log(model_name.val, version_name.val)
+    //console.log(model_name.val, version_name.val)
     var _self = this;
     var flag = 0;
     var dsSpec = '';
@@ -697,7 +697,7 @@ class VariableSearch extends PolymerElement {
         async: false,
 
         success: function(data) {
-          console.log("mod", data);
+          //console.log("mod", data);
           var x = []
           var inp_val = []
           var out_val = []
@@ -709,7 +709,7 @@ class VariableSearch extends PolymerElement {
               break
             }
           }
-          console.log(inp_val, out_val)
+          //console.log(inp_val, out_val)
           for(var i=0; i<inp_val.length; i++){
             if(_self.searchIO(inp_val[i], var_name) === true){
               dsSpec = inp_val[i]
@@ -726,7 +726,7 @@ class VariableSearch extends PolymerElement {
             }
           }
 
-          //console.log(inp_val, out_val)
+          ////console.log(inp_val, out_val)
         },
 
         error: function(jqXHR, exception) {
@@ -752,7 +752,7 @@ class VariableSearch extends PolymerElement {
             else {
                 msg = 'Uncaught Error.\n' + jqXHR.responseText;
             }
-            // console.log(msg);
+            // //console.log(msg);
         }
     });
     if(flag === 1){
@@ -765,7 +765,7 @@ class VariableSearch extends PolymerElement {
     var arr = []
     arr = dsSpec.split("/")
     this.dataSetSpecLk = arr[arr.length - 1]
-    console.log("DDDD", this.dataSetSpec)
+    //console.log("DDDD", this.dataSetSpec)
   }
 
   searchIO(var_data, var_name){
@@ -819,7 +819,7 @@ class VariableSearch extends PolymerElement {
             else {
                 msg = 'Uncaught Error.\n' + jqXHR.responseText;
             }
-            // console.log(msg);
+            // //console.log(msg);
         }
     });
     console.log(checker)
@@ -848,7 +848,7 @@ class VariableSearch extends PolymerElement {
           async: false,
 
           success: function(data) {
-            console.log(data);
+            //console.log(data);
            _self.process(data.results.bindings, e);
           },
 
@@ -881,7 +881,7 @@ class VariableSearch extends PolymerElement {
   }
 
   checkSN(vsn){
-    console.log("Hello")
+    //console.log("Hello")
     var _parent = document.querySelector("mint-explorer-app");
     //var qt = _parent.queries[9].query;
     var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
@@ -895,11 +895,11 @@ class VariableSearch extends PolymerElement {
       timeout: 5000,
       async: false,
       complete: function() {
-          console.log("GET request sent");
+          //console.log("GET request sent");
       },
 
       success: function(data) {
-        console.log(data)
+        //console.log(data)
         var res = data.results.bindings
         for(var i=0; i<res.length; i++){
           if('sn' in res[i]){
@@ -936,51 +936,51 @@ class VariableSearch extends PolymerElement {
           else {
               msg = 'Uncaught Error.\n' + jqXHR.responseText;
           }
-          console.log(msg);
+          //console.log(msg);
       }
     });
     this.sntoLabel = sntoLabel
     this.sntoURI = sntoURI
     this.inpVal = vsn
-    console.log(sntoLabel, sntoURI)
+    //console.log(sntoLabel, sntoURI)
     return flag
   }
 
   reachModel() {
-    console.log("Clicked");
-    console.log(this.label);
+    //console.log("Clicked");
+    //console.log(this.label);
     var _parent = document.querySelector("mint-explorer-app");
 
     _parent.modelSelected = {
       label: this.variableAndUnits.model,
       model: this.label.val
     }
-    console.log("Here", _parent.modelSelected);
+    //console.log("Here", _parent.modelSelected);
     var _pages = dom(_parent.root).querySelector("#pages");
-    console.log(_pages);
-    console.log(_pages.selected);
+    //console.log(_pages);
+    //console.log(_pages.selected);
     //this.set('route.path', '/view-model');
-    console.log(_pages.selected);
+    //console.log(_pages.selected);
 
   }
 
   reachVarPresentation() {
     var _parent = document.querySelector("mint-explorer-app");
-    console.log("TP", this.variableAndUnits.model)
+    //console.log("TP", this.variableAndUnits.model)
     _parent.configSelected = this.configURI.val;
     _parent.modelSelected = {"label": this.variableAndUnits.model, "model": this.label.val }
     _parent.variableSelected = this.dataSetSpec;
   }
 
   reachConfig() {
-    console.log("LLllllllllllll")
+    //console.log("LLllllllllllll")
     var _parent = document.querySelector("mint-explorer-app");
     _parent.modelSelected = {
       label: this.variableAndUnits.model,
       model: this.label.val
     }
     _parent.variableSelected = this.configURI.val;
-    console.log("Hello", this.configURI.val)
+    //console.log("Hello", this.configURI.val)
   }
 
   ready() {
@@ -1003,12 +1003,12 @@ class VariableSearch extends PolymerElement {
         _self.fetchConfiguration(temp[input.value])
         var data = dom(_self.root).querySelector("#displayRes");
         data.style.display = "block"
-        console.log(this.variableAndUnits)
+        //console.log(this.variableAndUnits)
         var kisp = dom(_self.root).querySelector("#dispSN");
         kisp.style.display = "none"
       }
       else{
-        console.log("Standard Variable Found")
+        //console.log("Standard Variable Found")
         var ksp = dom(_self.root).querySelector("#displayRes");
         ksp.style.display = "none"
         var tr = dom(_self.root).querySelector("#dispSN");

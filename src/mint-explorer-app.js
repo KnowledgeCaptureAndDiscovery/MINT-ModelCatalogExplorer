@@ -109,9 +109,9 @@ class MintExplorerApp extends PolymerElement {
           </div>
         </app-toolbar>
       </app-header>
-       <template is="dom-if" if="[[loading]]">
-  <loading-screen loading="true" id="pageLoading"></loading-screen>
-  </template>
+       <!--<template is="dom-if" if="[[loading]]">-->
+  <loading-screen loading="[[loading]]" id="pageLoading"></loading-screen>
+  <!--</template>-->
       <iron-pages id="pages"
         selected="{{page}}"
         attr-for-selected="name"
@@ -192,9 +192,9 @@ class MintExplorerApp extends PolymerElement {
     var v = document.querySelector('mint-explorer-app');
     var vk = v.varAndUnits
     v.varForDialog = vk.results.bindings[data-2].vp.value
-    console.log(vk.results.bindings[data-2].vp.value)
+    //console.log(vk.results.bindings[data-2].vp.value)
     var vsp = dom(_self.root).querySelector("#variableSearch");
-    console.log(vsp);
+    //console.log(vsp);
     vsp.dialogVal = vk.results.bindings[data-2].vp.value
     var _pages = dom(_self.root).querySelector("#pages");
     _pages.selected = "variable-search";
@@ -202,6 +202,7 @@ class MintExplorerApp extends PolymerElement {
 
   _pageChanged(page, oldPage) {
     if (page != null) {
+
       if(!this.loadedPages[page]) {
         //this.$.pageLoading.loading = true;
         this.loadedPages[page] = true;

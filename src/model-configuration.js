@@ -118,7 +118,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>CAG </b>: [[item.cag.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.cag.value)]]">
-                    <b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
+                    <!--<b>CAG : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
                   </template>
                 </div>
                 <div>
@@ -126,7 +126,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Description </b>: [[item.desc.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.desc.value)]]">
-                    <b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
+                    <!--<b>Description : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
                   </template>
                 </div>
                 <div>
@@ -134,7 +134,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Input Variables </b>: [[item.input_variables.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.input_variables.value)]]">
-                    <b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
+                    <!--<b>Input Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
                   </template>
                 </div>
                 <div>
@@ -142,7 +142,7 @@ class ModelConfiguration extends PolymerElement {
                     <b>Output Variables </b>: [[item.output_variables.value]]
                   </template>
                   <template is="dom-if" if="[[_checkNegInpValue(item.output_variables.value)]]">
-                    <b>Output Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>
+                    <!--<b>Output Variables : <paper-chip label="Not Found" class="custom-background-b" no-hover=""></paper-chip></b>-->
                   </template>
                 </div>
               </div>
@@ -165,7 +165,7 @@ class ModelConfiguration extends PolymerElement {
       },
       data: {
         variable:String,
-        observer: '_varChanged'
+        //observer: '_varChanged'
       },
       modelName: String,
       varSelected:String,
@@ -181,31 +181,31 @@ class ModelConfiguration extends PolymerElement {
     _pages.selected = "view-model";
   }*/
 
-  _varChanged(data){
-      var _parent = document.querySelector("mint-explorer-app");
-      this.configSelected = _parent.configSelected;
-      this.modelName = _parent.modelSelected.label;
-      this.varSelected =_parent.variableSelected;
-      this.verSelected = _parent.versionSelected;
-      var x = [];
-      console.log("Got this", this.configSelected, this.modelName, this.varSelected)
-      x = this.varSelected.split("/");
-      this.tempVar = x[x.length - 1];
-      this.fetchConfiguration(this.varSelected);
-  }
+  // _varChanged(data){
+  //     var _parent = document.querySelector("mint-explorer-app");
+  //     this.configSelected = _parent.configSelected;
+  //     this.modelName = _parent.modelSelected.label;
+  //     this.varSelected =_parent.variableSelected;
+  //     this.verSelected = _parent.versionSelected;
+  //     var x = [];
+  //     console.log("Got this", this.configSelected, this.modelName, this.varSelected)
+  //     x = this.varSelected.split("/");
+  //     this.tempVar = x[x.length - 1];
+  //     this.fetchConfiguration(this.varSelected);
+  // }
 
   _checkInpValue(stuff){
-      console.log("Detected", stuff)
+      //console.log("Detected", stuff)
       return typeof stuff !== 'undefined';
     }
 
   _checkNegInpValue(stuff){
-    console.log("Detected", stuff)
+    //console.log("Detected", stuff)
     return typeof stuff === 'undefined';
   }
 
   _checkConf(stuff){
-    console.log("This", stuff)
+    //console.log("This", stuff)
     if(stuff.length === 0){
       return true
     }
@@ -245,11 +245,11 @@ class ModelConfiguration extends PolymerElement {
                   }
               }
           }
-          console.log("this is config");
-          console.log(obj);
+          //console.log("this is config");
+          //console.log(obj);
           this.configurationResults = obj;
-          console.log("hhhhhhhhh");
-          console.log(this.configurationResults);
+          //console.log("hhhhhhhhh");
+          //console.log(this.configurationResults);
       }
 
   ready() {
@@ -283,17 +283,17 @@ class ModelConfiguration extends PolymerElement {
           timeout: 5000,
           async: false,
           complete: function() {
-              // console.log("GET request sent");
+              // //console.log("GET request sent");
           },
 
           success: function(data) {
-              console.log("GET success");
+              //console.log("GET success");
               /*if(data.results.length === 0) {
                   Polymer.dom(_self.root).querySelector("#configuration").innerHTML = "<h3>Configuration</h3>No configurations available";
               }*/
               //else {
-                  console.log("sjgf");
-                  console.log(data);
+                  //console.log("sjgf");
+                  //console.log(data);
                   _self.processConfigurationResults(data);
               //}
           },
