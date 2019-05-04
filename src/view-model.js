@@ -414,7 +414,7 @@ class ViewModel extends PolymerElement {
                 </div>
                 <div>
                   <template is="dom-if" if="[[_checkArray(item.cags.value)]]">
-                    <h4>These are the Causual Analysis Graphs of the model. <a  title="Click to know proccesses being modeled.." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
+                    <h4>These are the Causal Diagrams of the model. <a  title="Click to know proccesses being modeled.." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
                     <template is="dom-repeat" items="{{item.cags.value}}" as="stuff" id="t">
                       <vaadin-button class="pointer" on-click="openDialog" variable\$="{{stuff}}" raised="">[[stuff]]</vaadin-button>
                     </template>
@@ -463,7 +463,7 @@ class ViewModel extends PolymerElement {
     </template>
      <div>
     <paper-dialog id="dialog" class="colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
-      <h2>Causal Analysis Graph</h2>
+      <h2>Causal Diagram</h2>
       <p><ul style='color: #000; position: relative; left: 20px;'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
