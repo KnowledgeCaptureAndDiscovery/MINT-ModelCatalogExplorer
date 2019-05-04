@@ -14,7 +14,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   then delete this comment!
 */
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
-
 import './shared-styles.js';
 import '@polymer/app-layout/app-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
@@ -239,6 +238,8 @@ class ViewModel extends PolymerElement {
         }
 
         #graph {
+          position: relative;
+          top: -70px;
           margin-top: 0;
           margin-left: 30px;
           margin-right: 30px;
@@ -249,13 +250,13 @@ class ViewModel extends PolymerElement {
         }
 
         .arrow {
-            width:120px;
+            width:56px;
             height: 9px;
         }
 
         .line {
             margin-top:10px;
-            width:100px;
+            width: 36px;
             background:grey;
             height:2px;
             float:left;
@@ -272,6 +273,12 @@ class ViewModel extends PolymerElement {
       .row { display: table-row;}
       .header { font-weight:bold; display: table-cell; text-align:center;}
       .cell { display: table-cell;text-align:left;}
+
+      .all-legend {
+        position: relative;
+        top: -70px;
+        left: 70%;
+      }
     </style>
     <br>
    
@@ -351,7 +358,7 @@ class ViewModel extends PolymerElement {
                                  <!--<div class="header">Label</div>-->
                                   <!--<div class="header">Description</div>-->
                              <!--</div>-->
-                        <template is="dom-repeat" items="{{item.input}}">
+                        <template is="dom-repeat" items="{{item.output}}">
                              <div class="row">
                                 <div class="cell flex-center-justified"><a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{item.io.value}}" label$="{{item.iolabel.value}}" desc$="{{stuff.ioDescription.value}}" on-click="openConfigForUri" raised="">{{item.iolabel.value}}</vaadin-button></a></div>        
                                 <div class="cell flex-center-justified"> &nbsp;&nbsp; {{item.ioDescription.value}}</div>         
@@ -457,26 +464,28 @@ class ViewModel extends PolymerElement {
      <div>
     <paper-dialog id="dialog" class="colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>Causal Analysis Graph</h2>
-      <p><ul style='color: #000'>
+      <p><ul style='color: #000; position: relative; left: 20px;'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
-      <svg width="50" height="50">
-        <circle cx="25" cy="25" r="25" fill="rgb(204, 204, 204)" />
-      </svg><span style="position: relative; top: -20px; left: -25px; font-size: 20px; color: #000"> represents different <b>processes</b></span>
-      <div class="arrow">
-        <div class="line"></div>
-        <div class="point"></div>
+      <div class="all-legend">
+        <svg width="25" height="25">
+          <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
+        </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>processes</b></span>
+        <div class="arrow">
+          <div class="line"></div>
+          <div class="point"></div>
+        </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"> represents different <b>influences</b></span>
       </div>
-      <div style="position: relative; top: -30px; left: 135px; font-size: 20px; color: #000"> represents <b>influences</b></div>
       <div id="graph"></div>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
+      <div class="buttons" style="position:relative; top: -60px; left: -20px;">
+        <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
       </div>
     </paper-dialog>
-    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+    >
       <p class="font-size: 22px;">There is no data currently available for this CAG.</p>
       <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
+        <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
       </div>
     </paper-dialog>
     
@@ -698,8 +707,7 @@ class ViewModel extends PolymerElement {
     if(data["nodes"].length == 0) {
       this.$.edialog.open()
     } else {
-
-      var w = 1200, h = 500;
+      var w = 1200, h = 670;
       var size = d3.scale.pow().exponent(1).domain([1,100]).range([8,24]);
       var focus_node = null, highlight_node = null;
       var highlight_color = "blue";
@@ -727,6 +735,7 @@ class ViewModel extends PolymerElement {
                   edgepaths;
 
       var g = svg.append("g");
+      var zoom = d3.behavior.zoom().scaleExtent([min_zoom, max_zoom])
 
       svg.append('defs').append('marker')
           .attrs({'id':'arrowhead',
@@ -965,9 +974,35 @@ class ViewModel extends PolymerElement {
           }
         }
 
+        zoom.on("zoom", function () {
+
+          var stroke = nominal_stroke;
+          if (nominal_stroke * zoom.scale() > max_stroke) stroke = max_stroke / zoom.scale();
+          link.style("stroke-width", stroke);
+          circle.style("stroke-width", stroke);
+
+          var base_radius = nominal_base_node_size;
+          if (nominal_base_node_size * zoom.scale() > max_base_node_size) base_radius = max_base_node_size / zoom.scale();
+          circle.attr("d", d3.svg.symbol()
+            .size(function (d) { return Math.PI * Math.pow(size(d.size) * base_radius / nominal_base_node_size || base_radius, 2); })
+            .type(function (d) { return d.type; }))
+
+          //circle.attr("r", function(d) { return (size(d.size)*base_radius/nominal_base_node_size||base_radius); })
+          if (!text_center) text.attr("dx", function (d) { return (size(d.size) * base_radius / nominal_base_node_size || base_radius); });
+
+          var text_size = nominal_text_size;
+          if (nominal_text_size * zoom.scale() > max_text_size) text_size = max_text_size / zoom.scale();
+          text.style("font-size", text_size + "px");
+
+          g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+        });
+
+        svg.call(zoom);
+
+        resize();
+
         simulation
           .on("tick", ticked);
-
       }
 
       function ticked() {
@@ -988,8 +1023,8 @@ class ViewModel extends PolymerElement {
       }
 
       function resize() {
-        var width = window.innerWidth,
-            height = window.innerHeight;
+        var width = w,
+            height = h;
         svg.attr("width", width).attr("height", height);
 
         simulation.size([simulation.size()[0] + (width - w) / zoom.scale(), simulation.size()[1] + (height - h) / zoom.scale()]).resume();
@@ -1117,7 +1152,7 @@ class ViewModel extends PolymerElement {
               obj.results.bindings[i]["parameter"]=originalParameters;
 
 
-              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
+              var qs1="https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariablesAndStandardNames?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
               var originalFiles = [];
               $.ajax({
                   url: qs1,
@@ -1156,9 +1191,7 @@ class ViewModel extends PolymerElement {
                           this.outputDes = false;
 
                       }
-
                   }
-                  console.log(this.input_file);
                   // temp = r[k].prop.value.split("#");
                   // if (temp[1] === "hasVersionId") {
                   //     cs = r[i].value.value;
