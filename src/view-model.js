@@ -470,11 +470,11 @@ class ViewModel extends PolymerElement {
       <div class="all-legend">
         <svg width="25" height="25">
           <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
-        </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>processes</b></span>
+        </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>variables/processes</b></span>
         <div class="arrow">
           <div class="line"></div>
           <div class="point"></div>
-        </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"> represents different <b>influences</b></span>
+        </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"><b>influences</b></span>
       </div>
       <div id="graph"></div>
       <div class="buttons" style="position:relative; top: -60px; left: -20px;">
