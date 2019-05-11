@@ -61,8 +61,8 @@ setPassiveTouchGestures(true);
 setRootPath(MyAppGlobals.rootPath);
 
 class MintExplorerApp extends PolymerElement {
-  static get template() {
-    return html`
+    static get template() {
+        return html`
       <style>
         html, body {
           margin: 0;
@@ -105,7 +105,13 @@ class MintExplorerApp extends PolymerElement {
           <div id="links">
             <a href="[[routePath]]model-search" style="text-decoration: none; color: #000;">Models</a>&nbsp;&nbsp;&nbsp;
             <a href="[[routePath]]variable-search" style="text-decoration: none; color: #000;">Variables</a>&nbsp;&nbsp;&nbsp;
-            <a href="[[routePath]]my-about" style="text-decoration: none; color: #000;">About</a>
+            <a href="[[routePath]]my-about" style="text-decoration: none; color: #000;">About</a>&nbsp;&nbsp;&nbsp;
+             <template is="dom-if" if="{{!login}}">
+              <a href="[[routePath]]my-login" style="text-decoration: none; color: #000;">Login</a>
+               </template>
+                <template is="dom-if" if="{{login}}">
+                <a href="" style="text-decoration: none; color: #000;">Logout</a>
+                </template>
           </div>
         </app-toolbar>
       </app-header>
@@ -123,128 +129,141 @@ class MintExplorerApp extends PolymerElement {
         <variable-presentation id="variablePresentation" data="{{variableSelected}}" name="variable-presentation" route="{{subroute}}"></variable-presentation>
         <variable-search id="variableSearch" name="variable-search" route="{{subroute}}"></variable-search>
         <my-about name="my-about" route="{{subroute}}"></my-about>
+       
+         <my-login name="my-login" route="{{subroute}}"></my-login>
+        
         <not-found name="not-found"></not-found>
       </iron-pages>
       </app-header-layout>
     `;
-  }
-
-  static get properties() {
-    return {
-      page: {
-        type: String,
-        reflectToAttribute: true,
-        observer: '_pageChanged',
-      },
-      routeData: Object,
-      subroute: Object,
-      modelSelected: {
-        model: String,
-        label: String,
-      },
-      rootPath: String,
-      configSelected: {
-        model: String,
-        config: Object
-      },
-      loadedPages: {
-        type: Object,
-        value: {}
-      },
-      variableSelected:{
-        variable:String,
-      },
-      rowIndexes: {
-        type: String,
-        observer: '_rowIndexChanged'
-      },
-      versionSelected: String,
-      modelConfigSelected: String,
-      queries: Array,
-      varAndUnits: Object,
-      modelDescriptions: Array,
-      endpoint: {
-        type: String,
-        value: "https://endpoint.mint.isi.edu/ds"
-      },
-        loading:Boolean
-    };
-  }
-
-  static get observers() {
-    return [
-      '_routePageChanged(routeData.page)'
-    ];
-  }
-
-  _routePageChanged(page) {
-    if (!page) {
-      this.page = 'model-search';
-    } else if (['model-search', 'view-model', 'model-configuration', 'variable-presentation', 'variable-search', 'my-about'].indexOf(page) !== -1) {
-      this.page = page;
-    } else {
-      this.page = 'not-found';
     }
-  }
 
-  _rowIndexChanged(data){
-    var _self = this
-    var v = document.querySelector('mint-explorer-app');
-    var vk = v.varAndUnits
-    v.varForDialog = vk.results.bindings[data-2].vp.value
-    //console.log(vk.results.bindings[data-2].vp.value)
-    var vsp = dom(_self.root).querySelector("#variableSearch");
-    //console.log(vsp);
-    vsp.dialogVal = vk.results.bindings[data-2].vp.value
-    var _pages = dom(_self.root).querySelector("#pages");
-    _pages.selected = "variable-search";
-  }
+    static get properties() {
+        return {
+            page: {
+                type: String,
+                reflectToAttribute: true,
+                observer: '_pageChanged',
+            },
+            routeData: Object,
+            subroute: Object,
+            modelSelected: {
+                model: String,
+                label: String,
+            },
+            rootPath: String,
+            configSelected: {
+                model: String,
+                config: Object
+            },
+            loadedPages: {
+                type: Object,
+                value: {}
+            },
+            variableSelected:{
+                variable:String,
+            },
+            rowIndexes: {
+                type: String,
+                observer: '_rowIndexChanged'
+            },
+            versionSelected: String,
+            modelConfigSelected: String,
+            queries: Array,
+            varAndUnits: Object,
+            modelDescriptions: Array,
+            endpoint: {
+                type: String,
+                value: "https://endpoint.mint.isi.edu/ds"
+            },
+            loading:Boolean,
+            login:Boolean,
+            token:String
+        };
+    }
 
-  _pageChanged(page, oldPage) {
-    if (page != null) {
+    static get observers() {
+        return [
+            '_routePageChanged(routeData.page)'
+        ];
+    }
 
-      if(!this.loadedPages[page]) {
-        //this.$.pageLoading.loading = true;
-        this.loadedPages[page] = true;
-        let cb = this._pageLoaded.bind(this, Boolean(oldPage));
-        switch (page) {
-          case 'model-search':
-            import('./model-search.js').then(cb, cb, true);
-            break;
-          case 'view-model':
-            import('./view-model.js').then(cb, cb, true);
-            break;
-          case 'model-configuration':
-            import('./model-configuration.js').then(cb, cb, true);
-            break;
-          case 'variable-presentation':
-            import('./variable-presentation.js').then(cb, cb, true);
-            break;
-          case 'variable-search':
-            import('./variable-search.js').then(cb, cb, true);
-            break;
-          case 'my-about':
-            import('./my-about.js').then(cb, cb, true);
-            break;
-          case 'not-found':
-            import('./not-found.js').then(cb, cb, true);
-            break;
+    _routePageChanged(page) {
+        if (!page) {
+            this.page = 'model-search';
+        } else if (['model-search', 'view-model', 'model-configuration', 'variable-presentation', 'variable-search', 'my-about','my-login'].indexOf(page) !== -1) {
+            this.page = page;
+        } else {
+            this.page = 'not-found';
         }
-      }
     }
-  }
 
-  _pageLoaded(page) {
-    this.loading=false;
-    //this.$.pageLoading.loading = false;
-    this.style.zIndex = 2;
-    //console.log("LOADED", this.$.pageLoading.loading)
-  }
+    _rowIndexChanged(data){
+        var _self = this
+        var v = document.querySelector('mint-explorer-app');
+        var vk = v.varAndUnits;
+        v.varForDialog = vk.results.bindings[data-2].vp.value
+        //console.log(vk.results.bindings[data-2].vp.value)
+        var vsp = dom(_self.root).querySelector("#variableSearch");
+        //console.log(vsp);
+        vsp.dialogVal = vk.results.bindings[data-2].vp.value
+        var _pages = dom(_self.root).querySelector("#pages");
+        _pages.selected = "variable-search";
+    }
 
-  ready() {
-    super.ready();
-    this.loading=true;
-  }
+    _pageChanged(page, oldPage) {
+        if (page != null) {
+
+            if(!this.loadedPages[page]) {
+                //this.$.pageLoading.loading = true;
+                this.loadedPages[page] = true;
+                let cb = this._pageLoaded.bind(this, Boolean(oldPage));
+                switch (page) {
+                    case 'model-search':
+                        import('./model-search.js').then(cb, cb, true);
+                        break;
+                    case 'view-model':
+                        import('./view-model.js').then(cb, cb, true);
+                        break;
+                    case 'model-configuration':
+                        import('./model-configuration.js').then(cb, cb, true);
+                        break;
+                    case 'variable-presentation':
+                        import('./variable-presentation.js').then(cb, cb, true);
+                        break;
+                    case 'variable-search':
+                        import('./variable-search.js').then(cb, cb, true);
+                        break;
+                    case 'my-about':
+                        import('./my-about.js').then(cb, cb, true);
+                        break;
+                    case 'my-login':
+                        import('./my-login.js').then(cb, cb, true);
+                        break;
+                    case 'not-found':
+
+                        import('./not-found.js').then(cb, cb, true);
+                        break;
+                }
+            }
+        }
+    }
+
+    _pageLoaded(page) {
+        this.loading=false;
+        //this.$.pageLoading.loading = false;
+        this.style.zIndex = 2;
+
+        //console.log("LOADED", this.$.pageLoading.loading)
+    }
+
+    ready() {
+        super.ready();
+        this.loading=true;
+        this.login=false;
+
+    }
 }
 
 window.customElements.define('mint-explorer-app', MintExplorerApp);
+
