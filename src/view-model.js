@@ -358,7 +358,7 @@ class ViewModel extends PolymerElement {
                                  <!--<div class="header">Label</div>-->
                                   <!--<div class="header">Description</div>-->
                              <!--</div>-->
-                        <template is="dom-repeat" items="{{item.output}}">
+                        <template is="dom-repeat" items="{{item.input}}">
                              <div class="row">
                                 <div class="cell flex-center-justified"><a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{item.io.value}}" label$="{{item.iolabel.value}}" desc$="{{stuff.ioDescription.value}}" on-click="openConfigForUri" raised="">{{item.iolabel.value}}</vaadin-button></a></div>        
                                 <div class="cell flex-center-justified"> &nbsp;&nbsp; {{item.ioDescription.value}}</div>         
