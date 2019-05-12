@@ -76,6 +76,11 @@ class VariablePresentation extends PolymerElement {
         @apply --layout-center-justified;
       }
 
+      .flex-end-justified {
+        @apply --layout-horizontal;
+        @apply --layout-end-justified;
+      }
+
 
       paper-chip.custom-background {
         --paper-chip-background-color: #dc3545;
@@ -108,6 +113,51 @@ class VariablePresentation extends PolymerElement {
       vaadin-grid-cell-content {
         cursor: pointer;
       }
+
+      .color-stripe {
+        display: flex;
+      }
+
+      .chunk-1 {
+        width: 50px;
+        height: 5px;
+        background: #dc3545;
+      }
+
+      .chunk-2 {
+        width: 50px;
+        height: 5px;
+        background: #007bff;
+      }
+
+      .chunk-3 {
+        width: 50px;
+        height: 5px;
+        background: #28a745;
+      }
+
+      .color-stripe-text {
+        display: flex;
+        font-weight: bold;
+      }
+
+      .chunk-1-text {
+        width: 50px;
+        height: 5px;
+      }
+
+      .chunk-2-text {
+        width: 50px;
+        height: 5px;
+      }
+
+      .chunk-3-text {
+        text-align: right;
+        width: 50px;
+        height: 5px;
+      }
+
+
     </style>
     <br>
     <div>
@@ -124,12 +174,30 @@ class VariablePresentation extends PolymerElement {
        <a href="[[varSelected]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[varSelected]]" class="custom-background-l" no-hover=""></paper-chip></a>
     </div>
     <br>
+    <div class="container flex-end-justified">
+      <h6 style="margin: 0">Relevance Score Color Map</h6>
+    </div>
+    <div class="container flex-end-justified">
+      <div class="color-stripe">
+        <div class="chunk-1"></div>
+        <div class="chunk-2"></div>
+        <div class="chunk-3"></div>
+      </div>
+    </div>
+    <div class="container flex-end-justified">
+      <div class="color-stripe-text">
+        <div class="chunk-1-text"><h6 style="margin: 0">low</h6></div>
+        <div class="chunk-2-text"></div>
+        <div class="chunk-3-text"><h6 style="margin: 0">high</h6></div>
+      </div>
+    </div>
+    <br>
     <div class="container flex-center-justified">
       <template is="dom-if" if="[[_checkBNegVal(variableAndUnits.results.bindings)]]">
         <vaadin-grid items="[[variableAndUnits.results.bindings]]" theme="column-borders wrap-cell-content">
           <vaadin-grid-column text-align="center" resizable="">
             <template class="header"><strong>Label</strong></template>
-            <template>[[item.label.value]]</template>
+            <template><span style="font-weight: bold; color: [[item.rl.value]]">[[item.label.value]]</span></template>
           </vaadin-grid-column>
           <vaadin-grid-column text-align="center" resizable="">
             <template class="header"><strong>Long Name</strong></template>
@@ -271,6 +339,18 @@ class VariablePresentation extends PolymerElement {
 
   process(data){
       var obj = JSON.parse(JSON.stringify(data));
+      var pData = obj.results.bindings;
+      for(var i = 0; i < pData.length; i++) {
+        if(pData[i].rl.value == "0"){
+          pData[i].rl.value = "#dc3545"
+        } else if (pData[i].rl.value == "1") {
+          pData[i].rl.value = "#007bff"
+        } else if (pData[i].rl.value == "2") {
+          pData[i].rl.value = "#28a745"
+        } else {
+          pData[i].rl.value = "#000"
+        }
+      }
       this.variableAndUnits=obj;
       var _parent = document.querySelector("mint-explorer-app")
       _parent.varAndUnits = obj;

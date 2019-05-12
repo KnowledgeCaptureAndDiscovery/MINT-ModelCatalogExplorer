@@ -433,6 +433,7 @@ class VariableSearch extends PolymerElement {
       var flag = _self.checkSN(arr[arr.length - 1])
       if(flag === false){
         _self.fetchConfiguration(data)
+        console.log(data);
         var data = dom(_self.root).querySelector("#displayRes");
         data.style.display = "block"
         //console.log(this.variableAndUnits)
@@ -983,6 +984,53 @@ class VariableSearch extends PolymerElement {
     //console.log("Hello", this.configURI.val)
   }
 
+  getRelevance(e) {
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getConfigI_OVariables?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery"
+    $.ajax({
+      url: qt,
+      type: "GET",
+      data: {
+        config: e
+      },
+      cache: false,
+      timeout: 5000,
+      async: false,
+      complete: function () {
+        //console.log("GET request sent");
+      },
+
+      success: function (data) {
+        console.log(data)
+      },
+
+      error: function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+          msg = 'Not connected.\n Verify Network.';
+        }
+        else if (jqXHR.status == 404) {
+          msg = 'Requested page not found. [404]';
+        }
+        else if (jqXHR.status == 500) {
+          msg = 'Internal Server Error [500].';
+        }
+        else if (exception === 'parsererror') {
+          msg = 'Requested JSON parse failed.';
+        }
+        else if (exception === 'timeout') {
+          msg = 'Time out error.';
+        }
+        else if (exception === 'abort') {
+          msg = 'Ajax request aborted.';
+        }
+        else {
+          msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        //console.log(msg);
+      }
+    });
+  }
+
   ready() {
     super.ready();
     var _self = this;
@@ -1001,6 +1049,8 @@ class VariableSearch extends PolymerElement {
       var flag = _self.checkSN(input.value)
       if(flag === false){
         _self.fetchConfiguration(temp[input.value])
+        console.log(temp[input.value]) 
+        _self.getRelevance(temp[input.value]);
         var data = dom(_self.root).querySelector("#displayRes");
         data.style.display = "block"
         //console.log(this.variableAndUnits)

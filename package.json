@@ -56,9 +56,9 @@
     "@vaadin/vaadin-usage-statistics": "^2.0.1",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "web-animations-js": "^2.3.1",
-    "@polymer/iron-form":"^3.0.1",
-    "@polymer/paper-toast":"^3.0.1",
-    "@polymer/paper-tooltip": "^3.0.1",
+    "@polymer/iron-form": "^3.0.1",
+    "@polymer/paper-toast": "^3.0.1",
+    "@polymer/paper-tooltip": "^3.0.1"
   },
   "devDependencies": {
     "polymer-cli": "^1.7.1",
@@ -68,4 +68,3 @@
     "node": ">=8.0"
   }
 }
-
