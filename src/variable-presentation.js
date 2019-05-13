@@ -342,11 +342,11 @@ class VariablePresentation extends PolymerElement {
       var pData = obj.results.bindings;
       for(var i = 0; i < pData.length; i++) {
         if(pData[i].rl.value == "0"){
-          pData[i].rl.value = "#dc3545"
+          pData[i].rl.value = "#28a745"
         } else if (pData[i].rl.value == "1") {
           pData[i].rl.value = "#007bff"
         } else if (pData[i].rl.value == "2") {
-          pData[i].rl.value = "#28a745"
+          pData[i].rl.value = "#dc3545"
         } else {
           pData[i].rl.value = "#000"
         }
