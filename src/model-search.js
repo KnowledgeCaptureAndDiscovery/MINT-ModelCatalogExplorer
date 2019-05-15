@@ -14,6 +14,8 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js'
 import '@vaadin/vaadin-button/vaadin-button.js'
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js'
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
+import '@vaadin/vaadin-text-field/vaadin-text-area.js';
+
 
 
 //import './loading-screen.js'
@@ -39,6 +41,8 @@ import '@polymer/paper-listbox/paper-listbox.js'
 import '@polymer/paper-item/paper-item.js'
 import '@polymer/paper-toggle-button/paper-toggle-button.js'
 import '@polymer/paper-card/paper-card.js'
+
+import '@polymer/iron-localstorage/iron-localstorage.js';
 
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
@@ -201,10 +205,16 @@ class ModelSearch extends PolymerElement {
         .clear-icon{
           cursor: pointer;
         }
+         vaadin-text-area.max-height {
+    max-height: 20000px; 
+    width:100%;
+  }
         
 
     </style>
-
+<!--<iron-localstorage name="my-app-storage"-->
+          <!--value="[[login]]" on-iron-localstorage-load-empty="initializeDefault"-->
+          <!--&gt;-->
     <div class="container flex-center-justified">
       <div><h1>Model Search</h1></div>
     </div>
@@ -264,7 +274,16 @@ class ModelSearch extends PolymerElement {
               <h2><strong>[[item.label]]
                 &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
                 &nbsp;<paper-chip label="Total Versions: {{item.version.len}}" class="custom-background" no-hover=""></paper-chip></strong></h2>
+           <template is="dom-if" if="_checkValue(login)">
              <p>[[item.description]]</p>
+             </template>
+              <template is="dom-if" if="{{login1}}">
+               <div class="card-content">
+           <vaadin-text-area value="{{item.description}}" label="Edit Description" class="max-height" placeholder="Add Description" name="metadata"></vaadin-text-area>
+              </div>
+                <vaadin-button id="my-button1" on-click="edit" label$="{{item.description}}" raised>Edit Description</vaadin-button>
+             <!--<p>{{item.description}}</p>-->
+             </template>
               <p>[[item.assumptions]]</p>
               <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
             </div>
@@ -296,13 +315,15 @@ class ModelSearch extends PolymerElement {
             cts: Array,
             finResults: Array,
             allOpts: Array,
-            login:Boolean
+            login1:Boolean
+
         };
     }
 
     queriesChange(newValue, oldValue) {
         //console.log(newValue);
         //console.log(oldValue);
+
     }
 
     goToModel(e) {
@@ -650,9 +671,8 @@ class ModelSearch extends PolymerElement {
         var _self = this;
         _self.populateSearchResults();
         var _parent = document.querySelector("mint-explorer-app");
-        console.log(_parent.login);
-        console.log(_parent.token);
-        this.login=_parent.login;
+       console.log(_parent.login);
+       this.login1=_parent.login;
         this.finResults = this.results;
         var states = [];
         var opts = [];
@@ -666,7 +686,7 @@ class ModelSearch extends PolymerElement {
             });
             opts.push(this.results[i].label)
         }
-        this.allOpts = opts
+        this.allOpts = opts;
 
         var comboBox = this.$.searchInput;
         comboBox.items = this.allOpts;
@@ -676,6 +696,22 @@ class ModelSearch extends PolymerElement {
             // console.log(input)
             _self.searchHandler()
         });
+    }
+
+    _checkValue(stuff){
+alert(stuff);
+        console.log("Detected", stuff);
+        return typeof stuff === 'undefined';
+    }
+    edit(e){
+        var cag = e.target.getAttribute("label");
+//console.log(cag)
+
+    }
+
+    initializeDefault(){
+
+        this.login=false;
     }
 }
 
