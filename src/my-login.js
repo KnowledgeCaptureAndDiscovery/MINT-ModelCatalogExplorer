@@ -8,7 +8,7 @@ import '@vaadin/vaadin-button/vaadin-button.js';
 import '@polymer/iron-form/iron-form.js';
 import '@polymer/paper-toast/paper-toast.js';
 
-import '@polymer/iron-localstorage/iron-localstorage.js';
+
 // import './model-search.js'
 import {dom} from "@polymer/polymer/lib/legacy/polymer.dom";
 
@@ -68,12 +68,6 @@ class MyLogin extends PolymerElement {
       font-size: 15px;
     }
     </style>
-    <app-location route="{{route}}"></app-location>
-     <iron-localstorage name="my-app-storage"
-          value="{{login}}"
-          
-          >
-      </iron-localstorage>
 <div class="card flex-center-justified">
   <iron-form id = "login">
   <form>
@@ -83,9 +77,9 @@ class MyLogin extends PolymerElement {
                     <vaadin-button on-tap="_submitHandler">Submit</vaadin-button>
                     </form>
                 </iron-form>
-                 <!--<template is="dom-if" if="{{login}}">-->
-                 <!--<a href="[[routePath]]model-search"></a>-->
-                 <!--</template>-->
+                 <template is="dom-if" if="{{login}}">
+                 <a href="[[routePath]]model-search"></a>
+                 </template>
            
             </div>
             
@@ -101,8 +95,7 @@ class MyLogin extends PolymerElement {
 
     ready() {
         super.ready();
-        this.set('login',false);
-        console.log(this.login);
+
     }
 
     _submitHandler(){
@@ -173,24 +166,15 @@ class MyLogin extends PolymerElement {
         _parent.login=true;
         _parent.token=data;
         var _self=this;
-        this.set('login',true);
-       // console.log(this.login);
-       this.set(' _parent.login',true);
-        this.set('route.path','/model-search');
-
+        //this.set('route.path','/model-search');
         // window.location.href = "/model-search";
-        // var _pages = dom(_parent.root).querySelector("#pages");
-        // _pages.selected = "model-search";
-        //
-        // //  var _pages = dom(_parent.root).querySelector("#pages");
-        // //  //console.log(_pages);
-        // //  //console.log(_pages.selected);
-        // //  _pages.selected = "model-search";
-        // window.dispatchEvent(new CustomEvent('location-changed'));
-    }
-
-    init(){
-        this.login=false
+        var _pages = dom(_parent.root).querySelector("#pages");
+        _pages.selected = "model-search";
+        //  var _pages = dom(_parent.root).querySelector("#pages");
+        //  //console.log(_pages);
+        //  //console.log(_pages.selected);
+        //  _pages.selected = "model-search";
+        //window.dispatchEvent(new CustomEvent('location-changed'));
     }
 
 }

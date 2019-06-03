@@ -135,9 +135,6 @@ class MintExplorerApp extends PolymerElement {
         <not-found name="not-found"></not-found>
       </iron-pages>
       </app-header-layout>
-      <!--<iron-localstorage name="my-app-storage"-->
-          <!--value="{{login}}"-->
-          <!--&gt;-->
     `;
     }
 
@@ -265,9 +262,6 @@ class MintExplorerApp extends PolymerElement {
         this.loading=true;
         this.login=false;
 
-    }
-    clearHandler(){
-        location.reload();
     }
 }
 
