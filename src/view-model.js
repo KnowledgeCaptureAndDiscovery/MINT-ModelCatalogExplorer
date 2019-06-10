@@ -330,7 +330,7 @@ class ViewModel extends PolymerElement {
                   <!--<template is="dom-repeat" items="{{item.config.value}}" as="stuff">-->
                     <!--<a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[item.label]]</vaadin-button></a>-->
                  <a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>[[item.label]]</strong></vaadin-button></a>
-                 <a href="[[item.compLoc.value]]"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
+                 <a href="[[item.compLoc.value]]"  hidden$="{{!_checkValue(item.compLoc.value)}}"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
                   <!--</template>-->
                 </div>
                 
