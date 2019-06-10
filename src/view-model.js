@@ -467,9 +467,6 @@ class ViewModel extends PolymerElement {
       <p><ul style='color: #000; position: relative; left: 20px;'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
-      <div style='position: absolute; top: 0px; right: 0px;'>
-      <paper-button dialog-dismiss style="color: #FF0000" on-tap="cleardata">CLOSE</paper-button>
-      </div>
       <div class="all-legend">
         <svg width="25" height="25">
           <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
@@ -480,11 +477,12 @@ class ViewModel extends PolymerElement {
         </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"><b>influences</b></span>
       </div>
       <div id="graph"></div>
-      <div class="buttons" style="position:relative; top: 20px; right: 20px;">
-        <vaadin-button theme="primary" dialog-dismiss>Close</vaadin-button>
+      <div class="buttons" style="position:relative; top: -60px; left: -20px;">
+        <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
       </div>
     </paper-dialog>
-    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+    >
       <p class="font-size: 22px;">There is no data currently available for this CAG.</p>
       <div class="buttons">
         <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
