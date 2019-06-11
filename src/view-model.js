@@ -467,7 +467,10 @@ class ViewModel extends PolymerElement {
       <p><ul style='color: #000; position: relative; left: 20px;'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
-      <div class="all-legend">
+      <div style="position: absolute; top: 10px; right: 10px;">
+      	<paper-button dialog-dismiss style="color: #ff0000" on-tap="cleardata">CLOSE</paper-button>
+      </div>      
+<div class="all-legend">
         <svg width="25" height="25">
           <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
         </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>variables/processes</b></span>
