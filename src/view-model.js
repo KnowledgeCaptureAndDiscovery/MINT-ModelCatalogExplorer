@@ -294,6 +294,12 @@ class ViewModel extends PolymerElement {
     <div class="flex-center-justified">
       <a href="[[modelSelected.model]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[modelSelected.model]]" no-hover=""></paper-chip></a>
     </div>
+    <template is="dom-if" if="[[documentationLink]]">
+    <div class="flex-center-justified">
+     <a href=[[documentationLink]] target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>Documentation</strong></vaadin-button></a>
+     </br>
+    </div>
+    </template>
     <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
         <paper-listbox slot="dropdown-content" selected="0" class="dropdown-content" id="tempor">
@@ -329,8 +335,12 @@ class ViewModel extends PolymerElement {
                   <!--<h4>Model Configuration: </h4>-->
                   <!--<template is="dom-repeat" items="{{item.config.value}}" as="stuff">-->
                     <!--<a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[item.label]]</vaadin-button></a>-->
+                 <template is="dom-if" if="[[item.config.value]]">
                  <a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>[[item.label]]</strong></vaadin-button></a>
+                 </template>
+                 <template is="dom-if" if="[[item.compLoc.value]]">
                  <a href="[[item.compLoc.value]]"  hidden$="{{!_checkValue(item.compLoc.value)}}"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
+                  </template>
                   <!--</template>-->
                 </div>
                 
@@ -523,6 +533,7 @@ class ViewModel extends PolymerElement {
       configurationResults: {
         observer: '_configChanged'
       },
+      documentationLink: String,
       unModifiedConfigurationResults:Object,
       cags: Array,
         loading:Boolean,
@@ -1403,7 +1414,63 @@ class ViewModel extends PolymerElement {
     this.finVersions = finVersions
   }
 
+  findDocLink(modelURI){
+    var docUri = ""
+    $.ajax({
+        url: "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery",
+        type: "GET",
+        cache: false,
+        timeout: 5000,
+        async: false,
+        complete: function() {
+            //  console.log("GET request sent");
+        },
+
+        success: function(data) {
+            var x = data.results.bindings
+
+            //  console.log(x);
+            for(var i = 0;i < x.length; i++){
+              if(x[i]["model"]["value"] === modelURI){
+                if("doc" in x[i]){
+                  docUri = x[i]["doc"]["value"]
+                  break
+                }
+              } 
+            }
+        },
+
+        error: function(jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connected.\n Verify Network.';
+            }
+            else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            }
+            else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            }
+            else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            }
+            else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            }
+            else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            }
+            else {
+                msg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            // console.log(msg);
+        }
+    });
+    this.documentationLink = docUri
+  }
+
   fetchConfiguration(parentConfig) {
+    this.findDocLink(parentConfig.model)
     var _self = this;
     var _parent = document.querySelector("mint-explorer-app");
     // Get Versions
