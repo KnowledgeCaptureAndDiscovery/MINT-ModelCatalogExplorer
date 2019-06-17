@@ -68,6 +68,11 @@ class ViewModel extends PolymerElement {
           -webkit-font-smoothing: antialiased;
           max-height: 368px;
         }
+        
+        table.center {
+        margin-left:auto; 
+        margin-right:auto;
+        }
 
         app-toolbar {
           background-color: #f2f1ed;
@@ -237,6 +242,10 @@ class ViewModel extends PolymerElement {
           cursor: pointer;
         }
 
+        .unable{
+          setEnabled:false;
+        }
+
         #graph {
           position: relative;
           top: -70px;
@@ -291,14 +300,11 @@ class ViewModel extends PolymerElement {
      [[modelSelected.desc]]
      </br>
     </div>
-    <div class="flex-center-justified">
-      <a href="[[modelSelected.model]]" target="_blank" rel="noopener noreferrer"><paper-chip label="URI: [[modelSelected.model]]" no-hover=""></paper-chip></a>
-    </div>
     <template is="dom-if" if="[[documentationLink]]">
-    <div class="flex-center-justified">
-     <a href=[[documentationLink]] target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>Documentation</strong></vaadin-button></a>
-     </br>
-    </div>
+      <!--<div class="flex-center-justified">-->
+      <!--<a href=[[documentationLink]] target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>Documentation</strong></vaadin-button></a>-->
+      <!--</br>-->
+      <!-</div>-->
     </template>
     <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
@@ -325,40 +331,50 @@ class ViewModel extends PolymerElement {
         <template is="dom-if" if="[[_checkVal(item.version.value)]]" id="k">
           <div class="box" id="[[item.version.value]]">
             <div class="card-content">
-              <div class="title">
+            <table class="center" border="0">
+                <td>
+                <div class="title">
                 <div id="showVer">
                   <h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>
                 </div>
-              </div>
+                </div>
+                </td>
+                <td>
               <div class="body">
-                <div>
+              <div>
                   <!--<h4>Model Configuration: </h4>-->
                   <!--<template is="dom-repeat" items="{{item.config.value}}" as="stuff">-->
                     <!--<a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[item.label]]</vaadin-button></a>-->
-                 <template is="dom-if" if="[[item.config.value]]">
-                 <a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>[[item.label]]</strong></vaadin-button></a>
-                 </template>
+                 <!--<template is="dom-if" if="[[item.config.value]]">-->
+                 <!--<a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>[[item.label]]</strong></vaadin-button></a>-->
+                 <!--</template>-->
                  <template is="dom-if" if="[[item.compLoc.value]]">
                  <a href="[[item.compLoc.value]]"  hidden$="{{!_checkValue(item.compLoc.value)}}"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
                   </template>
+                  </td>
+                  <td>
+                  <div class="flex-center-justified">
+                  <a href="[[modelSelected.model]]" target="_blank" rel="noopener noreferrer" title="URI"><img border="0" src="http://www.w3.org/RDF/icons/rdf_flyer.24"
+                    alt="RDF Resource Description Framework Flyer Icon"/></a>
+                  </div>
+                  </td>
+                </table>
                   <!--</template>-->
-                </div>
-                
-                <div>
                   <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
                   <!--<h4>Description:</h4>-->
                   <br>
-                  {{item.configDesc.value}}
+                  <div class="flex-center-justified">
+                    [[modelSelected.label]] Configuration:
+                    &nbsp &nbsp{{item.configDesc.value}} <br>
+                  </div>
                   </template>
                   <template is="dom-if" if="[[_checkNegValue(item.configDesc.value)]]">
                     <!--<h4>Description:</h4>
                     <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
                 </div>
-
                 <div>
                   <template is="dom-if" if="{{_checkArray(item.input)}}">
-                  
                     <h4>These are the Input Files Used by this configuration.<a  title="Click on each file to know the variables used by the files." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
                     <!--<template is="dom-repeat" items="{{item.input}}" as="stuff">-->
                       <template is="dom-if" if="{{inputDes}}">
