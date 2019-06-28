@@ -14,11 +14,38 @@ import '@polymer/iron-flex-layout/iron-flex-layout.js'
 import '@vaadin/vaadin-button/vaadin-button.js'
 import '@vaadin/vaadin-combo-box/vaadin-combo-box.js'
 import '@vaadin/vaadin-checkbox/vaadin-checkbox.js'
+import './shared-styles.js';
+import '@polymer/app-layout/app-layout.js';
+import '@polymer/app-layout/app-header/app-header.js';
+import '@polymer/app-layout/app-header-layout/app-header-layout.js';
+import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/paper-input/paper-input.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-icon/iron-icon.js';
+import '@polymer/paper-dropdown-menu/paper-dropdown-menu.js';
+import '@polymer/paper-listbox/paper-listbox.js';
+import '@polymer/paper-item/paper-item.js';
+import '@polymer/paper-toggle-button/paper-toggle-button.js';
+import '@polymer/paper-card/paper-card.js';
+import '@polymer/paper-dialog/paper-dialog.js';
+import '@polymer/paper-dialog-behavior/paper-dialog-behavior.js';
+import './paper-chip.js';
+import '@polymer/paper-icon-button/paper-icon-button.js';
+import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import '@polymer/neon-animation/animations/scale-up-animation.js';
+import '@polymer/neon-animation/animations/fade-out-animation.js';
+
+import '@vaadin/vaadin-button/vaadin-button.js'
+import '@vaadin/vaadin-grid/vaadin-grid.js';
+import '@vaadin/vaadin-grid/vaadin-grid-column.js';
+import '@vaadin/vaadin-ordered-layout/vaadin-horizontal-layout.js';
+import './my-icons.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 
 
-//import './loading-screen.js'
-import './model-search.js'
-import './view-model.js'
+//import './loading-screen.js'import './view-model.js'
 //import './model-configuration.js'
 import './not-found.js'
 
@@ -39,18 +66,17 @@ import '@polymer/paper-listbox/paper-listbox.js'
 import '@polymer/paper-item/paper-item.js'
 import '@polymer/paper-toggle-button/paper-toggle-button.js'
 import '@polymer/paper-card/paper-card.js'
-
-import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
-
 class ModelSearch extends PolymerElement {
     static get template() {
         return html`
+    <!DOCTYPE html>
+    <html>
+    <head>
     <style>
       html, body {
           margin: 0;
-          font-family: 'Roboto', sans-serif;
           -webkit-font-smoothing: antialiased;
-          max-height: 368px;
+          max-height: 500px;
         }
 
         paper-card{
@@ -63,14 +89,32 @@ class ModelSearch extends PolymerElement {
         paper-input{
           width: 25%;
         }
+          
+        p {
+        overflow: hidden;
+        text-align: justify;
+        text-justify: inter-word;
+        }
 
         paper-button{
           background-color: #eee
         }
 
+        paper-dialog.colored {
+          border: 2px solid;
+          border-color: #4caf50;
+          background-color: #f1f8e9;
+          color: #4caf50;
+        }
+
         paper-toolbar {
           background-color: #f2f1ed;
           padding: 10px;
+        }
+
+        table.center {
+        margin-left:auto; 
+        margin-right:auto;
         }
 
         .card-body {
@@ -86,18 +130,18 @@ class ModelSearch extends PolymerElement {
         }
 
         #search-bar {
-          width: 50%;
+          width: 25%;
         }
 
         #options {
-          width: 50%;
+          width: 15%;
         }
 
         #searchInput {
           width: 100%;
         }
         #searchIcon {
-          width: 50%;
+          width: 15%;
         }
         #clearIcon {
           margin-top: -40px;
@@ -121,6 +165,7 @@ class ModelSearch extends PolymerElement {
         #styled{
           width: 35%;
         }
+
         .primary{
           cursor: pointer;
           border: 1px solid transparent;
@@ -137,6 +182,10 @@ class ModelSearch extends PolymerElement {
 
         .dropdown-content{
           width: 100%;
+        }
+
+        .small-font{
+          font-size:14px;
         }
 
         .grid {
@@ -166,7 +215,7 @@ class ModelSearch extends PolymerElement {
           text-decoration: none;
           text-align: center;
           position: relative;
-          width: 47.5%;
+          width: 85%;
           padding: 15px;
         }
         .box .inner {
@@ -202,9 +251,9 @@ class ModelSearch extends PolymerElement {
           cursor: pointer;
         }
         
-
     </style>
-
+    </head>
+    <body>
     <div class="container flex-center-justified">
       <div><h1>Model Search</h1></div>
     </div>
@@ -212,21 +261,9 @@ class ModelSearch extends PolymerElement {
       <center><p style="width: 50%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model. </p></center>
     </div>
     <div class="container flex-center-justified">
-      <div id="options">
-        <paper-dropdown-menu id="category" label="Select Category" on-iron-select="_itemSelected">
-          <paper-listbox slot="dropdown-content" class="dropdown-content">
-          <dom-repeat items="{{cts}}">
-            <template>
-              <paper-item>[[item.name]]</paper-item>
-            </template>
-          </dom-repeat>
-          </paper-listbox>
-        </paper-dropdown-menu>
-        <vaadin-checkbox id="version" checked="">Retrieve latest version</vaadin-checkbox>
-      </div>
-    </div>
-    <div class="container flex-center-justified">
       <div id="search-bar">
+      <table class="center" border="0">
+      <td>
         <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
           <template>
             <style>
@@ -241,14 +278,28 @@ class ModelSearch extends PolymerElement {
             <span selected$="[[selected]]" focused$="[[focused]]">[[item]]</span>
           </template>
         </vaadin-combo-box>
-        <br>
-        <br>
-        <div class="grid">
-          <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>Search
-          </vaadin-button>
-          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+        </td>
+        <td style="vertical-align: bottom;">
+          <div class="grid">
+          <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>
           </vaadin-button>
         </div>
+        </td>
+        </table>
+      </div>
+    </div>
+    <div class="container flex-center-justified">
+      <div id="options">
+        <paper-dropdown-menu id="category" label="Filter Models by Category" on-iron-select="_itemSelected">
+          <paper-listbox slot="dropdown-content" class="dropdown-content">
+          <dom-repeat items="{{cts}}">
+            <template>
+              <paper-item>[[item.name]]</paper-item>
+            </template>
+          </dom-repeat>
+          </paper-listbox>
+        </paper-dropdown-menu>
+        <!--<vaadin-checkbox id="version" checked="">Retrieve latest version</vaadin-checkbox>-->
       </div>
     </div>
     <br>
@@ -261,17 +312,41 @@ class ModelSearch extends PolymerElement {
       <template>
         <div class="box">
          <div class="card-content" identity\$="{{index}}">
-              <h2><strong>[[item.label]]
-                &nbsp;<a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
-                &nbsp;<paper-chip label="Total Versions: {{item.version.len}}" class="custom-background" no-hover=""></paper-chip></strong></h2>
-             <p>[[item.description]]</p>
-              <p>[[item.assumptions]]</p>
-              <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">Explore [[item.label]]</vaadin-button></a>
-            </div>
+              <div style="position: absolute; top: 3%; left: 3%;">
+                <h4><strong>versions: {{item.version.len}}</strong></h4>
+              </div>
+              <div style="position: absolute; top: 27%; left: 5%;">
+              <img src="../images/dssat.png" width="150px" height="100px"/>                  
+              </div>
+              <div style="position: absolute;top:1%; left:45%;">
+              <h4><strong>[[item.label]]</strong></h4>
+              </div>
+              <div class="small-font" style="position: absolute; bottom:10%; left:3%;">
+              Category: {{_getAns(assoc, item.label)}}
+              </div>
+              <div style="position: absolute; top:15%; left:25%; width: 60%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
+              <p>[[item.description]]</p>
+              </div>
+              <div style="position: absolute;bottom: 5%; right: 5%;">
+              <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">More Details</vaadin-button></a>
+              </div>
+              <div style="position: absolute; top: 4%; right: 7%;">
+              <a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
+              </div>
+              <div style="position: absolute; top:3%; right:4%">
+              <img src="../images/github.png" height="30px" width="35px"/>
+              </div>
+              <div class="small-font" style="position: absolute; bottom:10%; left:40%;">
+              Keywords: Agriculture, Soil, Crop
+              </div>
+
         </div>
+    </div>
         </template>
       </dom-repeat>
-    </div>
+      </div>
+    </body>
+    </html>
 `;
     }
 
@@ -279,10 +354,11 @@ class ModelSearch extends PolymerElement {
     static get properties() {
         return {
             queries: {
-                type: Array,
+                  type: Array,
                 value: [],
                 observer: "queriesChange"
             },
+            assoc: Array,
             searchParameter: String,
             models: Array,
             dummy: Array,
@@ -300,9 +376,13 @@ class ModelSearch extends PolymerElement {
         };
     }
 
+   
     queriesChange(newValue, oldValue) {
         //console.log(newValue);
         //console.log(oldValue);
+    }
+    _getAns(passoc,key){
+      return passoc[key];
     }
 
     goToModel(e) {
@@ -330,6 +410,8 @@ class ModelSearch extends PolymerElement {
     }
 
     searchHandler(){
+        this.flag=true;
+        this.flag=false;
         var searchString = this.$.searchInput.value;
         //console.log("Done", searchString)
         var filtered = [];
@@ -365,12 +447,7 @@ class ModelSearch extends PolymerElement {
             this.tempResults = newArray.splice(0, 10);
             this.numberofRes = this.tempResults.length.toString();
         }
-    }
-
-    clearHandler(){
-        location.reload();
-    }
-
+    }  
 
     handle(data){
         var r = [];
@@ -386,7 +463,9 @@ class ModelSearch extends PolymerElement {
         }
     }
 
+
     populateSearchResults() {
+        var arr={};
         var results = [];
         var cats = [];
         var versions = [];
@@ -419,6 +498,8 @@ class ModelSearch extends PolymerElement {
                     result.label = x[i].label.value;
                     result.description = x[i].desc.value;
                     result.category = x[i].categories.value;
+                    //inter=result.label;
+                    arr[result.label]=result.category;
                     if ("assumptions" in x[i])
                         result.assumptions=x[i].assumptions.value;
                     if('doc' in x[i]){
@@ -560,6 +641,9 @@ class ModelSearch extends PolymerElement {
              console.log(res)
            }
          })*/
+         //var object=JSON.parse(map);
+         this.assoc=arr;
+         //console.log(this.maps);
         this.totalRes = results.length.toString();
         this.searchResults = results;
         var newArray = results.slice();
@@ -646,6 +730,7 @@ class ModelSearch extends PolymerElement {
     }
 
     ready() {
+      this.flag=false;
         super.ready();
         var _self = this;
         _self.populateSearchResults();
