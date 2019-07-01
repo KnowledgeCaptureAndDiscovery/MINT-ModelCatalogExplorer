@@ -112,11 +112,6 @@ class ModelSearch extends PolymerElement {
           padding: 10px;
         }
 
-        table.center {
-        margin-left:auto; 
-        margin-right:auto;
-        }
-
         .card-body {
           padding: 15px;
         }
@@ -130,11 +125,11 @@ class ModelSearch extends PolymerElement {
         }
 
         #search-bar {
-          width: 25%;
+          width: 50%;
         }
 
         #options {
-          width: 15%;
+          width: 50%;
         }
 
         #searchInput {
@@ -144,9 +139,7 @@ class ModelSearch extends PolymerElement {
           width: 15%;
         }
         #clearIcon {
-          margin-top: -40px;
-          margin-left: 51%;
-          width: 50%;
+          width: 15%;
         }
 
         #heading {
@@ -250,20 +243,25 @@ class ModelSearch extends PolymerElement {
         .clear-icon{
           cursor: pointer;
         }
+
+        .oneLine{
+          display:inline-block;
+        }
         
     </style>
+     <script src="http://code.jquery.com/jquery-1.6.4.min.js" type="text/javascript"></script>
     </head>
     <body>
     <div class="container flex-center-justified">
       <div><h1>Model Search</h1></div>
     </div>
+    <center><p style="width: 50%;"> 
     <div class="container flex-center-justified">
-      <center><p style="width: 50%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model. </p></center>
+    <center><p style="width: 50%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model.</p></center>
+    </p></center>
     </div>
     <div class="container flex-center-justified">
       <div id="search-bar">
-      <table class="center" border="0">
-      <td>
         <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
           <template>
             <style>
@@ -278,18 +276,22 @@ class ModelSearch extends PolymerElement {
             <span selected$="[[selected]]" focused$="[[focused]]">[[item]]</span>
           </template>
         </vaadin-combo-box>
-        </td>
-        <td style="vertical-align: bottom;">
-          <div class="grid">
+          <!--<div style="text-align: center;">-->
+          <div style="position: absolute; left: 42%;">
+          <div class="oneLine">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>
           </vaadin-button>
-        </div>
-        </td>
-        </table>
+          </div>
+          <div class="oneLine">
+          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+          </vaadin-button>
+          </div>
+          </div>
+      <!--</div>-->
       </div>
     </div>
     <div class="container flex-center-justified">
-      <div id="options">
+      <div class="oneLine" id="options">
         <paper-dropdown-menu id="category" label="Filter Models by Category" on-iron-select="_itemSelected">
           <paper-listbox slot="dropdown-content" class="dropdown-content">
           <dom-repeat items="{{cts}}">
@@ -315,16 +317,16 @@ class ModelSearch extends PolymerElement {
               <div style="position: absolute; top: 3%; left: 3%;">
                 <h4><strong>versions: {{item.version.len}}</strong></h4>
               </div>
-              <div style="position: absolute; top: 27%; left: 5%;">
-              <img src="../images/dssat.png" width="150px" height="100px"/>                  
+              <div style="position: absolute; top: 27%; left: 3%;">
+              <img src="../images/no_logo.png" width="100 px" height="100px"/>                 
               </div>
-              <div style="position: absolute;top:1%; left:45%;">
-              <h4><strong>[[item.label]]</strong></h4>
+              <div style="position: absolute;top:1%; left: 40%;">
+              <h4><strong><center>[[item.label]]  [Author]</center></strong></h4>
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:3%;">
               Category: {{_getAns(assoc, item.label)}}
               </div>
-              <div style="position: absolute; top:15%; left:25%; width: 60%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
+              <div style="position: absolute; top:15%; left:25%; width: 50%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
               <p>[[item.description]]</p>
               </div>
               <div style="position: absolute;bottom: 5%; right: 5%;">
@@ -385,6 +387,12 @@ class ModelSearch extends PolymerElement {
       return passoc[key];
     }
 
+    _getDesc(){
+      $(document).ready(function(){
+   $('#appendToThis').load("intro.html");
+});
+    }
+
     goToModel(e) {
         //console.log(e.target);
         var _label = e.target.getAttribute("label");
@@ -410,10 +418,10 @@ class ModelSearch extends PolymerElement {
     }
 
     searchHandler(){
-        this.flag=true;
-        this.flag=false;
         var searchString = this.$.searchInput.value;
         //console.log("Done", searchString)
+        if(searchString!="")
+        {
         var filtered = [];
         //console.log(this.results)
         for(var i=0; i<this.results.length; ++i) {
@@ -426,6 +434,19 @@ class ModelSearch extends PolymerElement {
         this.totalRes = this.tempResults.length.toString();
         this.numberofRes = this.tempResults.length.toString();
         //console.log(this.searchResults);
+      }
+      else if(this.$.searchInput.value!=''){
+        this.populateSearchResults();
+      }
+      else{
+        this.displayLabel(this.getModelsByCategory(this.$.category.value));
+      }
+    }
+
+    clearHandler(){
+      this.$.category.value='All';
+      this.populateSearchResults();
+      this.$.searchInput.value='';
     }
 
     displayLabel(tp){
@@ -714,6 +735,7 @@ class ModelSearch extends PolymerElement {
     }
 
     _itemSelected(e) {
+        this.$.searchInput.value='';
         var _self = this;
         var selectedItem = e.target.selectedItem;
         var category = selectedItem.innerText
@@ -730,7 +752,6 @@ class ModelSearch extends PolymerElement {
     }
 
     ready() {
-      this.flag=false;
         super.ready();
         var _self = this;
         _self.populateSearchResults();
