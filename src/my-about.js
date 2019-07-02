@@ -68,6 +68,10 @@ class MyAbout extends PolymerElement {
           font-size: 30px;
         }
 
+        p {
+          text:justify;
+        }
+
         paper-tooltip.giant {
         --paper-tooltip: {
           font-size: 14px;
@@ -76,7 +80,7 @@ class MyAbout extends PolymerElement {
       }
     </style>
 
-    <center><h1>What is MINT?<paper-chip label="v 0.0.2" class="custom-background-m" id="btn"></paper-chip><paper-tooltip class="giant" for="btn">This release consists of the following features:<br><ul><li>Adding Causal Diagrams using D3.js with zoom, drag and node highlighting.</li><br><li>View Model Page now has more detailed information regarding input output files.</li><br><li>UI Improvements to View Model Page.</li></ul></paper-tooltip></h1></center>
+    <center><h1>What is MINT?<paper-chip label="v 0.0.3" class="custom-background-m" id="btn"></paper-chip><paper-tooltip class="giant" for="btn">This release consists of the following features:<br><ul><li>New search UI with clear button to clear seach bar and category</li><br><li>New UI for displaying models</li><br><li>Additional Metadata including Category, image of models.</li></ul></paper-tooltip></h1></center>
     <center>
       Major societal and environmental challenges require forecasting how natural processes and human activities affect one another. There are many areas of the globe where climate affects water resources and therefore food availability, with major economic and social implications. Today, such analyses require significant effort to integrate highly heterogeneous models from separate disciplines, including geosciences, agriculture, economics, and social sciences. Model integration requires resolving semantic, spatio-temporal, and execution mismatches, which are largely done by hand today and may take more than two years. The Model INTegration (MINT) project will develop a modeling environment which will significantly reduce the time needed to develop new integrated models, while ensuring their utility and accuracy.
     </center>

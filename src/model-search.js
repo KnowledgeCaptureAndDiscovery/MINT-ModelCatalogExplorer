@@ -159,6 +159,10 @@ class ModelSearch extends PolymerElement {
           width: 35%;
         }
 
+        .bottom {
+          bottom: 0px;
+        }
+
         .primary{
           cursor: pointer;
           border: 1px solid transparent;
@@ -182,13 +186,13 @@ class ModelSearch extends PolymerElement {
         }
 
         .grid {
-          margin-left: 20px;
-          margin-right: 20px;
+          margin-left: 5px;
+          margin-right: 5px;
           @apply --layout-horizontal;
           @apply --layout-wrap;
           @apply --layout-justified;
-          -webkit-flex-basis: 50%;
-          flex-basis: 50%;
+          -webkit-flex-basis: 85%;
+          flex-basis: 85%;
           max-width: 100%;
         }
         .box {
@@ -261,8 +265,9 @@ class ModelSearch extends PolymerElement {
     </p></center>
     </div>
     <div class="container flex-center-justified">
-      <div id="search-bar">
-        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
+      <div class="grid" id="search-bar">
+      <div style="float:right; width: 70%;">
+       <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
           <template>
             <style>
               span[focused] {
@@ -276,22 +281,18 @@ class ModelSearch extends PolymerElement {
             <span selected$="[[selected]]" focused$="[[focused]]">[[item]]</span>
           </template>
         </vaadin-combo-box>
-          <!--<div style="text-align: center;">-->
-          <div style="position: absolute; left: 42%;">
-          <div class="oneLine">
+        </div>
+        <div style="position: relative; vertical-align: bottom; float:center; width: 20%">
+          <div style="position: absolute; left: 0; bottom: 0;">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>
           </vaadin-button>
           </div>
-          <div class="oneLine">
-          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
-          </vaadin-button>
-          </div>
-          </div>
-      <!--</div>-->
+        </div>
       </div>
     </div>
     <div class="container flex-center-justified">
-      <div class="oneLine" id="options">
+      <div class="grid" id="options">
+        <div style="float: right; width: 70%;">
         <paper-dropdown-menu id="category" label="Filter Models by Category" on-iron-select="_itemSelected">
           <paper-listbox slot="dropdown-content" class="dropdown-content">
           <dom-repeat items="{{cts}}">
@@ -301,7 +302,14 @@ class ModelSearch extends PolymerElement {
           </dom-repeat>
           </paper-listbox>
         </paper-dropdown-menu>
+        </div>
         <!--<vaadin-checkbox id="version" checked="">Retrieve latest version</vaadin-checkbox>-->
+        <div style="position: relative; float: center; width: 20%;">
+          <div style="position: absolute; left:0; bottom: 0;">
+          <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
+          </vaadin-button>
+          </div>
+        </div>
       </div>
     </div>
     <br>
@@ -321,7 +329,7 @@ class ModelSearch extends PolymerElement {
               <img src="../images/no_logo.png" width="100 px" height="100px"/>                 
               </div>
               <div style="position: absolute;top:1%; left: 40%;">
-              <h4><strong><center>[[item.label]]  [Author]</center></strong></h4>
+              <h4><strong><center>[[item.label]]</center></strong></h4>
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:3%;">
               Category: {{_getAns(assoc, item.label)}}
@@ -336,10 +344,9 @@ class ModelSearch extends PolymerElement {
               <a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
               </div>
               <div style="position: absolute; top:3%; right:4%">
-              <img src="../images/github.png" height="30px" width="35px"/>
+              <!--<img src="../images/github.png" height="30px" width="35px"/>-->
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:40%;">
-              Keywords: Agriculture, Soil, Crop
               </div>
 
         </div>
