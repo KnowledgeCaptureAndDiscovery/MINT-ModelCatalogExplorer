@@ -261,12 +261,12 @@ class ModelSearch extends PolymerElement {
     </div>
     <center><p style="width: 50%;"> 
     <div class="container flex-center-justified">
-    <center><p style="width: 50%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model.</p></center>
+    <center><p style="width: 85%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model.</p></center>
     </p></center>
     </div>
     <div class="container flex-center-justified">
       <div class="grid" id="search-bar">
-      <div style="float:right; width: 70%;">
+      <div style="float:right; width: 88%;">
        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
           <template>
             <style>
@@ -282,7 +282,7 @@ class ModelSearch extends PolymerElement {
           </template>
         </vaadin-combo-box>
         </div>
-        <div style="position: relative; vertical-align: bottom; float:center; width: 20%">
+        <div style="position: relative; vertical-align: bottom; float:center; width: 10%">
           <div style="position: absolute; left: 0; bottom: 0;">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>
           </vaadin-button>
@@ -292,7 +292,7 @@ class ModelSearch extends PolymerElement {
     </div>
     <div class="container flex-center-justified">
       <div class="grid" id="options">
-        <div style="float: right; width: 70%;">
+        <div style="float: right; width: 88%;">
         <paper-dropdown-menu id="category" label="Filter Models by Category" on-iron-select="_itemSelected">
           <paper-listbox slot="dropdown-content" class="dropdown-content">
           <dom-repeat items="{{cts}}">
@@ -304,7 +304,7 @@ class ModelSearch extends PolymerElement {
         </paper-dropdown-menu>
         </div>
         <!--<vaadin-checkbox id="version" checked="">Retrieve latest version</vaadin-checkbox>-->
-        <div style="position: relative; float: center; width: 20%;">
+        <div style="position: relative; float: center; width: 10%;">
           <div style="position: absolute; left:0; bottom: 0;">
           <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
           </vaadin-button>
@@ -313,7 +313,7 @@ class ModelSearch extends PolymerElement {
       </div>
     </div>
     <br>
-    <div class="container flex-end-justified">
+    <div class="container flex-end-justified" style="position:absolute; right:5%;">
       <div><b>Displaying [[numberofRes]]/[[totalRes]] results</b></div>
     </div>
     <br>
@@ -322,28 +322,28 @@ class ModelSearch extends PolymerElement {
       <template>
         <div class="box">
          <div class="card-content" identity\$="{{index}}">
-              <div style="position: absolute; top: 3%; left: 3%;">
+              <div style="position: absolute; top: 3%; left: 4%;">
                 <h4><strong>versions: {{item.version.len}}</strong></h4>
               </div>
               <div style="position: absolute; top: 27%; left: 3%;">
               <img src="../images/no_logo.png" width="100 px" height="100px"/>                 
               </div>
-              <div style="position: absolute;top:1%; left: 40%;">
-              <h4><strong><center>[[item.label]]</center></strong></h4>
+              <div style="position: absolute;top:3%; left: 40%; font-size: 18px;">
+              <strong><center>[[item.label]]</center></strong>
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:3%;">
               Category: {{_getAns(assoc, item.label)}}
               </div>
-              <div style="position: absolute; top:15%; left:25%; width: 50%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
+              <div style="position: absolute; top:15%; left:20%; width: 60%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
               <p>[[item.description]]</p>
               </div>
-              <div style="position: absolute;bottom: 5%; right: 5%;">
+              <div style="position: absolute;bottom: 5%; right: 3%;">
               <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">More Details</vaadin-button></a>
               </div>
-              <div style="position: absolute; top: 4%; right: 7%;">
+              <div style="position: absolute; top: 4%; right: 4%;">
               <a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
               </div>
-              <div style="position: absolute; top:3%; right:4%">
+              <div style="position: absolute; top:3%; right:7%">
               <!--<img src="../images/github.png" height="30px" width="35px"/>-->
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:40%;">
