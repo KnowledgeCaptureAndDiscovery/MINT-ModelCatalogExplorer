@@ -30,6 +30,7 @@ import '@polymer/paper-item/paper-item.js';
 import '@polymer/paper-toggle-button/paper-toggle-button.js';
 import '@polymer/paper-card/paper-card.js';
 import '@polymer/paper-dialog/paper-dialog.js';
+import '@vaadin/vaadin-tabs/vaadin-tabs.js';
 import '@polymer/paper-dialog-behavior/paper-dialog-behavior.js';
 import './paper-chip.js';
 import '@polymer/paper-icon-button/paper-icon-button.js';
@@ -61,6 +62,7 @@ String.prototype.format = function () {
 class ViewModel extends PolymerElement {
   static get template() {
     return html`
+    <!DOCTYPE html>
     <style include="shared-styles">
       html, body {
           margin: 0;
@@ -158,9 +160,45 @@ class ViewModel extends PolymerElement {
           color: #4caf50;
         }
 
+        .tab {
+      overflow: hidden;
+      border: 1px solid #ccc;
+      background-color: #f1f1f1;
+      }
+
+/* Style the buttons that are used to open the tab content */
+  .tab button {
+    background-color: inherit;
+    float: center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    }
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+    background-color: #ddd;
+   } 
+
+/* Create an active/current tablink class */
+  .tab button.active {
+    background-color: #ccc;
+    }
+
+/* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+    }
+
       .title{
         display: inline-block;
       }
+
       .box {
           @apply --layout-vertical;
 
@@ -285,28 +323,46 @@ class ViewModel extends PolymerElement {
 
       .all-legend {
         position: relative;
-        top: -70px;
+        top: -7px;
         left: 70%;
       }
     </style>
+    <body>
+    
+
+
     <br>
    
     <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
+    
     <div class="flex-center-justified">
-      <h1 style="text-align:center;">[[modelSelected.label]] &nbsp;&nbsp;<div id="showAllVer"><center><paper-chip label="Showing All Versions" class="custom-background-j"></paper-chip></center></div><div id="changeVer" style="display: none;"><center><paper-chip id="verC" class="custom-background-m"></paper-chip></center></div></h1>
-   
+      <h3 style="text-align:center;"><center>[[modelSelected.label]]</center></h1>
+    </div>
+    <div>
+    <img src="../images/No_photo.jpg" width="10%" height="10%"/>
     </div>
     <div class="flex-center-justified">
      [[modelSelected.desc]]
      </br>
     </div>
-    <template is="dom-if" if="[[documentationLink]]">
-      <!--<div class="flex-center-justified">-->
-      <!--<a href=[[documentationLink]] target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>Documentation</strong></vaadin-button></a>-->
-      <!--</br>-->
-      <!-</div>-->
-    </template>
-    <div class="container flex-center-justified">
+    <div>
+    <strong>Author</strong>: Armen Kemanian<br>
+    <details>
+    <summary><strong>Contact</strong>: Armen Kemanian</summary>
+    <p>
+    Contact email: armen@psu.edu <br> 
+    Contact phone: 3213213132
+    </p>
+    </details>
+    <details>
+    <summary><strong>Institution</strong>: Penn State University</summary>
+    <p>Address: 321 Street, USA</p>
+    </details>
+    <strong>Website</strong>: https://plantscience.psu.edu/research/labs/kemanian/models-and-tools/cycles <br>
+    <strong>Code</strong>: https://github.com/cycles <br>
+    </div>
+
+   <!-- <div class="container flex-center-justified">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
         <paper-listbox slot="dropdown-content" selected="0" class="dropdown-content" id="tempor">
           <paper-item>All</paper-item>
@@ -317,64 +373,31 @@ class ViewModel extends PolymerElement {
           </dom-repeat>
         </paper-listbox>
       </paper-dropdown-menu>
-    </div>
-    <br><br>
-    <div class="flex-center-justified">
-   <b> Current model has following configurations. You can download the configuration file from download icon and click on individual configuration to know more.
-</b>
-</div>
-    <div id="content"></div>
-    <div class="grid flex-center-justified">
+    </div> --> 
+    <vaadin-tabs selected="{{page}}" theme="equal-width-tabs">
+  		<vaadin-tab>Overview</vaadin-tab>
+  		<vaadin-tab>I/O</vaadin-tab>
+  		<vaadin-tab>Variables</vaadin-tab>
+  		<vaadin-tab>Execute</vaadin-tab>
+  		<vaadin-tab>Compatible Software</vaadin-tab>
+	</vaadin-tabs>
+    
+
+    <iron-pages selected="[[page]]">
+  		<page>Data Not Available</page>
+  		<page>	
+  		<div class="grid flex-center-justified">
      <loading-screen loading="{{loading}}" id="pageLoading"></loading-screen>
      <!--<div id="configuration">-->
       <template is="dom-repeat" items="{{configurationResults.results.bindings}}" id="r">
         <template is="dom-if" if="[[_checkVal(item.version.value)]]" id="k">
           <div class="box" id="[[item.version.value]]">
             <div class="card-content">
-            <table class="center" border="0">
-                <td>
-                <div class="title">
-                <div id="showVer">
-                  <h4>Version: <paper-chip label="[[item.version.value]]" class="custom-background-m"></paper-chip></h4>
-                </div>
-                </div>
-                </td>
-                <td>
               <div class="body">
-              <div>
-                  <!--<h4>Model Configuration: </h4>-->
-                  <!--<template is="dom-repeat" items="{{item.config.value}}" as="stuff">-->
-                    <!--<a href="[[routePath]]model-configuration"><vaadin-button class="pointer" variable\$="{{stuff}}" on-click="openConfigForUri" raised="">[[item.label]]</vaadin-button></a>-->
-                 <!--<template is="dom-if" if="[[item.config.value]]">-->
-                 <!--<a href="[[item.config.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer"> <strong>[[item.label]]</strong></vaadin-button></a>-->
-                 <!--</template>-->
-                 <template is="dom-if" if="[[item.compLoc.value]]">
-                 <a href="[[item.compLoc.value]]"  hidden$="{{!_checkValue(item.compLoc.value)}}"  title="Download" style="color: #000;"><iron-icon icon="get-app"></iron-icon></a>
-                  </template>
-                  </td>
-                  <td>
-                  <div class="flex-center-justified">
-                  <a href="[[modelSelected.model]]" target="_blank" rel="noopener noreferrer" title="URI"><img border="0" src="http://www.w3.org/RDF/icons/rdf_flyer.24"
-                    alt="RDF Resource Description Framework Flyer Icon"/></a>
-                  </div>
-                  </td>
-                </table>
-                  <!--</template>-->
-                  <template is="dom-if" if="[[_checkValue(item.configDesc.value)]]">
-                  <!--<h4>Description:</h4>-->
-                  <br>
-                  <div class="flex-center-justified">
-                    [[modelSelected.label]] Configuration:
-                    &nbsp &nbsp{{item.configDesc.value}} <br>
-                  </div>
-                  </template>
-                  <template is="dom-if" if="[[_checkNegValue(item.configDesc.value)]]">
-                    <!--<h4>Description:</h4>
-                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
-                  </template>
-                </div>
+              <h3><center>Click on I/O to know more about variables.</center></h3>
                 <div>
                   <template is="dom-if" if="{{_checkArray(item.input)}}">
+                  
                     <h4>These are the Input Files Used by this configuration.<a  title="Click on each file to know the variables used by the files." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
                     <!--<template is="dom-repeat" items="{{item.input}}" as="stuff">-->
                       <template is="dom-if" if="{{inputDes}}">
@@ -405,7 +428,6 @@ class ViewModel extends PolymerElement {
                     <!--<h4>Input Files:</h4>
                     <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
                   </template>
-                </div>
                 <div >
                   <template is="dom-if" if="[[_checkArray(item.output)]]">
                     <h4>These are the Output Files generated by this configuration. <a  title="Click on each file to know the variables used by the files." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a> </h4>
@@ -493,10 +515,13 @@ class ViewModel extends PolymerElement {
       <p><ul style='color: #000; position: relative; left: 20px;'>
       <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
       <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
+      <div style='position: absolute; top: 0px; right: 0px;'>
+      <paper-button dialog-dismiss style="color: #FF0000" on-tap="cleardata">CLOSE</paper-button>
+      </div>
       <div style="position: absolute; top: 10px; right: 10px;">
-      	<paper-button dialog-dismiss style="color: #ff0000" on-tap="cleardata">CLOSE</paper-button>
-      </div>      
-<div class="all-legend">
+        <paper-button dialog-dismiss style="color: #ff0000" on-tap="cleardata">CLOSE</paper-button>
+      </div>
+      <div class="all-legend">
         <svg width="25" height="25">
           <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
         </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>variables/processes</b></span>
@@ -506,8 +531,8 @@ class ViewModel extends PolymerElement {
         </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"><b>influences</b></span>
       </div>
       <div id="graph"></div>
-      <div class="buttons" style="position:relative; top: -60px; left: -20px;">
-        <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
+      <div class="buttons" style="position:relative; top: 20px; right: 20px;">
+        <vaadin-button theme="primary" dialog-dismiss>Close</vaadin-button>
       </div>
     </paper-dialog>
     <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
@@ -520,6 +545,172 @@ class ViewModel extends PolymerElement {
     
     </div>
     </div>
+ 		</page>
+  		<page>
+  			<div class="grid flex-center-justified">
+     <loading-screen loading="{{loading}}" id="pageLoading"></loading-screen>
+     <!--<div id="configuration">-->
+      <template is="dom-repeat" items="{{configurationResults.results.bindings}}" id="r">
+        <template is="dom-if" if="[[_checkVal(item.version.value)]]" id="k">
+          <div class="box" id="[[item.version.value]]">
+            <div class="card-content">
+              <div class="body">
+              <h3><center>Click on I/O to know more about variables.</center></h3>
+                <div>
+                  <template is="dom-if" if="{{_checkArray(item.input)}}">
+                  
+                    <h4>These are the Input Files Used by this configuration.<a  title="Click on each file to know the variables used by the files." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
+                    <!--<template is="dom-repeat" items="{{item.input}}" as="stuff">-->
+                      <template is="dom-if" if="{{inputDes}}">
+                       <div class="flex-center-justified">
+                       <div class="table">
+                             <!--<div class="row">            -->
+                                 <!--<div class="header">Label</div>-->
+                                  <!--<div class="header">Description</div>-->
+                             <!--</div>-->
+                        <template is="dom-repeat" items="{{item.input}}">
+                             <div class="row">
+                                <div class="cell flex-center-justified"><a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{item.io.value}}" label$="{{item.iolabel.value}}" desc$="{{stuff.ioDescription.value}}" on-click="openConfigForUri" raised="">{{item.iolabel.value}}</vaadin-button></a></div>        
+                                <div class="cell flex-center-justified"> &nbsp;&nbsp; {{item.ioDescription.value}}</div>         
+                            </div>
+         
+                        </template>
+                       </div>
+                       </div>
+                  </template>
+                   <template is="dom-if" if="{{!inputDes}}">
+                     <template is="dom-repeat" items="{{item.input}}" as="stuff">   
+                      <a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{stuff.io.value}}" label$="{{stuff.iolabel.value}}"  desc$="{{stuff.ioDescription.value}}" slot="suffix" on-click="openConfigForUri" raised="">{{stuff.iolabel.value}}</vaadin-button></a>
+                     {{stuff.ioDescription.value}}<br>
+                    </template>
+                   </template>
+                  </template>
+                  <template is="dom-if" if="{{_checkNegArray(item.input)}}">
+                    <!--<h4>Input Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                  </template>
+                <div >
+                  <template is="dom-if" if="[[_checkArray(item.output)]]">
+                    <h4>These are the Output Files generated by this configuration. <a  title="Click on each file to know the variables used by the files." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a> </h4>
+                      <template is="dom-if" if="{{outputDes}}">
+                       <div class="flex-center-justified">
+                       <div class="table">
+                             <!--<div class="row">            -->
+                                 <!--<div class="header">Label</div>-->
+                                  <!--<div class="header">Description</div>-->
+                             <!--</div>-->
+                        <template is="dom-repeat" items="{{item.output}}">
+                             <div class="row">
+                                <div class="cell flex-center-justified"><a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable$="{{item.io.value}}" label$="{{item.iolabel.value}}" desc$="{{item.ioDescription.value}}" on-click="openConfigForUri" raised="">{{item.iolabel.value}}</vaadin-button></a></div>        
+                                <div class="cell flex-center-justified"> &nbsp;&nbsp; {{item.ioDescription.value}}</div>         
+                            </div>
+         
+                        </template>
+                       </div>
+                       </div>
+                       </template>
+                   <template is="dom-if" if="{{!outputDes}}">
+                    <template is="dom-repeat" items="{{item.output}}" as="stuff">   
+                      <a href="[[routePath]]variable-presentation"><vaadin-button class="pointer" variable\$="{{stuff.io.value}}" label\$="{{stuff.iolabel.value}}"  desc\$="{{stuff.ioDescription.value}}" slot="suffix" on-click="openConfigForUri" raised="">{{stuff.iolabel.value}}</vaadin-button></a>
+                     {{stuff.ioDescription.value}}<br>
+                    </template>
+                  </template>
+                  </template>
+                  <template is="dom-if" if="[[_checkNegArray(item.output)]]">
+                    <!--<h4>Output Files:</h4>
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                  </template>
+                </div>
+                <div>
+                  <template is="dom-if" if="[[_checkArray(item.cags.value)]]">
+                    <h4>These are the Causal Diagrams of the model. <a  title="Click to know proccesses being modeled.." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
+                    <template is="dom-repeat" items="{{item.cags.value}}" as="stuff" id="t">
+                      <vaadin-button class="pointer" on-click="openDialog" variable\$="{{stuff}}" raised="">[[stuff]]</vaadin-button>
+                    </template>
+                  </template>
+                  <template is="dom-if" if="[[_checkNegArray(item.cags.value)]]">
+                  </template>
+                </div>
+                <div>
+                  <template is="dom-if" if="[[_checkArray(item.parameter)]]">
+                    <h4>These are the Parameters used by the model. <a  title="It is shown as Parameter(&nbsp;It's DataType,&nbsp;&nbsp;It's DefaultValue). Click to know more." style="color: #000;"><iron-icon icon="help-outline"></iron-icon></a></h4>
+                   <div class="flex-center-justified">
+                    <div class="table">
+                             <!--<div class="row">            -->
+                                 <!--<div class="header">Parameter</div>-->
+                                  <!--<div class="header">Default DataType, Default Value</div>-->
+                             <!--</div>-->
+                        <template is="dom-repeat" items="{{item.parameter}}" as="stuff">
+                             <div class="row">
+                                <div class="cell flex-center-justified"> <a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]]</vaadin-button></a></div>        
+                                <div class="cell flex-center-justified">  &nbsp;[[stuff.pdatatype.value]],&nbsp;&nbsp;[[stuff.defaultvalue.value]]</div>         
+                            </div>
+         
+                        </template>
+                       </div>
+                       </div>
+                   
+                   
+                   
+                   
+                   
+                    <!--<template is="dom-repeat" items="{{item.parameter}}" as="stuff">-->
+                      <!--<a href="[[stuff.p.value]]" target="_blank" rel="noopener noreferrer"><vaadin-button class="pointer" raised="">[[stuff.paramlabel.value]]</vaadin-button></a>-->
+                   <!--(&nbsp;[[stuff.pdatatype.value]],&nbsp;&nbsp;[[stuff.defaultvalue.value]])<br>-->
+                    <!--</template>-->
+                  </template>
+                  <template is="dom-if" if="[[_checkNegArray(item.parameter)]]">
+                    <!--<h4>Parameters:</h4
+                    <paper-chip label="Not Found" class="custom-background" no-hover=""></paper-chip>-->
+                  </template>
+                </div>
+               
+              </div>
+            </div>
+          </div>
+      </template>
+    </template>
+     <div>
+    <paper-dialog id="dialog" class="colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>Causal Diagram</h2>
+      <p><ul style='color: #000; position: relative; left: 20px;'>
+      <li>Click and hold on the nodes to visualize the influences of a specific process node</li>
+      <li>Hover on the nodes to highlight the influences of a specific process node</li></ul></p>
+      <div style='position: absolute; top: 0px; right: 0px;'>
+      <paper-button dialog-dismiss style="color: #FF0000" on-tap="cleardata">CLOSE</paper-button>
+      </div>
+      <div style="position: absolute; top: 10px; right: 10px;">
+        <paper-button dialog-dismiss style="color: #ff0000" on-tap="cleardata">CLOSE</paper-button>
+      </div>
+      <div class="all-legend">
+        <svg width="25" height="25">
+          <circle cx="10" cy="10" r="10" fill="rgb(204, 204, 204)" />
+        </svg><span style="position: relative; top: -10px; left: 24px; font-size: 14px; color: #000"> represents different <b>variables/processes</b></span>
+        <div class="arrow">
+          <div class="line"></div>
+          <div class="point"></div>
+        </div><span style="position: relative; top: -19px; left: 64px; font-size: 14px; color: #000"><b>influences</b></span>
+      </div>
+      <div id="graph"></div>
+      <div class="buttons" style="position:relative; top: 20px; right: 20px;">
+        <vaadin-button theme="primary" dialog-dismiss>Close</vaadin-button>
+      </div>
+    </paper-dialog>
+    <paper-dialog id="edialog" class="red-colored" entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+    >
+      <p class="font-size: 22px;">There is no data currently available for this CAG.</p>
+      <div class="buttons">
+        <vaadin-button theme="primary" dialog-dismiss>Cancel</vaadin-button>
+      </div>
+    </paper-dialog>
+    
+    </div>
+    </div>
+  		</page>
+  		<page>Data Not Available</page>
+  		<page>Data Not Available</page>
+	</iron-pages>    
+
 `;
   }
 
@@ -594,6 +785,9 @@ class ViewModel extends PolymerElement {
    // console.log("DOund", ver, this.versionSelected);
     return true
   }
+	_checkAns(item) {
+  		return item.compLoc.value;
+	}
 
   _modelChanged(data){
       this.configurationResults=[];
@@ -604,7 +798,7 @@ class ViewModel extends PolymerElement {
     var _self = this;
     var dropdownContents = dom(this.root).querySelector('paper-dropdown-menu');
     var inp = dom(_self.root).querySelector('#tempor')
-    inp.selected = "0";
+    //inp.selected = "0";
     var _parent = document.querySelector("mint-explorer-app");
     this.modelSelected = data;
   //  console.log("Ojj", data);
@@ -1430,7 +1624,7 @@ class ViewModel extends PolymerElement {
     this.finVersions = finVersions
   }
 
-  findDocLink(modelURI){
+    findDocLink(modelURI){
     var docUri = ""
     $.ajax({
         url: "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModels?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery",
@@ -1921,7 +2115,7 @@ class ViewModel extends PolymerElement {
     this.finVersions = [];
     var _parent = document.querySelector('mint-explorer-app')
     this.modelSelected = _parent.modelSelected;
-   // console.log("Hell", _parent.modelSelected);
+    //console.log("Hell", _parent.modelSelected);
     // console.log(this.modelSelected);
     //this.fetchData();
 
@@ -1939,4 +2133,6 @@ class ViewModel extends PolymerElement {
   //  console.log("attached");
   }
 }
+
+
 window.customElements.define(ViewModel.is, ViewModel);
