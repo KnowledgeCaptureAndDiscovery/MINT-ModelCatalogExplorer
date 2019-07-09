@@ -106,6 +106,12 @@ class MyAbout extends PolymerElement {
       </div>
       <div class="box">
         <div class="card-content">
+          <div class="title"><img src="./images/Yash.jpg" class="thumbnail"></div>
+          <strong>Yash Dholakia</strong>
+        </div>
+      </div>
+      <div class="box">
+        <div class="card-content">
           <div class="title"><img src="./images/Daniel.jpg" class="thumbnail"></div>
           <strong>Daniel Garijo</strong>
         </div>
