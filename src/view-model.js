@@ -296,6 +296,10 @@ class ViewModel extends PolymerElement {
           overflow-y: hidden;
         }
 
+        #oneLine {
+        	display: inline-block;
+        }
+
         .arrow {
             width:56px;
             height: 9px;
@@ -334,17 +338,16 @@ class ViewModel extends PolymerElement {
     <br>
    
     <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
-    
     <div class="flex-center-justified">
       <h3 style="text-align:center;"><center>[[modelSelected.label]]</center></h1>
     </div>
-    <div>
-    <img src="../images/No_photo.jpg" width="10%" height="10%"/>
+    <div id="oneLine" style="width:10%;">
+    <img src="../images/No_photo.jpg" width="100%" height="10%"/>
     </div>
-    <div class="flex-center-justified">
-     [[modelSelected.desc]]
-     </br>
+    <div class="flex-center-justified" id="oneLine" style="width:70%;margin-left:10%;vertical-align:top;">
+     <center style="text-align:justify;">[[modelSelected.desc]]</center>
     </div>
+    <br>
     <div>
     <strong>Author</strong>: Armen Kemanian<br>
     <details>
@@ -361,8 +364,8 @@ class ViewModel extends PolymerElement {
     <strong>Website</strong>: https://plantscience.psu.edu/research/labs/kemanian/models-and-tools/cycles <br>
     <strong>Code</strong>: https://github.com/cycles <br>
     </div>
-
-   <!-- <div class="container flex-center-justified">
+    <br>
+   <div style="text-align:left;width:25%">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
         <paper-listbox slot="dropdown-content" selected="0" class="dropdown-content" id="tempor">
           <paper-item>All</paper-item>
@@ -373,7 +376,8 @@ class ViewModel extends PolymerElement {
           </dom-repeat>
         </paper-listbox>
       </paper-dropdown-menu>
-    </div> --> 
+    </div>
+    <br>
     <vaadin-tabs selected="{{page}}" theme="equal-width-tabs">
   		<vaadin-tab>Overview</vaadin-tab>
   		<vaadin-tab>I/O</vaadin-tab>
@@ -707,8 +711,84 @@ class ViewModel extends PolymerElement {
     </div>
     </div>
   		</page>
-  		<page>Data Not Available</page>
-  		<page>Data Not Available</page>
+  		<page>
+  			<div class="grid flex-center-justified">
+  			<loading-screen loading="{{loading}}" id="pageLoading"></loading-screen>
+  			<div class="box">
+  			<div class="card-content">
+              <div class="body" style="text-align:left;">
+              	<strong>Sample invocation:</strong>
+              	<div>
+              	<details style="text-align:left;">
+              	<summary>Example 1: Invocation of the model for  Maize production on South Sudan</summary>
+              	<ul>
+              	<li>Reinit file: <i>Link to Data Catalog</i></li>
+              	<li>Soil: <i>Link to Data Catalog</i></li>
+              	<li>Weather: <i>Link to Data Catalog</i></li>
+              	<li>Fertilizer: <i>Link to Data Catalog</i></li>
+              	</ul>
+              	</details>
+              	<details style="text-align:left;">
+              	<summary>Example 2: Invocation of the model for Sorghum production on Ethiopia </summary>
+              	<ul>
+              	<li>Reinit file: <i>Link to Data Catalog</i></li>
+              	<li>Soil: <i>Link to Data Catalog</i></li>
+              	<li>Weather: <i>Link to Data Catalog</i></li>
+              	<li>Fertilizer: <i>Link to Data Catalog</i></li>
+              	</ul>
+              	</details>
+              	</div>
+              	<br>
+              	<div>
+              		<strong>Sample result:</strong><br>
+							Season file example: link to data catalog<br>
+							Sample visualization: link to data catalog
+              	</div>
+              </div>
+            </div>
+            </div>
+            </div>
+  		</page>
+  		<page>
+  			<div class="grid flex-center-justified">
+  			<loading-screen loading="{{loading}}" id="pageLoading"></loading-screen>
+  			<div class="box">
+  			<div class="card-content">
+            <div class="body" style="text-align:left;">
+            <div>
+  			<strong> This software uses variables that can be produced from:</strong>
+  			<ul>
+  				<li><Strong>PIHM</strong> [Hydrology]. With variables: precipitation, albedo.</li>
+  				<li><Strong>TOPOFLOW</strong> [Hydrology]. With variables: precipitation, RH.</li>
+  				<li><strong>FLDAS2PIHM</strong> [Hydrology, <strong>Data Transformation</strong>]. With variables: PP.</li>
+  			</ul>
+  			</div>
+  			<br>
+  			<div>
+  			<strong>This software produces variables that can be used by:</strong>
+  			<ul>
+  				<li><Strong>EACS</strong> [Economy]. With variables: crop yield.</li>
+  			</ul>
+  			</div>
+  			<br>
+  			<div>
+  			<strong>Similar Models:</strong>
+  			<ul>
+  				<li><Strong>DSSAT</strong> [Agriculture]. Similar variables: precipitation, crop yield.</li>
+  			</ul>
+  			</div>
+  			<br>
+  			<div>
+  			<strong>Results of this model can be browsed with:</strong>
+  			<ul>
+  				<li><Strong>Cycles R visualization</strong> [Agriculture]. R script for visualizing crop yield.</li>
+  			</ul>
+  			</div>
+  			</div>
+  			</div>
+  			</div>
+  			</div>
+  		</page>
 	</iron-pages>    
 
 `;
