@@ -538,6 +538,7 @@ class ViewModel extends PolymerElement {
   }
 
   getModelByLabel(label){
+    return "https://w3id.org/mint/instance/" + label
     var _parent = document.querySelector("mint-explorer-app");
     var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModel?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
     var query = qt + "&label=" + label
@@ -584,11 +585,12 @@ class ViewModel extends PolymerElement {
 
   _modelURI(e){
     console.log(this.routeData);
-    var model = this.getModelByLabel(this.routeData["label"])
-    if (model["results"]["bindings"].length > 0){
+    var label = this.routeData["label"]
+    var model = "https://w3id.org/mint/instance/" + label
+    //if (model["results"]["bindings"].length > 0){
+    if (model){
       this.loading = true
-      var label = this.routeData["label"]
-      var model = model["results"]["bindings"][0]["model"]["value"]
+      //var model = model["results"]["bindings"][0]["model"]["value"]
       this.modelSelected = {"label": label, "model": model}
       this.fetchConfiguration(this.modelSelected);
     }
