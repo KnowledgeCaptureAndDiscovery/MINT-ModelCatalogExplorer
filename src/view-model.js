@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 */
 import { PolymerElement } from '@polymer/polymer/polymer-element.js';
 import './shared-styles.js';
+import '@polymer/app-route/app-route.js';
 import '@polymer/app-layout/app-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
@@ -281,7 +282,8 @@ class ViewModel extends PolymerElement {
       }
     </style>
     <br>
-   
+    <app-route route="[[route]]" pattern="/:label" data="{{routeData}}"></app-route>
+    
     <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     <div class="flex-center-justified">
       <h1 style="text-align:center;">[[modelSelected.label]] &nbsp;&nbsp;<div id="showAllVer"><center><paper-chip label="Showing All Versions" class="custom-background-j"></paper-chip></center></div><div id="changeVer" style="display: none;"><center><paper-chip id="verC" class="custom-background-m"></paper-chip></center></div></h1>
@@ -497,6 +499,10 @@ class ViewModel extends PolymerElement {
   static get is() { return 'view-model'; }
   static get properties() {
     return {
+      routeData: {
+        type: Object,
+        observer: '_modelURI'
+      },
       modelSelected: {
         model: String,
         label: String,
@@ -531,8 +537,69 @@ class ViewModel extends PolymerElement {
     };
   }
 
-  _activeChanged(modelSelected){
+  getModelByLabel(label){
+    var _parent = document.querySelector("mint-explorer-app");
+    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModel?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
+    var query = qt + "&label=" + label
+    var model_iri
+    $.ajax({
+      url: query,
+      type: "GET",
+      cache: false,
+      timeout: 5000,
+      async: false,
 
+      success: function(data) {
+        model_iri = data
+      },
+
+      error: function(jqXHR, exception) {
+          var msg = '';
+          if (jqXHR.status === 0) {
+              msg = 'Not connected.\n Verify Network.';
+          }
+          else if (jqXHR.status == 404) {
+              msg = 'Requested page not found. [404]';
+          }
+          else if (jqXHR.status == 500) {
+              msg = 'Internal Server Error [500].';
+          }
+          else if (exception === 'parsererror') {
+              msg = 'Requested JSON parse failed.';
+          }
+          else if (exception === 'timeout') {
+              msg = 'Time out error.';
+          }
+          else if (exception === 'abort') {
+              msg = 'Ajax request aborted.';
+          }
+          else {
+              msg = 'Uncaught Error.\n' + jqXHR.responseText;
+          }
+      }
+    });
+    console.log("uri" + model_iri)
+    return model_iri;
+  }
+
+  _modelURI(e){
+    console.log(this.routeData);
+    var model = this.getModelByLabel(this.routeData["label"])
+    if (model["results"]["bindings"].length > 0){
+      this.loading = true
+      var label = this.routeData["label"]
+      var model = model["results"]["bindings"][0]["model"]["value"]
+      this.modelSelected = {"label": label, "model": model}
+      this.fetchConfiguration(this.modelSelected);
+    }
+    else {
+      console.log("config not exists");
+      //this.shadowRoot.querySelectorAll('#publishModal').open()
+      var label = e.target.getAttribute("label");
+    }
+  }
+
+  _activeChanged(modelSelected){
 
   }
 
@@ -1844,13 +1911,10 @@ class ViewModel extends PolymerElement {
       this.finConfigs = this.configurationResults;
       //console.log("Ok Show the Val", this.finConfigs);
     }
-
-
   }
 
   attributeChangedCallback(){
     super.attributeChangedCallback();
-  //  console.log("attached");
   }
 }
 window.customElements.define(ViewModel.is, ViewModel);
