@@ -649,8 +649,6 @@ class ViewModel extends PolymerElement {
   //  console.log("Ojj", data);
     this.fetchConfiguration(data);
     this.finConfigs = this.configurationResults;
-
-
   }
 
   /*goBack(){
@@ -1149,42 +1147,6 @@ class ViewModel extends PolymerElement {
       var _parent = document.querySelector("mint-explorer-app");
       _parent.variableSelected={"variable":configuration,"label":label};
       _parent.modelDescriptions=desc;
-      //_parent.versionSelected = this.unModifiedConfigurationResults.results.bindings[i]["version"].value;
-      // if(configuration.constructor===Array){
-      //     console.log("hyttr");
-      //     configuration=configuration[0];
-      //     configuration=configuration.trim();
-      // }
-      // console.log(this.unModifiedConfigurationResults);
-      // var _parent = document.querySelector("mint-explorer-app");
-      //
-      //     for (var i = 0; i < this.unModifiedConfigurationResults.results.bindings.length; ++i) {
-      //         for (var key in this.unModifiedConfigurationResults.results.bindings[i]) {
-      //             if(this.unModifiedConfigurationResults.results.bindings[i][key].value.includes(",")) {
-      //                 var strs = this.unModifiedConfigurationResults.results.bindings[i][key].value.split(",");
-      //                 for(var j = 0; j<strs.length; ++j){
-      //                     var vars = [];
-      //                     var parts = strs[j].split("/");
-      //                    if(parts[parts.length - 1]===configuration){
-      //                        _parent.variableSelected=strs[j];
-      //                        console.log("hello" + _parent.variableSelected);
-      //                        break;
-      //                    }
-      //                 }
-      //             }else{
-      //                 var str = this.unModifiedConfigurationResults.results.bindings[i][key].value;
-      //                 var arr = str.split("/");
-      //                 if(arr[arr.length - 1]===configuration){
-      //                     _parent.variableSelected = str;
-      //                     _parent.versionSelected = this.unModifiedConfigurationResults.results.bindings[i]["version"].value;
-      //                     break;
-      //                 }
-      //             }
-      //         }
-      //     }
-        //console.log("jhfgdf"+_parent.variableSelected);
-        //console.log(_parent.variableSelected);
-        //console.log(_parent.modelDescriptions);
   }
 
   processConfigurationResults(data) {
@@ -1303,73 +1265,6 @@ class ViewModel extends PolymerElement {
             this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
             //console.log("Completed", this.unModifiedConfigurationResults)
           }
-            // if(key === "input_files" || key==="output_files"){
-            //
-            //     var strs = obj.results.bindings[i][key].value.split(",");
-            //   //  console.log(strs);
-            //     var _self = this;
-            //     var p=[]
-            //     var vars = [];
-            //     var _parent = document.querySelector("mint-explorer-app");
-            //     var all_files=[];
-            //     var single_file="";
-            //     var des="";
-            //     for(var k = 0; k<strs.length; ++k) {
-            //       //  console.log(strs[k]);
-            //         var qs = "http://ontosoft.isi.edu:8001/api/mintproject/MINT-ModelCatalogQueries/getResourceMetadata?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
-            //         $.ajax({
-            //             url: qs,
-            //             type: "GET",
-            //             data: {
-            //                 mv: strs[k].trim()
-            //             },
-            //             cache: false,
-            //             timeout: 5000,
-            //             async: false,
-            //             success: function (data) {
-            //                 //console.log(data);
-            //                 if (data.results.bindings !== undefined) {
-            //                     p = data.results.bindings;
-            //
-            //                 }
-            //             }
-            //             ,
-            //                 error: function (jqXHR, exception) {
-            //                 }
-            //             });
-            //         for (var index = 0; index < p.length; index++) {
-            //             temp = p[index].prop.value.split("#");
-            //             if (temp[1] === "label") {
-            //                 single_file = p[index].value.value;
-            //             }
-            //             if (p[index].prop.value.includes("description")) {
-            //                // single_file = single_file.concat("(" + p[index].value.value+")")
-            //                 des=p[index].value.value;
-            //             }
-            //         }
-            //
-            //         var parts = strs[k].split("/");
-            //         vars.push(parts[parts.length-1]);
-            //         if(single_file===""){
-            //             single_file=parts[parts.length-1];
-            //         }
-            //         all_files.push({"file":single_file,"var":parts[parts.length-1],"des":des});
-            //        // console.log("heyyyyyy");
-            //         //console.log(all_files)
-            //     }
-            //
-            //     obj.results.bindings[i][key].value = vars;
-            //     if(key==="input_files"){
-            //        // obj.results.bindings[i]["input"]=all_files
-            //     }else{
-            //         //obj.results.bindings[i]["output"]=all_files
-            //     }
-            //    // console.log(obj.results.bindings)
-            //
-            //    // this.unModifiedConfigurationResults.results.bindings[i][key].value = cs;
-            //     //console.log("Completed", this.unModifiedConfigurationResults)
-            // }
-
           else{
               if (key==='compLoc' || key==='config') {
 
@@ -1670,186 +1565,17 @@ class ViewModel extends PolymerElement {
     }
      this.cags = kmp;
     this.loading=false;
-     // console.log(this.configurationResults.results);
   }
 
-  // }
-  /*fetchData() {
-
-    var _self = this;
-    var _parent = document.querySelector("mint-explorer-app");
-    var query = _parent.queries[1].query.format(encodeURI(_self.modelSelected.label));
-    console.log("Ok", _self.modelSelected.label);
-    // var queries = [
-    //   {
-    //     description: "What are some of the things related to this model ?",
-    //     query: "PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0APREFIX+model%3A+%3Chttps%3A%2F%2Fw3id.org%2Fmint%2FmodelCatalog%23%3E%0D%0ASELECT+%3Fmodel+%24reln+%3Fprop%0D%0AWHERE+%7B%0D%0A++%3Fmodel+rdfs%3Alabel+%22"+encodeURI(_self.modelSelected.label)+"%22.%0D%0A++%3Fmodel+%3Freln+%3Fprop%0D%0A%7D"
-    //   }
-    // ]
-    console.log(query);
-    var endpoint = _parent.endpoint;
-
-      $.ajax({
-        url: endpoint + "/query?query=" + query,
-        type: "GET",
-        cache: false,
-        timeout: 5000,
-        async: false,
-        complete: function() {
-            // console.log("GET request sent");
-        },
-
-        success: function(data) {
-            // console.log("GET success");
-            var obj = JSON.parse(JSON.stringify(data));
-            _self.queryResults.push(obj);
-            console.log(_self.queryResults);
-
-           // _self.populateData();
-        },
-
-        error: function(jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 0) {
-                msg = 'Not connected.\n Verify Network.';
-            }
-            else if (jqXHR.status == 404) {
-                msg = 'Requested page not found. [404]';
-            }
-            else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            }
-            else if (exception === 'parsererror') {
-                msg = 'Requested JSON parse failed.';
-            }
-            else if (exception === 'timeout') {
-                msg = 'Time out error.';
-            }
-            else if (exception === 'abort') {
-                msg = 'Ajax request aborted.';
-            }
-            else {
-                msg = 'Uncaught Error.\n' + jqXHR.responseText;
-            }
-            // console.log(msg);
-        }
-      });
-
-  }*/
-
-  //   populateData() {
-  //     var result = this.queryResults[0];
-  //
-  //     var vars = result.head.vars;
-  //     for(var i=0; i<vars.length; ++i){
-  //       // console.log(vars[i]);
-  //     }
-  //     var lines = []
-  //     for(var i=0; i<result.results.bindings.length; ++i) {
-  //       var string = " : ";
-  //       var obj = result.results.bindings[i];
-  //       // console.log(obj);
-  //       for(var k=1; k<vars.length; ++k) {
-  //         var tuple = obj[vars[k]].value;
-  //         if(obj[vars[k]].type === "literal"){
-  //           string += tuple + " : ";
-  //         }
-  //         else if(obj[vars[k]].type === "uri"){
-  //           var arr = tuple.split("#");
-  //           string += arr[1] + " : ";
-  //         }
-  //       }
-  //
-  //       lines.push(string);
-  //     }
-  //
-  //       var div="#content";
-  //       var elem = Polymer.dom(this.root).querySelector(div);
-  //       for(var j=0; j<lines.length; ++j) {
-  //       var paragraph = document.createElement("p");
-  //       paragraph.innerHTML = lines[j];
-  //       elem.appendChild(paragraph);
-  //
-  //   }
-  // }
-
-  // populateConfigurationResults() {
-  //
-  //   var result = this.configurationResults;
-  //     var string = "<table class='table'><thead><tr>";
-  //     var vars = result.head.vars;
-  //     for(var i=0; i<vars.length; ++i){
-  //       string += "<th>" + vars[i] + "</th>";
-  //     }
-  //     string += "</tr></thead><tbody>";
-  //     for(var i=0; i<result.results.bindings.length; ++i) {
-  //       string += "<tr>";
-  //       var obj = result.results.bindings[i];
-  //       // console.log(obj);
-  //       for(var k=0; k<vars.length; ++k) {
-  //         var tuple = obj[vars[k]].value;
-  //         if(obj[vars[k]].type === "literal"){
-  //           string += "<td>"+tuple + "</td>";
-  //         }
-  //         else if(obj[vars[k]].type === "uri"){
-  //           var arr = tuple.split("#");
-  //           string += "<td>" + arr[1] + "</td>";
-  //         }
-  //       }
-  //       string += "</tr>"
-  //     }
-  //
-  //     var div=".table-responsive";
-  //     var elem = Polymer.dom(this.root).querySelector(div);
-  //     string = "<h3>Configurations</h3>" + string;
-  //     string += "</tbody></table>";
-  //     elem.innerHTML = string;
-  // }
-  //
-  // populateConfiguration() {
-  //
-  //   var result = this.configurationResults;
-  //     var string = "<table border='1'><tr>";
-  //     var vars = result.head.vars;
-  //     for(var i=0; i<vars.length; ++i){
-  //       string += "<th>" + vars[i] + "</th>";
-  //     }
-  //     string += "</tr>";
-  //     for(var i=0; i<result.results.bindings.length; ++i) {
-  //       string += "<tr>";
-  //       var obj = result.results.bindings[i];
-  //       // console.log(obj);
-  //       for(var k=0; k<vars.length; ++k) {
-  //         var tuple = obj[vars[k]].value;
-  //         if(obj[vars[k]].type === "literal"){
-  //           string += "<td>"+tuple + "</td>";
-  //         }
-  //         else if(obj[vars[k]].type === "uri"){
-  //           var arr = tuple.split("#");
-  //           string += "<td>" + arr[1] + "</td>";
-  //         }
-  //       }
-  //       string += "</tr>"
-  //     }
-  //
-  //     var div="#configuration";
-  //     var elem = Polymer.dom(this.root).querySelector(div);
-  //     string = "<h3>Configurations</h3>" + string;
-  //     string += "</table>";
-  //     elem.innerHTML = string;
-  //   }
   getDataFromVersion(inpV){
-   //console.log(inpV, this.finConfigs);
     var arr = []
     if(inpV != ''){
       for(var i=0; i<this.finConfigs.results.bindings.length; i++){
-       // console.log("hi")
         if(this.finConfigs.results.bindings[i].version.value === inpV){
           arr.push(this.finConfigs.results.bindings[i])
         }
       }
     var obj = {"head": this.finConfigs.head, "results": {"bindings": arr}};
-      //console.log(obj);
     this.configurationResults = obj
     }
   }
@@ -1860,9 +1586,7 @@ class ViewModel extends PolymerElement {
     var versionNo = selectedItem.innerText;
     this.versionSelected = {"val": versionNo};
       this.finConfigs = this.configurationResults;
-   // console.log(this.versionSelected)
     if(versionNo != "All"){
-     // console.log("Do Something")
       _self.getDataFromVersion(versionNo);
       var showVer = dom(_self.root).querySelectorAll('#showVer');
       for(var i=0; i<showVer.length; i++){
@@ -1876,12 +1600,9 @@ class ViewModel extends PolymerElement {
       changeVer.style.display = "block"
     }
     else{
-     // console.log("Show All")
       this.finVersions = [];
       var _parent = document.querySelector("mint-explorer-app");
       this.modelSelected = _parent.modelSelected;
-      // console.log(this.modelSelected);
-      //this.fetchData();
       if(this.modelSelected) {
        _self.fetchConfiguration(_parent.modelSelected);
       this.finConfigs = this.configurationResults;
@@ -1904,14 +1625,10 @@ class ViewModel extends PolymerElement {
     this.finVersions = [];
     var _parent = document.querySelector('mint-explorer-app')
     this.modelSelected = _parent.modelSelected;
-   // console.log("Hell", _parent.modelSelected);
-    // console.log(this.modelSelected);
-    //this.fetchData();
 
     if(_parent.modelSelected != undefined) {
       this.fetchConfiguration(_parent.modelSelected);
       this.finConfigs = this.configurationResults;
-      //console.log("Ok Show the Val", this.finConfigs);
     }
   }
 
