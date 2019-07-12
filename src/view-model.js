@@ -336,19 +336,18 @@ class ViewModel extends PolymerElement {
 
 
     <br>
-   
     <!--<a href="[[routePath]]/model-search"><vaadin-button theme="error primary" on-click="goBack" raised="">&lt;&lt; Back</vaadin-button></a>-->
     <div class="flex-center-justified">
       <h3 style="text-align:center;"><center>[[modelSelected.label]]</center></h1>
     </div>
-    <div id="oneLine" style="width:10%;">
-    <img src="../images/No_photo.jpg" width="100%" height="10%"/>
+    <div id="oneLine" style="width:15%; margin-left:5%;margin-right:4.5%;">
+    <img src="../images/No_photo.jpg" width="100%" height="15%"/>
     </div>
-    <div class="flex-center-justified" id="oneLine" style="width:70%;margin-left:10%;vertical-align:top;">
+    <div class="flex-center-justified" id="oneLine" style="width:60%;vertical-align:top;">
      <center style="text-align:justify;">[[modelSelected.desc]]</center>
     </div>
     <br>
-    <div>
+    <div style="margin:0 auto; width:50%;">
     <strong>Author</strong>: Armen Kemanian<br>
     <details>
     <summary><strong>Contact</strong>: Armen Kemanian</summary>
@@ -361,11 +360,11 @@ class ViewModel extends PolymerElement {
     <summary><strong>Institution</strong>: Penn State University</summary>
     <p>Address: 321 Street, USA</p>
     </details>
-    <strong>Website</strong>: https://plantscience.psu.edu/research/labs/kemanian/models-and-tools/cycles <br>
+    <strong>Website</strong>: <a href="https://plantscience.psu.edu/research/labs/kemanian/models-and-tools/cycles">https://plantscience.psu.edu/research/labs/kemanian/models-and-tools/cycles</a> <br>
     <strong>Code</strong>: https://github.com/cycles <br>
     </div>
     <br>
-   <div style="text-align:left;width:25%">
+   <div id="oneLine" style="text-align:left;width:20%;margin-left:7%;">
       <paper-dropdown-menu id="version" label="Select Version" on-iron-select="_itemChanged">
         <paper-listbox slot="dropdown-content" selected="0" class="dropdown-content" id="tempor">
           <paper-item>All</paper-item>
@@ -376,6 +375,9 @@ class ViewModel extends PolymerElement {
           </dom-repeat>
         </paper-listbox>
       </paper-dropdown-menu>
+    </div>
+    <div id="oneLine" style="position:absolute;left:25%;width:60%;">
+    <p>It implements a new method for calculating how interventions affect the crops</p>
     </div>
     <br>
     <vaadin-tabs selected="{{page}}" theme="equal-width-tabs">
