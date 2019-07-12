@@ -37,7 +37,7 @@ import '@polymer/paper-icon-button/paper-icon-button.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import '@polymer/neon-animation/animations/scale-up-animation.js';
 import '@polymer/neon-animation/animations/fade-out-animation.js';
-
+import '@polymer/iron-ajax/iron-ajax.js';
 import '@vaadin/vaadin-button/vaadin-button.js'
 import '@vaadin/vaadin-grid/vaadin-grid.js';
 import '@vaadin/vaadin-grid/vaadin-grid-column.js';
@@ -45,6 +45,7 @@ import '@vaadin/vaadin-ordered-layout/vaadin-horizontal-layout.js';
 import './my-icons.js';
 import { html } from '@polymer/polymer/lib/utils/html-tag.js';
 import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
+import {endpoint, queryModel} from './query-service';
 
 //console.log("Hello")
 String.prototype.format = function () {
@@ -495,7 +496,6 @@ class ViewModel extends PolymerElement {
     </div>
 `;
   }
-
   static get is() { return 'view-model'; }
   static get properties() {
     return {
@@ -537,68 +537,18 @@ class ViewModel extends PolymerElement {
     };
   }
 
-  getModelByLabel(label){
-    return "https://w3id.org/mint/instance/" + label
-    var _parent = document.querySelector("mint-explorer-app");
-    var qt = "https://query.mint.isi.edu/api/mintproject/MINT-ModelCatalogQueries/getModel?endpoint=https%3A%2F%2Fendpoint.mint.isi.edu%2Fds%2Fquery";
-    var query = qt + "&label=" + label
-    var model_iri
-    $.ajax({
-      url: query,
-      type: "GET",
-      cache: false,
-      timeout: 5000,
-      async: false,
-
-      success: function(data) {
-        model_iri = data
-      },
-
-      error: function(jqXHR, exception) {
-          var msg = '';
-          if (jqXHR.status === 0) {
-              msg = 'Not connected.\n Verify Network.';
-          }
-          else if (jqXHR.status == 404) {
-              msg = 'Requested page not found. [404]';
-          }
-          else if (jqXHR.status == 500) {
-              msg = 'Internal Server Error [500].';
-          }
-          else if (exception === 'parsererror') {
-              msg = 'Requested JSON parse failed.';
-          }
-          else if (exception === 'timeout') {
-              msg = 'Time out error.';
-          }
-          else if (exception === 'abort') {
-              msg = 'Ajax request aborted.';
-          }
-          else {
-              msg = 'Uncaught Error.\n' + jqXHR.responseText;
-          }
+  _modelURI(){
+      var label = this.routeData["label"];
+      var model = queryModel(label);
+      if (model !== ""){
+          this.loading = true;
+          this.modelSelected = {"label": label, "model": model};
+          this.fetchConfiguration(this.modelSelected);
       }
-    });
-    console.log("uri" + model_iri)
-    return model_iri;
-  }
-
-  _modelURI(e){
-    console.log(this.routeData);
-    var label = this.routeData["label"]
-    var model = "https://w3id.org/mint/instance/" + label
-    //if (model["results"]["bindings"].length > 0){
-    if (model){
-      this.loading = true
-      //var model = model["results"]["bindings"][0]["model"]["value"]
-      this.modelSelected = {"label": label, "model": model}
-      this.fetchConfiguration(this.modelSelected);
-    }
-    else {
-      console.log("config not exists");
-      //this.shadowRoot.querySelectorAll('#publishModal').open()
-      var label = e.target.getAttribute("label");
-    }
+      else {
+          console.log("config not exists");
+          this.page = 'not-found';
+      }
   }
 
   _activeChanged(modelSelected){
