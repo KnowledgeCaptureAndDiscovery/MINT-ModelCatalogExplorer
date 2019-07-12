@@ -164,13 +164,6 @@ class ModelSearch extends PolymerElement {
           right:5%;
         }
 
-        #placeCategory{
-          position: 
-          absolute; 
-          bottom:10%; 
-          left:3%;
-        }
-
         .bottom {
           bottom: 0px;
         }
@@ -193,7 +186,7 @@ class ModelSearch extends PolymerElement {
           width: 100%;
         }
 
-        .small-font{
+        #small-font{
           font-size:14px;
         }
 
@@ -318,6 +311,12 @@ class ModelSearch extends PolymerElement {
           right:7%;
         }
 
+        .placeCategory{
+          position: absolute; 
+          bottom:10%; 
+          left:3%;
+        }
+
         .search-icon{
           cursor: pointer;
         }
@@ -408,7 +407,7 @@ class ModelSearch extends PolymerElement {
               <div class="placeLabel">
               <strong><center>[[item.label]]</center></strong>
               </div>
-              <div class="small-font" id="placeCategory">
+              <div class="placeCategory" id="small-font">
               Category: [[_getAns(assoc, item.label)]]
               </div>
               <div class="placeDescription">
@@ -422,8 +421,6 @@ class ModelSearch extends PolymerElement {
               </div>
               <div class="placeGithubLogo">
               <!--<img src="../images/github.png" height="30px" width="35px"/>-->
-              </div>
-              <div class="small-font" style="position: absolute; bottom:10%; left:40%;">
               </div>
 
         </div>
