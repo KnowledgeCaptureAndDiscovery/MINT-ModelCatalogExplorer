@@ -18,7 +18,8 @@ export function queryModel(label){
         timeout: 5000,
         async: false,
         success: function(data) {
-            model_iri = data["results"]["bindings"][0]["model"]["value"];
+            if (data["results"]["bindings"].length > 0)
+                model_iri = data["results"]["bindings"][0]["model"]["value"];
         },
         error: function(jqXHR, exception) {
             var msg = '';
