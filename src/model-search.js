@@ -159,6 +159,18 @@ class ModelSearch extends PolymerElement {
           width: 35%;
         }
 
+        #placeNoOfResults {
+          position:absolute; 
+          right:5%;
+        }
+
+        #placeCategory{
+          position: 
+          absolute; 
+          bottom:10%; 
+          left:3%;
+        }
+
         .bottom {
           bottom: 0px;
         }
@@ -240,6 +252,72 @@ class ModelSearch extends PolymerElement {
           font-weight: bold;
         }
 
+        .searchBar{
+          float:right; 
+          width: 88%;
+        }
+
+        .buttons{
+          position: relative; 
+          vertical-align: bottom; 
+          float:center; 
+          width: 10%;
+        }
+
+        .placeButtons{
+          position: absolute; 
+          left: 0; 
+          bottom: 0;
+        }
+
+        .placeVersions{
+          position: absolute; 
+          top: 3%; 
+          left: 4%;
+        }
+
+        .placeLogo{
+          position: absolute; 
+          top: 27%; 
+          left: 3%;
+        }
+
+        .placeLabel{
+          position: absolute;
+          top:3%; 
+          left: 40%; 
+          font-size: 18px;
+        }
+
+        .placeDescription{
+          position: absolute; 
+          top:15%; 
+          left:20%; 
+          width: 60%; 
+          text-overflow:ellipsis; 
+          overflow: hidden; 
+          text-align: justify; 
+          text-justify: inter-word;
+        }
+
+        .placeMoreDetailsButton{
+          position: absolute;
+          bottom: 5%; 
+          right: 3%;
+        }
+
+        .placeLink {
+          position: absolute; 
+          top: 4%; 
+          right: 4%;
+        }
+
+        .placeGithubLogo{
+          position: absolute; 
+          top:3%; 
+          right:7%;
+        }
+
         .search-icon{
           cursor: pointer;
         }
@@ -253,20 +331,19 @@ class ModelSearch extends PolymerElement {
         }
         
     </style>
-     <script src="http://code.jquery.com/jquery-1.6.4.min.js" type="text/javascript"></script>
     </head>
     <body>
     <div class="container flex-center-justified">
       <div><h1>Model Search</h1></div>
     </div>
-    <center><p style="width: 50%;"> 
+    <center> 
     <div class="container flex-center-justified">
     <center><p style="width: 85%;">This interface allows searching information about scientific and economic models, organized by categories. Try it out by specifying a model name in the search model name. For example: Type <b>Topoflow</b> in search bar to explore more information about the model.</p></center>
-    </p></center>
+    </center>
     </div>
     <div class="container flex-center-justified">
       <div class="grid" id="search-bar">
-      <div style="float:right; width: 88%;">
+      <div class="searchBar">
        <vaadin-combo-box label="Search Model Name" id="searchInput" items="[[data]]" on-iron-select="_fillData">
           <template>
             <style>
@@ -282,8 +359,8 @@ class ModelSearch extends PolymerElement {
           </template>
         </vaadin-combo-box>
         </div>
-        <div style="position: relative; vertical-align: bottom; float:center; width: 10%">
-          <div style="position: absolute; left: 0; bottom: 0;">
+        <div class="buttons">
+          <div class="placeButtons">
           <vaadin-button theme="contrast primary" class="search-icon" id="searchIcon" title="Search" on-click="searchHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:search" slot="prefix"></iron-icon>
           </vaadin-button>
           </div>
@@ -292,7 +369,7 @@ class ModelSearch extends PolymerElement {
     </div>
     <div class="container flex-center-justified">
       <div class="grid" id="options">
-        <div style="float: right; width: 88%;">
+        <div class="searchBar">
         <paper-dropdown-menu id="category" label="Filter Models by Category" on-iron-select="_itemSelected">
           <paper-listbox slot="dropdown-content" class="dropdown-content">
           <dom-repeat items="{{cts}}">
@@ -304,8 +381,8 @@ class ModelSearch extends PolymerElement {
         </paper-dropdown-menu>
         </div>
         <!--<vaadin-checkbox id="version" checked="">Retrieve latest version</vaadin-checkbox>-->
-        <div style="position: relative; float: center; width: 10%;">
-          <div style="position: absolute; left:0; bottom: 0;">
+        <div class="buttons">
+          <div class="placeButtons">
           <vaadin-button theme="error primary" class="clear-icon" id="clearIcon" title="Clear" on-click="clearHandler" slot="suffix" prefix="" icon="search"><iron-icon icon="icons:close" slot="prefix"></iron-icon>Clear
           </vaadin-button>
           </div>
@@ -313,7 +390,7 @@ class ModelSearch extends PolymerElement {
       </div>
     </div>
     <br>
-    <div class="container flex-end-justified" style="position:absolute; right:5%;">
+    <div class="container flex-end-justified" id="placeNoOfResults">
       <div><b>Displaying [[numberofRes]]/[[totalRes]] results</b></div>
     </div>
     <br>
@@ -322,28 +399,28 @@ class ModelSearch extends PolymerElement {
       <template>
         <div class="box">
          <div class="card-content" identity\$="{{index}}">
-              <div style="position: absolute; top: 3%; left: 4%;">
+              <div class="placeVersions">
                 <h4><strong>versions: {{item.version.len}}</strong></h4>
               </div>
-              <div style="position: absolute; top: 27%; left: 3%;">
+              <div class="placeLogo">
               <img src="../images/no_logo.png" width="100 px" height="100px"/>                 
               </div>
-              <div style="position: absolute;top:3%; left: 40%; font-size: 18px;">
+              <div class="placeLabel">
               <strong><center>[[item.label]]</center></strong>
               </div>
-              <div class="small-font" style="position: absolute; bottom:10%; left:3%;">
-              Category: {{_getAns(assoc, item.label)}}
+              <div class="small-font" id="placeCategory">
+              Category: [[_getAns(assoc, item.label)]]
               </div>
-              <div style="position: absolute; top:15%; left:20%; width: 60%; text-overflow:ellipsis; overflow: hidden; text-align: justify; text-justify: inter-word;">
+              <div class="placeDescription">
               <p>[[item.description]]</p>
               </div>
-              <div style="position: absolute;bottom: 5%; right: 3%;">
+              <div class="placeMoreDetailsButton">
               <a href="[[routePath]]view-model"><vaadin-button class="clear-icon" theme="primary" label\$="{{item.label}}" model\$="{{item.model}}" desc$="{{item.description}}" on-click="goToModel" raised="">More Details</vaadin-button></a>
               </div>
-              <div style="position: absolute; top: 4%; right: 4%;">
+              <div class="placeLink">
               <a href="[[item.link]]" target="_blank" title="View Documentation" hidden="[[item.avail]]" style="color: #000;"><iron-icon icon="book"></iron-icon></a>
               </div>
-              <div style="position: absolute; top:3%; right:7%">
+              <div class="placeGithubLogo">
               <!--<img src="../images/github.png" height="30px" width="35px"/>-->
               </div>
               <div class="small-font" style="position: absolute; bottom:10%; left:40%;">
@@ -427,7 +504,7 @@ class ModelSearch extends PolymerElement {
     searchHandler(){
         var searchString = this.$.searchInput.value;
         //console.log("Done", searchString)
-        if(searchString!="")
+        if(searchString!="")  // This is called only if input is valid model
         {
         var filtered = [];
         //console.log(this.results)
@@ -442,15 +519,12 @@ class ModelSearch extends PolymerElement {
         this.numberofRes = this.tempResults.length.toString();
         //console.log(this.searchResults);
       }
-      else if(this.$.searchInput.value!=''){
-        this.populateSearchResults();
-      }
-      else{
+      else{         //this is called when user deletes the input and all models of selected category are displayed
         this.displayLabel(this.getModelsByCategory(this.$.category.value));
       }
     }
 
-    clearHandler(){
+    clearHandler(){   //this function is called when clear button is clicked. It resets the category to all and displays all the results and clears the input
       this.$.category.value='All';
       this.populateSearchResults();
       this.$.searchInput.value='';
@@ -527,7 +601,7 @@ class ModelSearch extends PolymerElement {
                     result.description = x[i].desc.value;
                     result.category = x[i].categories.value;
                     //inter=result.label;
-                    arr[result.label]=result.category;
+                    arr[result.label]=result.category;  //model-name mapped to categories
                     if ("assumptions" in x[i])
                         result.assumptions=x[i].assumptions.value;
                     if('doc' in x[i]){
@@ -670,7 +744,7 @@ class ModelSearch extends PolymerElement {
            }
          })*/
          //var object=JSON.parse(map);
-         this.assoc=arr;
+         this.assoc=arr;        //model name mapped to categories stored in associate array named 'assoc'
          //console.log(this.maps);
         this.totalRes = results.length.toString();
         this.searchResults = results;
